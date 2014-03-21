@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Set;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.payu.hackathon.discovery.scanner.AnnotationScanner;
@@ -14,7 +13,6 @@ public class AnnotationScannerTest {
     AnnotationScanner scanner;
 
     @Test
-    @Ignore
     public void shouldScanClassesInProperPackage() {
         //given
         scanner = new AnnotationScanner("com.payu.hackaton.sampledomain.service");
@@ -26,7 +24,6 @@ public class AnnotationScannerTest {
     }
 
     @Test
-    @Ignore
     public void shouldNoScanClassesNotAnnotatedPath() {
         //given
         scanner = new AnnotationScanner("com.payu.hackaton.sampledomain.notscanned.service");

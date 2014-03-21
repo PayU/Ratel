@@ -6,8 +6,6 @@ import java.util.Set;
 import javax.ws.rs.Path;
 
 import org.reflections.Reflections;
-import org.reflections.util.ConfigurationBuilder;
-import org.reflections.util.FilterBuilder;
 public class AnnotationScanner {
     private String packageToScan;
 
@@ -25,9 +23,7 @@ public class AnnotationScanner {
 
     private Reflections buildReflection() {
         Objects.requireNonNull(packageToScan, "package must be not null");
-        return new Reflections(
-                    new ConfigurationBuilder().filterInputsBy(new FilterBuilder().includePackage(packageToScan)
-                ).build());
+        return new Reflections(packageToScan);
 
     }
 
