@@ -20,6 +20,8 @@ public class GatewayController {
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<Status> open() {
 
+        LOG.info("open");
+
         final Status status = new Status("working");
         status.add(linkTo(methodOn(GatewayController.class).open()).withSelfRel());
 
