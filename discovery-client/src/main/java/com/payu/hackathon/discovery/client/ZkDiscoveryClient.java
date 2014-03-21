@@ -69,7 +69,19 @@ public class ZkDiscoveryClient implements DiscoveryClient {
 
     private Service fetchService(String serviceName) {
         try {
-            return serviceSerializer.deserializeService(zkClient.getData().forPath(serviceName));
+            Service service = serviceSerializer.deserializeService(zkClient.getData().forPath(serviceName));
+            service.getMethods().addAll(zkClient.getChildren().forPath(serviceName).stream().
+                            map(method -> fetchMethod(serviceName, method)).collect(Collectors.toList()));
+            return service;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private Service.Method fetchMethod(String serviceName, String methodName) {
+        try {
+            return serviceSerializer.
+                    deserializeMethod(zkClient.getData().forPath(serviceName.concat(ZK_PATH_SEPARATOR).concat(methodName)));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

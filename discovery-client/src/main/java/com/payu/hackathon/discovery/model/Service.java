@@ -3,13 +3,14 @@ package com.payu.hackathon.discovery.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.Collection;
+import java.util.Collections;
 
 public class Service {
 
     private String name;
 
     @JsonIgnore
-    private Collection<Method> methods;
+    private Collection<Method> methods = Collections.emptyList();
 
     private String address;
 
