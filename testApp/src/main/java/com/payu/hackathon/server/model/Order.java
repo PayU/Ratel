@@ -1,8 +1,14 @@
 package com.payu.hackathon.server.model;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement
 public class Order {
-    private final String what;
-    private final String amount;
+    private String what;
+    private String amount;
+
+    public Order() {
+    }
 
     public Order(String amount, String what) {
         this.amount = amount;
@@ -17,4 +23,11 @@ public class Order {
         return amount;
     }
 
+    public void setWhat(String what) {
+        this.what = what;
+    }
+
+    public void setAmount(String amount) {
+        this.amount = amount;
+    }
 }
