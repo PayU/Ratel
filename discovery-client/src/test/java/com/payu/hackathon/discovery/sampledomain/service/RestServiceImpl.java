@@ -12,7 +12,14 @@ public class RestServiceImpl implements RestService  {
 
     @Override
     @GET
-    public List<String> getOrders() {
+    public List<String> getAllOrders() {
+        return null;
+    }
+
+    @Override
+    @GET
+    @Path("/user")
+    public List<String> getUserOrders(String userId) {
         return null;
     }
 

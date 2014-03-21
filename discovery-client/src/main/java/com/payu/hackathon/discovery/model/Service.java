@@ -86,5 +86,13 @@ public class Service {
             return name;
         }
 
+        @Override
+        public String toString() {
+            return "Method{" +
+                    "name='" + name + '\'' +
+                    ", path='" + path + '\'' +
+                    ", methodType=" + methodType +
+                    '}';
+        }
     }
 }

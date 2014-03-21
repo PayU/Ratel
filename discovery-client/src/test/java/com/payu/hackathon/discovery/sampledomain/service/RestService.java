@@ -4,6 +4,9 @@ import java.util.List;
 
 public interface RestService {
 
-    List<String> getOrders();
+    List<String> getAllOrders();
+
+    List<String> getUserOrders(String userId);
+
     String addOrder(String order);
 }

@@ -4,6 +4,6 @@ import com.payu.hackathon.discovery.model.Service;
 
 public interface DiscoveryServer {
 
-    void registerService(Service service) throws Exception;
+    void registerService(Service service);
 
 }
