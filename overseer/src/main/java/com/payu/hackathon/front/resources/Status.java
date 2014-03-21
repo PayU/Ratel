@@ -1,4 +1,4 @@
-package com.payu.hackathon.front;
+package com.payu.hackathon.front.resources;
 
 import org.springframework.hateoas.ResourceSupport;
 
