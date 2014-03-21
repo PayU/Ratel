@@ -14,6 +14,13 @@
     <artifactId>discovery-client</artifactId>
 
     <dependencies>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+            <version>4.0.2.RELEASE</version>
+        </dependency>
+
         <dependency>
             <groupId>org.apache.zookeeper</groupId>
             <artifactId>zookeeper</artifactId>
@@ -58,6 +65,7 @@
             <groupId>com.googlecode.catch-exception</groupId>
             <artifactId>catch-exception</artifactId>
         </dependency>
+
     </dependencies>
 
 

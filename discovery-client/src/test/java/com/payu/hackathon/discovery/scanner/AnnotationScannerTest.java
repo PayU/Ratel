@@ -32,4 +32,13 @@ public class AnnotationScannerTest {
         //then
         assertThat(classes).isEmpty();
     }
+
+    @Test
+    public void shouldScan() {
+        //given
+        scanner = new AnnotationScanner("com.payu.hackathon.discovery.sampledomain.service");
+        //when
+        scanner.scan();
+        //then
+    }
 }

@@ -1,9 +1,8 @@
 package com.payu.hackathon.discovery.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import java.net.URI;
 import java.util.Collection;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class Service {
 
@@ -12,11 +11,11 @@ public class Service {
     @JsonIgnore
     private Collection<Method> methods;
 
-    private URI address;
+    private String address;
 
     private String path;
 
-    public Service(String name, Collection<Method> methods, URI address, String path) {
+    public Service(String name, Collection<Method> methods, String address, String path) {
         this.name = name;
         this.methods = methods;
         this.address = address;
@@ -27,7 +26,7 @@ public class Service {
         return methods;
     }
 
-    public URI getAddress() {
+    public String getAddress() {
         return address;
     }
 
@@ -37,6 +36,16 @@ public class Service {
 
     public String getName() {
         return name;
+    }
+
+    @Override
+    public String toString() {
+        return "Service{" +
+                "name='" + name + '\'' +
+                ", methods=" + methods +
+                ", address='" + address + '\'' +
+                ", path='" + path + '\'' +
+                '}';
     }
 
     public static class Method {
@@ -68,5 +77,6 @@ public class Service {
         public String getName() {
             return name;
         }
+
     }
 }
