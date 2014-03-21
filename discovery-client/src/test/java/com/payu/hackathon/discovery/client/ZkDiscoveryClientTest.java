@@ -1,5 +1,6 @@
 package com.payu.hackathon.discovery.client;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.payu.hackathon.discovery.model.Service;
@@ -57,7 +58,33 @@ public class ZkDiscoveryClientTest {
         assertThat(services.stream().findFirst().get().getAddress()).isEqualTo("http://billpayments/dupsko");
         assertThat(services.stream().findFirst().get().getName()).isEqualTo("OrderService");
         assertThat(services.stream().findFirst().get().getPath()).isEqualTo("/dupsko");
+    }
 
+    @Test
+    public void shouldListenForChangedService() throws Exception {
+        //given
+        ZkDiscoveryServer zkDiscoveryServer = new ZkDiscoveryServer(zkTestServer.getConnectString());
+        ZkDiscoveryClient zkDiscoveryClient = new ZkDiscoveryClient(zkTestServer.getConnectString());
+        Service service = ServiceBuilder.aService().
+                withName("OrderService").
+                withPath("/dupsko").
+                withAddress("http://billpayments/dupsko").build();
+
+        Service changedService = ServiceBuilder.aService().
+                withName("OrderService").
+                withPath("/noweDupsko").
+                withAddress("http://billpayments/noweDupsko").build();
+
+        zkDiscoveryServer.registerService(service);
+
+        //when
+        zkDiscoveryClient.listenForServices(newArrayList("OrderService"), updatedService -> {
+            assertThat(updatedService.getAddress()).isEqualTo("http://billpayments/noweDupsko");
+            assertThat(updatedService.getName()).isEqualTo("OrderService");
+            assertThat(updatedService.getPath()).isEqualTo("/noweDupsko");
+        });
+
+        zkDiscoveryServer.registerService(changedService);
     }
 
 }

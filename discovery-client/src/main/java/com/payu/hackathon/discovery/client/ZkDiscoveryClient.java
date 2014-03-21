@@ -4,7 +4,9 @@ import com.payu.hackathon.discovery.model.Service;
 import com.payu.hackathon.discovery.model.ServiceSerializer;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
+import org.apache.curator.framework.api.CuratorWatcher;
 import org.apache.curator.retry.ExponentialBackoffRetry;
+import org.apache.zookeeper.WatchedEvent;
 
 import java.util.Collection;
 import java.util.function.Consumer;
@@ -50,8 +52,19 @@ public class ZkDiscoveryClient implements DiscoveryClient {
     }
 
     @Override
-    public void listenForServices(Collection<String> services, Consumer<Collection<Service>> consumer) {
-
+    public void listenForServices(Collection<String> services, Consumer<Service> consumer) {
+        services.forEach(service -> {
+            try {
+                zkClient.getData().usingWatcher(new CuratorWatcher() {
+                    @Override
+                    public void process(WatchedEvent watchedEvent) throws Exception {
+                        consumer.accept(fetchService(watchedEvent.getPath()));
+                    }
+                }).forPath(service);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
     private Service fetchService(String serviceName) {
