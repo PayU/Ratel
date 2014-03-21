@@ -4,12 +4,9 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.springframework.stereotype.Service;
-
 import com.payu.hackathon.server.model.Order;
 import com.payu.hackathon.server.service.OrderService;
 
-@Service
 public class OrderServiceImpl implements OrderService {
 
     private Map<Long, Order> orders = new HashMap<>();
