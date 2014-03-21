@@ -13,13 +13,13 @@ public class ZkDiscoveryServer implements DiscoveryServer {
 
     private final String zookeeperUrl;
 
-    private final int BASE_SLEEP_TIME_MS = 1000;
+    private static final int BASE_SLEEP_TIME_MS = 1000;
 
-    private final int MAX_RETRIES = 3;
+    private static final int MAX_RETRIES = 3;
 
-    private final String NAMESPACE = "SERVICE_DISCOVERY";
+    public static final String NAMESPACE = "SERVICE_DISCOVERY";
 
-    private final String ZK_PATH_SEPARATOR = "/";
+    private static final String ZK_PATH_SEPARATOR = "/";
 
     Optional<CuratorFramework> zkClient = Optional.empty();
 
