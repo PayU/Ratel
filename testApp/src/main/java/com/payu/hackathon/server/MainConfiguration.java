@@ -1,8 +1,10 @@
 package com.payu.hackathon.server;
 
 
-import javax.servlet.ServletException;
-
+import com.payu.hackathon.discovery.server.ServiceRegister;
+import com.payu.hackathon.server.config.JerseyConfig;
+import com.payu.hackathon.server.config.ServiceRegisterPostProcessor;
+import com.payu.hackathon.server.model.OrderDatabase;
 import org.glassfish.jersey.servlet.ServletContainer;
 import org.glassfish.jersey.servlet.ServletProperties;
 import org.springframework.boot.SpringApplication;
@@ -14,10 +16,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
-import com.payu.hackathon.discovery.server.ServiceRegister;
-import com.payu.hackathon.server.config.JerseyConfig;
-import com.payu.hackathon.server.config.ServiceRegisterPostProcessor;
-import com.payu.hackathon.server.model.OrderDatabase;
+import javax.servlet.ServletException;
 
 @ComponentScan(basePackages = "com.payu.hackathon.server")
 @Configuration
@@ -25,7 +24,7 @@ import com.payu.hackathon.server.model.OrderDatabase;
 public class MainConfiguration extends SpringBootServletInitializer {
 
     private static final String appAddress = "http://localhost:8080/";
-    private static String zooKeeperUri = "localhost:2181";
+    private static String zooKeeperUri = "localhost:7777";
 
     public static void main(String[] args) throws Exception {
         SpringApplication.run(new Object[]{
