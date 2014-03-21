@@ -1,16 +1,16 @@
 package com.payu.hackathon.discovery.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.common.collect.Sets;
 
 import java.util.Collection;
-import java.util.Collections;
 
 public class Service {
 
     private String name;
 
     @JsonIgnore
-    private Collection<Method> methods = Collections.emptyList();
+    private Collection<Method> methods = Sets.newHashSet();
 
     private String address;
 
