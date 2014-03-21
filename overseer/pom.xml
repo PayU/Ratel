@@ -11,10 +11,6 @@
 
     <artifactId>overseer</artifactId>
 
-    <properties>
-        <start-class>com.payu.hackaton.Application</start-class>
-    </properties>
-
     <build>
         <plugins>
             <plugin>
