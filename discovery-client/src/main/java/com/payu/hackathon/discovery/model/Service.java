@@ -1,8 +1,8 @@
 package com.payu.hackathon.discovery.model;
 
-import java.util.Collection;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import java.util.Collection;
 
 public class Service {
 
@@ -14,6 +14,10 @@ public class Service {
     private String address;
 
     private String path;
+
+    public Service() {
+
+    }
 
     public Service(String name, Collection<Method> methods, String address, String path) {
         this.name = name;
@@ -59,6 +63,10 @@ public class Service {
         private String path;
 
         private MethodType methodType;
+
+        public Method() {
+
+        }
 
         public Method(String name, String path, MethodType methodType) {
             this.name = name;
