@@ -10,6 +10,7 @@
     <modules>
         <module>service</module>
         <module>scanner</module>
+        <module>discovery-client</module>
     </modules>
 
     <packaging>pom</packaging>
