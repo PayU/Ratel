@@ -13,4 +13,8 @@ public class DiscoveredServices extends ResourceSupport {
     public DiscoveredServices(Collection<Service> services) {
         this.services = services;
     }
+
+    public Collection<Service> getServices() {
+        return services;
+    }
 }
