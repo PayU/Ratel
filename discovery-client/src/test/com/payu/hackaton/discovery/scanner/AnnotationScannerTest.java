@@ -1,4 +1,4 @@
-package com.payu.hackaton.scanner;
+package com.payu.hackaton.discovery.scanner;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -15,18 +15,18 @@ public class AnnotationScannerTest {
     @Test
     public void shouldScanClassesInProperPackage() {
         //given
-        scanner = new AnnotationScanner("com.payu.hackaton.sampledomain.service");
+        scanner = new AnnotationScanner("com.payu.hackaton.discovery.sampledomain.service");
         //when
         Set<Class<?>> classes = scanner.scanClasses();
         //then
         assertThat(classes).hasSize(1);
-        assertThat(classes).contains(com.payu.hackaton.sampledomain.service.RestServiceImpl.class);
+        assertThat(classes).contains(com.payu.hackaton.discovery.sampledomain.service.RestServiceImpl.class);
     }
 
     @Test
     public void shouldNoScanClassesNotAnnotatedPath() {
         //given
-        scanner = new AnnotationScanner("com.payu.hackaton.sampledomain.notscanned.service");
+        scanner = new AnnotationScanner("com.payu.hackaton.discovery.sampledomain.notscanned.service");
         //when
         Set<Class<?>> classes = scanner.scanClasses();
         //then
