@@ -10,6 +10,6 @@ public interface DiscoveryClient {
 
     Collection<Service> fetchAllServices();
 
-    void listenForSevices(Collection<Service> services, Consumer<Collection<Service>> consumer);
+    void listenForServices(Collection<Service> services, Consumer<Collection<Service>> consumer);
 
 }
