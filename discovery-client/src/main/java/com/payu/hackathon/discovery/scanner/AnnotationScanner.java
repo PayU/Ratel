@@ -17,17 +17,20 @@ public class AnnotationScanner {
 
     }
 
+
+    protected Set<Class<?>> scanClasses() {
+        return reflections.getTypesAnnotatedWith(Path.class);
+    }
+
     private void withPackage(String packageToScan) {
         this.packageToScan = packageToScan;
     }
+
+
 
     private Reflections buildReflection() {
         Objects.requireNonNull(packageToScan, "package must be not null");
         return new Reflections(packageToScan);
 
-    }
-
-    public Set<Class<?>> scanClasses() {
-        return reflections.getTypesAnnotatedWith(Path.class);
     }
 }

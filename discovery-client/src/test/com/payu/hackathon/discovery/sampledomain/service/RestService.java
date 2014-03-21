@@ -1,4 +1,4 @@
-package com.payu.hackaton.discovery.sampledomain.service;
+package com.payu.hackathon.discovery.sampledomain.service;
 
 import java.util.List;
 
