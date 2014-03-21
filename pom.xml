@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.payu.hackathon</groupId>
@@ -10,7 +10,6 @@
     <modules>
         <module>testApp</module>
         <module>overseer</module>
-        <module>scanner</module>
         <module>discovery-client</module>
     </modules>
 
@@ -85,6 +84,18 @@
                 <artifactId>curator-test</artifactId>
                 <version>2.3.0</version>
                 <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.googlecode.catch-exception</groupId>
+                <artifactId>catch-exception</artifactId>
+                <version>1.2.0</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>javax</groupId>
+                <artifactId>javaee-api</artifactId>
+                <version>7.0</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
