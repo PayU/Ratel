@@ -14,7 +14,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
+import com.payu.hackathon.discovery.server.ServiceRegister;
 import com.payu.hackathon.server.config.JerseyConfig;
+import com.payu.hackathon.server.config.ServiceRegisterPostProcessor;
 import com.payu.hackathon.server.model.OrderDatabase;
 
 @ComponentScan(basePackages = "com.payu.hackathon.server")
@@ -22,9 +24,15 @@ import com.payu.hackathon.server.model.OrderDatabase;
 @EnableAutoConfiguration
 public class MainConfiguration extends SpringBootServletInitializer {
 
-    public static void main(String[] args) {
+    private static final String appAddress = "http://localhost:8080/";
+    private static String zooKeeperUri = "localhost:2181";
+
+    public static void main(String[] args) throws Exception {
         SpringApplication.run(new Object[]{
                 MainConfiguration.class}, args);
+        ServiceRegister serviceRegister = new ServiceRegister("com.payu.hackathon.server.service",
+                appAddress, zooKeeperUri);
+        serviceRegister.registerServices();
     }
 
     @Bean
@@ -46,5 +54,10 @@ public class MainConfiguration extends SpringBootServletInitializer {
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
         return application.sources(MainConfiguration.class);
     }
+
+    public ServiceRegisterPostProcessor getServiceRegisterPostProcessor() {
+        return new ServiceRegisterPostProcessor();
+    }
+
 
 }

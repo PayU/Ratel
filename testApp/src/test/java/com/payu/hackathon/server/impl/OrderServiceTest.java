@@ -8,18 +8,19 @@ import org.junit.Test;
 
 import com.payu.hackathon.server.model.Order;
 import com.payu.hackathon.server.model.OrderBuilder;
+import com.payu.hackathon.server.model.OrderDatabase;
 import com.payu.hackathon.server.service.OrderService;
 
 public class OrderServiceTest {
 
-    private OrderService orderService = new OrderService();
+    private OrderDatabase orderService = new OrderDatabase();
 
     @Test
     public void shouldSetWithId1() {
         //when
         orderService.createOrder(aBulder().withAmount("100").withWhat("Żelki").build());
         //then
-        assertThat(orderService.getOrder(1L)).isNotNull();
+        assertThat(orderService.get(1L)).isNotNull();
     }
 
     @Test
@@ -31,8 +32,8 @@ public class OrderServiceTest {
         orderService.createOrder(pedały);
         orderService.createOrder(gacie);
         //then
-        then(orderService.getOrder(2L).getAmount()).isEqualTo("1000");
-        then(orderService.getOrder(2L).getWhat()).isEqualTo("Złote gacie");
+        then(orderService.get(2L).getAmount()).isEqualTo("1000");
+        then(orderService.get(2L).getWhat()).isEqualTo("Złote gacie");
     }
 
     private OrderBuilder aBulder() {
