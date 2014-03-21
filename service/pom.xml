@@ -12,7 +12,7 @@
     <artifactId>service</artifactId>
 
     <properties>
-        <start-class>com.payu.hackhaton.Application</start-class>
+        <start-class>com.payu.hackaton.Application</start-class>
     </properties>
 
     <build>
