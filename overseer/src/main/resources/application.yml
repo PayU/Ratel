@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: overseer
+server:
+  port: 8081
+management:
+  port: 8082
+logging:
+  file: target/log.out
+
