@@ -13,7 +13,7 @@ public class ZkDiscoveryClient implements DiscoveryClient {
     }
 
     @Override
-    public void listenForServices(Collection<Service> services, Consumer<Collection<Service>> consumer) {
+    public void listenForServices(Collection<String> services, Consumer<Collection<Service>> consumer) {
 
     }
 }

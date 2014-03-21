@@ -1,5 +1,7 @@
 package com.payu.hackathon.discovery.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.net.URI;
 import java.util.Collection;
 
@@ -7,6 +9,7 @@ public class Service {
 
     private String name;
 
+    @JsonIgnore
     private Collection<Method> methods;
 
     private URI address;
@@ -42,11 +45,14 @@ public class Service {
             POST, GET, PUT, DELETE, TRACE, HEAD
         }
 
+        private String name;
+
         private String path;
 
         private MethodType methodType;
 
-        public Method(String path, MethodType methodType) {
+        public Method(String name, String path, MethodType methodType) {
+            this.name = name;
             this.path = path;
             this.methodType = methodType;
         }
@@ -57,6 +63,10 @@ public class Service {
 
         public MethodType getMethodType() {
             return methodType;
+        }
+
+        public String getName() {
+            return name;
         }
     }
 }
