@@ -1,13 +1,12 @@
 package com.payu.hackathon.discovery.model;
 
-import java.net.URI;
 import java.util.Collection;
 import java.util.Collections;
 
 public class ServiceBuilder {
     private String name;
     private Collection<Service.Method> methods = Collections.emptySet();
-    private URI address;
+    private String address;
     private String path;
 
     private ServiceBuilder() {
@@ -32,7 +31,7 @@ public class ServiceBuilder {
         return this;
     }
 
-    public ServiceBuilder withAddress(URI address) {
+    public ServiceBuilder withAddress(String address) {
         this.address = address;
         return this;
     }

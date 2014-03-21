@@ -42,7 +42,7 @@ public class ZkDiscoveryServer implements DiscoveryServer {
     @Override
     public void registerService(Service service) {
         try {
-            zkClient.orElseGet(() -> initZookeeper()).setData().forPath(service.getName(), serviceSerializer.toBytes(service));
+            zkClient.orElseGet(this::initZookeeper).setData().forPath(service.getName(), serviceSerializer.toBytes(service));
             registerServiceMethods(service);
         } catch (Exception e) {
             throw new RuntimeException(e);
