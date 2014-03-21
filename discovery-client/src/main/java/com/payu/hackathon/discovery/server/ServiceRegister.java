@@ -12,7 +12,7 @@ public class ServiceRegister {
         discoveryServer = new ZkDiscoveryServer(zooKeeperUri);
     }
 
-    public void registerServices() throws Exception {
+    public void registerServices() {
         scanner.scan().forEach(discoveryServer::registerService);
     }
 }
