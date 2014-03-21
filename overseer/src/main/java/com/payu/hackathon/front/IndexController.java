@@ -18,7 +18,7 @@ public class IndexController {
     public HttpEntity<Index> index() {
 
         final Index index = new Index();
-        index.add(linkTo(methodOn(GatewayController.class).open()).withRel("open"));
+        index.add(linkTo(methodOn(DiscoveryQueryController.class).services()).withRel("services"));
 
         return new ResponseEntity<>(index, HttpStatus.OK);
     }

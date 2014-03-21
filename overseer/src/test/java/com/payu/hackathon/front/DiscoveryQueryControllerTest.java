@@ -8,15 +8,26 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standal
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.web.servlet.MockMvc;
 
-public class IndexControllerTest {
+import com.payu.hackathon.discovery.client.DiscoveryClient;
+
+@RunWith(MockitoJUnitRunner.class)
+public class DiscoveryQueryControllerTest {
 
     MockMvc mockMvc;
 
-    IndexController controller = new IndexController();
+    @InjectMocks
+    DiscoveryQueryController controller;
+
+    @Mock
+    DiscoveryClient discoveryClient;
 
     @Before
     public void setUp() throws Exception {
@@ -27,12 +38,12 @@ public class IndexControllerTest {
     @Test
     public void shouldOpenIndex() throws Exception {
         this.mockMvc.perform(
-                get("/")
+                get("/services")
                         .accept(MediaType.APPLICATION_JSON)
         )
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.links[*].rel").value("services"));
+                .andExpect(jsonPath("$.links[*].rel").value("self"));
 
     }
 }
