@@ -8,7 +8,7 @@
     <artifactId>servicediscovery</artifactId>
     <version>1.0-SNAPSHOT</version>
     <modules>
-        <module>service</module>
+        <module>overseer</module>
         <module>scanner</module>
         <module>discovery-client</module>
     </modules>

@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>service</artifactId>
+    <artifactId>overseer</artifactId>
 
     <properties>
         <start-class>com.payu.hackaton.Application</start-class>
