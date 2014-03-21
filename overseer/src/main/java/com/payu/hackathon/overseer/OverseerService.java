@@ -11,12 +11,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.payu.hackathon.discovery.server.ZkDiscoveryServer;
-
 @Component
 public class OverseerService {
 
-    public static final String PATH = ZkDiscoveryServer.NAMESPACE;
+    public static final String PATH = "SERVICES_STATES";
     private static final Logger LOG = LoggerFactory.getLogger(OverseerService.class);
     private final CuratorFramework client;
 
