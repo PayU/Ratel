@@ -2,6 +2,8 @@ package com.payu.hackathon.discovery.server;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.payu.hackathon.discovery.client.ZkDiscoveryClient;
+import com.payu.hackathon.discovery.model.Service;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.retry.RetryOneTime;
@@ -10,8 +12,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.payu.hackathon.discovery.model.Service;
-import com.payu.hackathon.discovery.model.ServiceSerializer;
+import java.util.Collection;
 
 public class ServiceRegisterTest {
 
@@ -39,15 +40,14 @@ public class ServiceRegisterTest {
     @Test
     public void shouldRegisterServices() throws Exception {
         //given
+        ZkDiscoveryClient zkDiscoveryClient = new ZkDiscoveryClient(zkTestServer.getConnectString());
         serviceRegister = new ServiceRegister("com.payu.hackathon.discovery.sampledomain.service",
                 "localhost:8080/app", zkTestServer.getConnectString());
         //when
         serviceRegister.registerServices();
         //then
-        ServiceSerializer serviceSerializer = new ServiceSerializer();
-
-        Service service = serviceSerializer.deserializeService(client.getData().forPath("com.payu.hackathon.discovery" +
-                ".sampledomain.service.RestServiceImpl"));
+        Collection<Service> services = zkDiscoveryClient.fetchAllServices();
+        Service service = services.stream().findFirst().get();
         assertThat(service).isNotNull();
         assertThat(service.getMethods()).hasSize(3);
 
