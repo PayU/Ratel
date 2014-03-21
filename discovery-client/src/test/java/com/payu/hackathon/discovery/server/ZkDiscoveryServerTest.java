@@ -13,8 +13,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.net.URI;
-
 public class ZkDiscoveryServerTest {
 
     private TestingServer zkTestServer;
@@ -45,14 +43,14 @@ public class ZkDiscoveryServerTest {
         Service service = ServiceBuilder.aService().
                 withName("OrderService").
                 withPath("/dupsko").
-                withAddress(new URI("http://billpayments/dupsko")).build();
+                withAddress("http://billpayments/dupsko").build();
 
         //when
         zkDiscoveryServer.registerService(service);
 
         //then
         Service orderService = serviceSerializer.deserializeService(client.getData().forPath("OrderService"));
-        assertThat(orderService.getAddress()).isEqualTo(new URI("http://billpayments/dupsko"));
+        assertThat(orderService.getAddress()).isEqualTo("http://billpayments/dupsko");
         assertThat(orderService.getName()).isEqualTo("OrderService");
         assertThat(orderService.getPath()).isEqualTo("/dupsko");
 
