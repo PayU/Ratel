@@ -8,10 +8,11 @@ import org.junit.Test;
 
 import com.payu.hackathon.server.model.Order;
 import com.payu.hackathon.server.model.OrderBuilder;
+import com.payu.hackathon.server.service.OrderService;
 
-public class OrderServiceImplTest {
+public class OrderServiceTest {
 
-    private OrderServiceImpl orderService = new OrderServiceImpl();
+    private OrderService orderService = new OrderService();
 
     @Test
     public void shouldSetWithId1() {
