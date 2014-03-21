@@ -1,7 +1,13 @@
 package com.payu.hackathon.discovery.server;
 
-/**
- * Created by mwarecki on 21.03.14.
- */
+
+import com.payu.hackathon.discovery.model.Service;
+
 public class ZkDiscoveryServer implements DiscoveryServer {
+
+
+    @Override
+    public void registerService(Service service) {
+
+    }
 }
