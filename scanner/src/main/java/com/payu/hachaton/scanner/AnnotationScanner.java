@@ -1,10 +1,10 @@
 package com.payu.hachaton.scanner;
 
-import java.util.Objects;
-
 import org.reflections.Reflections;
 import org.reflections.util.ConfigurationBuilder;
 import org.reflections.util.FilterBuilder;
+
+import java.util.Objects;
 
 public class AnnotationScanner {
     private String packageToScan;
