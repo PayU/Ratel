@@ -1,6 +1,16 @@
 package com.payu.hackathon.front;
 
-public enum Status {
+import org.springframework.hateoas.ResourceSupport;
 
-    OK
+public class Status extends ResourceSupport {
+
+    private String status;
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 }

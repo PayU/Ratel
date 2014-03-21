@@ -25,7 +25,7 @@ public class Gateway {
                         .build()
                         .toUri());
 
-        return new ResponseEntity<>(Status.OK, headers, HttpStatus.OK);
+        return new ResponseEntity<>(new Status(), headers, HttpStatus.OK);
 
     }
 
