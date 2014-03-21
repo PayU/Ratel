@@ -1,4 +1,4 @@
-package com.payu.hackathon.front;
+package com.payu.hackathon.overseer.front;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.payu.hackathon.discovery.client.DiscoveryClient;
 import com.payu.hackathon.discovery.model.Service;
-import com.payu.hackathon.front.resources.DiscoveredServices;
+import com.payu.hackathon.overseer.front.resources.DiscoveredServices;
 
 @RestController
 @RequestMapping("/services")
