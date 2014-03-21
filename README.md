@@ -10,4 +10,4 @@ Running from command line
 CI
 -----
 
-https://mariuszs.ci.cloudbees.com/job/hackhaton/
+ * https://mariuszs.ci.cloudbees.com/job/hackhaton/

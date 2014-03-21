@@ -1,4 +1,4 @@
-package com.payu.hackathon.front.resources;
+package com.payu.hackathon.overseer.front.resources;
 
 import java.util.Collection;
 

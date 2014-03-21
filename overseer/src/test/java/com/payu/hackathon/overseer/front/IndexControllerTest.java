@@ -1,4 +1,4 @@
-package com.payu.hackathon.front;
+package com.payu.hackathon.overseer.front;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
