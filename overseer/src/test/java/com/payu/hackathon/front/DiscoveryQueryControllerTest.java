@@ -40,10 +40,7 @@ public class DiscoveryQueryControllerTest {
         this.mockMvc = standaloneSetup(controller)
                 .setMessageConverters(new MappingJackson2HttpMessageConverter()).build();
         given(discoveryClient.fetchAllServices()).willReturn(
-                asList(
-                        new Service("foo", Collections.<Service.Method>emptyList(), new URI("http://localhost"),
-                                "http://localhost")
-                )
+                asList(new Service("foo", Collections.<Service.Method>emptyList(), "http://localhost", "order"))
         );
     }
 
