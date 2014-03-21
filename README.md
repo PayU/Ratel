@@ -5,4 +5,4 @@ Usage
 Running from command line
 
 
-    mvn -pl service clean spring-boot:run
+    mvn -pl overseer clean spring-boot:run
