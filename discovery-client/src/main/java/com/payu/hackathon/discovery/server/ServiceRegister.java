@@ -7,8 +7,8 @@ public class ServiceRegister {
     private AnnotationScanner scanner;
     private DiscoveryServer discoveryServer;
 
-    public ServiceRegister(String packageToScan, String zooKeeperUri) {
-        scanner = new AnnotationScanner(packageToScan);
+    public ServiceRegister(String packageToScan, String appAddress, String zooKeeperUri) {
+        scanner = new AnnotationScanner(packageToScan, appAddress);
         discoveryServer = new ZkDiscoveryServer(zooKeeperUri);
     }
 

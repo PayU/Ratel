@@ -30,10 +30,13 @@ public class AnnotationScanner {
 
     private String packageToScan;
 
+    private String appAddress;
+
     private Reflections reflections;
 
-    public AnnotationScanner(String packageToScan) {
-        withPackage(packageToScan);
+    public AnnotationScanner(String packageToScan, String appAddress) {
+        this.packageToScan = packageToScan;
+        this.appAddress = appAddress;
         reflections = buildReflection();
 
     }
@@ -43,6 +46,7 @@ public class AnnotationScanner {
                 map(it ->
                         aService()
                                 .withName(it.getName())
+                                .withAddress(appAddress)
                                 .withPath(findAnnotation(it, Path.class).value())
                                 .withMethods(scanMethods(it))
                                 .build());
@@ -74,11 +78,6 @@ public class AnnotationScanner {
     protected Set<Class<?>> scanClasses() {
         return reflections.getTypesAnnotatedWith(Path.class);
     }
-
-    private void withPackage(String packageToScan) {
-        this.packageToScan = packageToScan;
-    }
-
 
 
     private Reflections buildReflection() {
