@@ -8,3 +8,7 @@ management:
 logging:
   file: target/log.out
 
+service:
+  zookeeper:
+    connectionUrl: localhost:80
+
