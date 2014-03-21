@@ -1,21 +1,29 @@
-package com.payu.hachaton.scanner;
+package com.payu.hackathon.discovery.scanner;
+
+import java.util.Objects;
+import java.util.Set;
+
+import javax.ws.rs.Path;
 
 import org.reflections.Reflections;
 import org.reflections.util.ConfigurationBuilder;
 import org.reflections.util.FilterBuilder;
-
-import java.util.Objects;
-
 public class AnnotationScanner {
     private String packageToScan;
 
     private Reflections reflections;
 
-    public void withPackage(String packageToScan) {
+    public AnnotationScanner(String packageToScan) {
+        withPackage(packageToScan);
+        reflections = buildReflection();
+
+    }
+
+    private void withPackage(String packageToScan) {
         this.packageToScan = packageToScan;
     }
 
-    public Reflections build() {
+    private Reflections buildReflection() {
         Objects.requireNonNull(packageToScan, "package must be not null");
         return new Reflections(
                     new ConfigurationBuilder().filterInputsBy(new FilterBuilder().includePackage(packageToScan)
@@ -23,4 +31,7 @@ public class AnnotationScanner {
 
     }
 
+    public Set<Class<?>> scanClasses() {
+        return reflections.getTypesAnnotatedWith(Path.class);
+    }
 }
