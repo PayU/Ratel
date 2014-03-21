@@ -20,10 +20,14 @@ import javax.ws.rs.Path;
 import org.reflections.Reflections;
 import org.reflections.scanners.MethodAnnotationsScanner;
 import org.reflections.scanners.TypeAnnotationsScanner;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.payu.hackathon.discovery.model.Service;
 
 public class AnnotationScanner {
+    private static final Logger LOG = LoggerFactory.getLogger(AnnotationScanner.class);
+
     private String packageToScan;
 
     private Reflections reflections;
@@ -52,7 +56,7 @@ public class AnnotationScanner {
     }
     private List<Service.Method> scanMethods(Class<?> aClass, Class<? extends java.lang.annotation.Annotation>
             annotation) {
-        System.out.println("scaning: "+annotation);
+        LOG.info("scanning package={} for annotations={} : ",packageToScan, annotation);
         return getAllMethods(aClass, withModifier(Modifier.PUBLIC),
                 withAnnotation(annotation)).stream()
                 .map(it -> {
