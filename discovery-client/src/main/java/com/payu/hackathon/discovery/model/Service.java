@@ -5,13 +5,16 @@ import java.util.Collection;
 
 public class Service {
 
+    private String name;
+
     private Collection<Method> methods;
 
     private URI address;
 
     private String path;
 
-    public Service(Collection<Method> methods, URI address, String path) {
+    public Service(String name, Collection<Method> methods, URI address, String path) {
+        this.name = name;
         this.methods = methods;
         this.address = address;
         this.path = path;
@@ -27,6 +30,10 @@ public class Service {
 
     public String getPath() {
         return path;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public static class Method {
