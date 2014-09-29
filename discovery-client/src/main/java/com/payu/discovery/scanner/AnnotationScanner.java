@@ -60,7 +60,6 @@ public class AnnotationScanner {
                 withAnnotation(annotation)).stream()
                 .map(it -> aMethod()
                         .withName(it.getName())
-                        .withMethodType(annotation)
                         .withPath(findAnnotation(it, Path.class) != null ? findAnnotation(it,
                                 Path.class).value() : "")
                         .build())

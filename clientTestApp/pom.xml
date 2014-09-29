@@ -10,22 +10,10 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>testApp</artifactId>
+    <artifactId>clientTestApp</artifactId>
     <version>${parent.version}</version>
 
     <packaging>jar</packaging>
-
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.glassfish.jersey</groupId>
-                <artifactId>jersey-bom</artifactId>
-                <version>2.7</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
 
     <dependencies>
         <dependency>

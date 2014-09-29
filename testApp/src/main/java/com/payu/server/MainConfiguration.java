@@ -2,21 +2,17 @@ package com.payu.server;
 
 
 import com.payu.discovery.server.ServiceRegister;
-import com.payu.server.config.JerseyConfig;
-import com.payu.server.config.ServiceRegisterPostProcessor;
 import com.payu.server.model.OrderDatabase;
-import org.glassfish.jersey.servlet.ServletContainer;
-import org.glassfish.jersey.servlet.ServletProperties;
+import com.payu.server.service.OrderService;
+import com.payu.server.service.OrderServiceImpl;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.boot.context.embedded.ServletRegistrationBean;
 import org.springframework.boot.context.web.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-
-import javax.servlet.ServletException;
+import org.springframework.remoting.caucho.HessianServiceExporter;
 
 @ComponentScan(basePackages = "com.payu.server")
 @Configuration
@@ -33,18 +29,13 @@ public class MainConfiguration extends SpringBootServletInitializer {
     }
 
     @Bean
-    public ServletRegistrationBean jerseyServlet() throws ServletException {
-
-        ServletContainer servlet = new ServletContainer();
-        ServletRegistrationBean registration = new ServletRegistrationBean(servlet,
-                "/server/*");
-        registration.addInitParameter(ServletProperties.JAXRS_APPLICATION_CLASS, JerseyConfig.class.getName());
-        return registration;
+    public OrderDatabase orderDatabase() {
+        return new OrderDatabase();
     }
 
     @Bean
-    public OrderDatabase orderDatabase() {
-        return new OrderDatabase();
+    public OrderServiceImpl orderService() {
+        return new OrderServiceImpl();
     }
 
     @Override
@@ -52,9 +43,12 @@ public class MainConfiguration extends SpringBootServletInitializer {
         return application.sources(MainConfiguration.class);
     }
 
-    public ServiceRegisterPostProcessor getServiceRegisterPostProcessor() {
-        return new ServiceRegisterPostProcessor();
+    @Bean(name = "/orderService")
+    public HessianServiceExporter hessianServiceExporter() {
+        HessianServiceExporter hessianServiceExporter = new HessianServiceExporter();
+        hessianServiceExporter.setService(orderService());
+        hessianServiceExporter.setServiceInterface(OrderService.class);
+        return hessianServiceExporter;
     }
-
 
 }

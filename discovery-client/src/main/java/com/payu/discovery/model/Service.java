@@ -53,33 +53,23 @@ public class Service {
 
     public static class Method {
 
-        public enum MethodType {
-            POST, GET, PUT, DELETE, TRACE, HEAD
-        }
-
         private String name;
 
         private String path;
-
-        private MethodType methodType;
 
         public Method() {
 
         }
 
-        public Method(String name, String path, MethodType methodType) {
+        public Method(String name, String path) {
             this.name = name;
             this.path = path;
-            this.methodType = methodType;
         }
 
         public String getPath() {
             return path;
         }
 
-        public MethodType getMethodType() {
-            return methodType;
-        }
 
         public String getName() {
             return name;
@@ -90,7 +80,6 @@ public class Service {
             return "Method{" +
                     "name='" + name + '\'' +
                     ", path='" + path + '\'' +
-                    ", methodType=" + methodType +
                     '}';
         }
     }

@@ -1,9 +1,12 @@
-package com.payu.server.config;
+package com.payu.discovery.server.config;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
+import org.springframework.stereotype.Component;
 
+@Component
 public class ServiceRegisterPostProcessor implements BeanPostProcessor {
+
     @Override
     public Object postProcessBeforeInitialization(Object o, String s) throws BeansException {
         return o;

@@ -5,6 +5,7 @@ import com.payu.discovery.scanner.AnnotationScanner;
 public class ServiceRegister {
 
     private AnnotationScanner scanner;
+
     private DiscoveryServer discoveryServer;
 
     public ServiceRegister(String packageToScan, String appAddress) {

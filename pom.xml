@@ -10,6 +10,7 @@
     <modules>
         <module>testApp</module>
         <module>discovery-client</module>
+        <module>discovery-server</module>
     </modules>
 
     <packaging>pom</packaging>

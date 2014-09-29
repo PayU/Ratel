@@ -1,15 +1,27 @@
 package com.payu.discovery.client;
 
 
+import com.payu.discovery.ServiceDiscoveryApi;
 import com.payu.discovery.model.Service;
+import retrofit.RestAdapter;
 
 import java.util.Collection;
-import java.util.function.Consumer;
 
-public interface DiscoveryClient {
+public class DiscoveryClient {
 
-    Collection<Service> fetchAllServices();
+    private static final String API_URL = "http://localhost:8080/server/discovery";
 
-    void listenForServices(Collection<String> services, Consumer<Service> consumer);
+    final ServiceDiscoveryApi api;
+
+    public DiscoveryClient() {
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setEndpoint(API_URL)
+                .build();
+        api = restAdapter.create(ServiceDiscoveryApi.class);
+    }
+
+    public Collection<Service> fetchAllServices() {
+        return api.fetchAllServices();
+    }
 
 }
