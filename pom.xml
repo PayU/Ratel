@@ -11,6 +11,9 @@
         <module>testApp</module>
         <module>discovery-client</module>
         <module>discovery-server</module>
+		<module>clientTestApp</module>
+		<module>order-api</module>
+		<module>order-service</module>
     </modules>
 
     <packaging>pom</packaging>
