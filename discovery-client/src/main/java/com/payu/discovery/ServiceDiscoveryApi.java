@@ -14,11 +14,9 @@ public interface ServiceDiscoveryApi {
 
     @POST
     @Consumes("application/json")
-    @Path("/register")
     void registerService(Service service);
 
     @GET
-    @Path("/fetchAllServices")
     @Produces("application/json")
     Collection<Service> fetchAllServices();
 }

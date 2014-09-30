@@ -24,7 +24,7 @@ public class MainConfiguration extends SpringBootServletInitializer {
     public static void main(String[] args) throws Exception {
         SpringApplication.run(new Object[]{
                 MainConfiguration.class}, args);
-        ServiceRegister serviceRegister = new ServiceRegister("com.payu.server.service", appAddress);
+        ServiceRegister serviceRegister = new ServiceRegister("com.payu", appAddress);
         serviceRegister.registerServices();
     }
 
