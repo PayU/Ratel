@@ -1,8 +1,9 @@
 package com.payu.discovery.server;
 
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import com.payu.discovery.model.Service;
-import com.payu.discovery.model.ServiceBuilder;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.Consumes;
@@ -24,7 +25,8 @@ public class InMemoryDiscoveryServer implements DiscoveryServer {
     @POST
     @Consumes("application/json")
     public void registerService(Service service) {
-        services.putIfAbsent("aaa", ServiceBuilder.aService().withName("aaas").build());
+        checkNotNull(service.getName(), "Given service name cannot be null");
+        services.putIfAbsent(service.getName(), service);
     }
 
     @Override
