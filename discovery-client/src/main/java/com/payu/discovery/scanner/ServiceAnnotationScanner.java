@@ -9,7 +9,7 @@ import java.util.stream.Stream;
 
 import com.payu.discovery.model.Service;
 
-public class ServiceAnnotationScanner<K extends Annotation, T> extends AnnotationScanner<K, Service> {
+public class ServiceAnnotationScanner<K extends Annotation> extends AnnotationScanner<K, Service> {
 
 	private String appAddress;
 

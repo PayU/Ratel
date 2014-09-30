@@ -2,9 +2,11 @@ package com.payu.server;
 
 
 import com.payu.discovery.server.ServiceRegister;
+import com.payu.discovery.server.config.DiscoveryServiceConfig;
 import com.payu.server.model.OrderDatabase;
 import com.payu.server.service.OrderService;
 import com.payu.server.service.OrderServiceImpl;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -23,7 +25,7 @@ public class MainConfiguration extends SpringBootServletInitializer {
 
     public static void main(String[] args) throws Exception {
         SpringApplication.run(new Object[]{
-                MainConfiguration.class}, args);
+                MainConfiguration.class, DiscoveryServiceConfig.class }, args);
         ServiceRegister serviceRegister = new ServiceRegister("com.payu", appAddress);
         serviceRegister.registerServices();
     }

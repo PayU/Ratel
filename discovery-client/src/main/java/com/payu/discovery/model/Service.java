@@ -41,22 +41,6 @@ public class Service {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setMethods(Collection<Method> methods) {
-        this.methods = methods;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
-    }
-
     @Override
     public String toString() {
         return "Service{" +
@@ -91,14 +75,6 @@ public class Service {
             return name;
         }
 
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public void setPath(String path) {
-            this.path = path;
-        }
-
         @Override
         public String toString() {
             return "Method{" +
@@ -107,5 +83,4 @@ public class Service {
                     '}';
         }
     }
-
 }

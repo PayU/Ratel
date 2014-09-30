@@ -8,13 +8,13 @@ public class ServiceRegister {
 
     private ServiceAnnotationScanner scanner;
 
-    private DiscoveryServer discoveryServer;
+    private RemoteRestDiscoveryServer discoveryServer;
 
     public ServiceRegister(String packageToScan, String appAddress) {
         scanner = new ServiceAnnotationScanner(packageToScan, Service.class, appAddress);
     }
 
     public void registerServices() {
-        scanner.scan().forEach(discoveryServer::registerService);
+        scanner.scan().forEach(it -> discoveryServer.registerService(( com.payu.discovery.model.Service)it));
     }
 }
