@@ -8,7 +8,6 @@
     <artifactId>servicediscovery</artifactId>
     <version>1.0-SNAPSHOT</version>
     <modules>
-        <module>testApp</module>
         <module>discovery-client</module>
         <module>discovery-server</module>
 		<module>clientTestApp</module>
@@ -20,6 +19,7 @@
 
     <properties>
         <spring-boot.version>1.0.0.RC4</spring-boot.version>
+        <spring.version>4.0.2.RELEASE</spring.version>
     </properties>
 
     <dependencyManagement>
