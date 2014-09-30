@@ -6,7 +6,6 @@ import com.payu.discovery.server.config.DiscoveryServiceConfig;
 import com.payu.server.model.OrderDatabase;
 import com.payu.server.service.OrderService;
 import com.payu.server.service.OrderServiceImpl;
-
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;

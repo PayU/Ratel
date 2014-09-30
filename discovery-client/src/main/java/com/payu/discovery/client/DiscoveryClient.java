@@ -9,7 +9,7 @@ import java.util.Collection;
 
 public class DiscoveryClient {
 
-    private static final String API_URL = "http://localhost:8080/server/discovery";
+    private static final String API_URL = "http://localhost:8090/server/discovery";
 
     final ServiceDiscoveryApi api;
 

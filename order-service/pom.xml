@@ -58,6 +58,11 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
+            <groupId>com.payu.hackathon</groupId>
+            <artifactId>discovery-server</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
         	<groupId>com.payu.hackathon</groupId>
         	<artifactId>order-api</artifactId>
         	<version>${project.version}</version>

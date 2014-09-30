@@ -1,22 +1,18 @@
 package com.payu.discovery;
 
 import com.payu.discovery.model.Service;
+import retrofit.client.Response;
+import retrofit.http.Body;
+import retrofit.http.GET;
+import retrofit.http.POST;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
 import java.util.Collection;
 
-@Path("/discovery")
 public interface ServiceDiscoveryApi {
 
-    @POST
-    @Consumes("application/json")
-    void registerService(Service service);
+    @POST("/")
+    Response registerService(@Body Service service);
 
-    @GET
-    @Produces("application/json")
+    @GET("/")
     Collection<Service> fetchAllServices();
 }

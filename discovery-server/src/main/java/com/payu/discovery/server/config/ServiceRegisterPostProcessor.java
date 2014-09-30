@@ -18,8 +18,6 @@ public class ServiceRegisterPostProcessor implements BeanPostProcessor {
 	
 	//TODO - hardcoded address
 	private String address = "http://localhost:8080/orderService";
-	
-	
 
     @Override
     public Object postProcessBeforeInitialization(Object o, String s) throws BeansException {

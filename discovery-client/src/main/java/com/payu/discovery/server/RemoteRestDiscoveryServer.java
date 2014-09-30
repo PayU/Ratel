@@ -3,14 +3,12 @@ package com.payu.discovery.server;
 
 import com.payu.discovery.ServiceDiscoveryApi;
 import com.payu.discovery.model.Service;
-import com.payu.discovery.model.ServiceBuilder;
-
 import retrofit.RestAdapter;
 
 
 public class RemoteRestDiscoveryServer {
 
-    private static final String API_URL = "http://localhost:8080/server/discovery";
+    private static final String API_URL = "http://localhost:8090/server/discovery";
 
     private final ServiceDiscoveryApi api;
 
