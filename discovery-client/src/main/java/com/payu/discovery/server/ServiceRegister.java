@@ -8,7 +8,7 @@ public class ServiceRegister {
 
     private ServiceAnnotationScanner scanner;
 
-    private RemoteRestDiscoveryServer discoveryServer;
+    private RemoteRestDiscoveryServer discoveryServer = new RemoteRestDiscoveryServer();
 
     public ServiceRegister(String packageToScan, String appAddress) {
         scanner = new ServiceAnnotationScanner(packageToScan, Service.class, appAddress);
