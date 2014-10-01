@@ -39,30 +39,16 @@
             <groupId>javax</groupId>
             <artifactId>javaee-api</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.assertj</groupId>
-            <artifactId>assertj-core</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.assertj</groupId>
-            <artifactId>assertj-core</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-        	<groupId>com.payu.hackathon</groupId>
-        	<artifactId>order-api</artifactId>
-        	<version>${project.version}</version>
-        </dependency>
-        <dependency>
-        	<groupId>org.springframework</groupId>
-        	<artifactId>spring-context</artifactId>
-        </dependency>
 
         <dependency>
-        	<groupId>com.payu.hackathon</groupId>
-        	<artifactId>discovery-api</artifactId>
-        	<version>${project.version}</version>
+            <groupId>com.payu.hackathon</groupId>
+            <artifactId>discovery-client</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.payu.hackathon</groupId>
+            <artifactId>order-api</artifactId>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 

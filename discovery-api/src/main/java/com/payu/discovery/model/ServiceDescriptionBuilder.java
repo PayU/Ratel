@@ -1,6 +1,5 @@
 package com.payu.discovery.model;
 
-
 public class ServiceDescriptionBuilder {
     private String name;
     private String address;
@@ -18,8 +17,6 @@ public class ServiceDescriptionBuilder {
         return this;
     }
 
-
-
     public ServiceDescriptionBuilder withAddress(String address) {
         this.address = address;
         return this;
@@ -32,7 +29,6 @@ public class ServiceDescriptionBuilder {
 
 
     public ServiceDescriptor build() {
-        ServiceDescriptor serviceDescriptor = new ServiceDescriptor(name, address, path);
-        return serviceDescriptor;
+        return new ServiceDescriptor(name, address, path);
     }
 }

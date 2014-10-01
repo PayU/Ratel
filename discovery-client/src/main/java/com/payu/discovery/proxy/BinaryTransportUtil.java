@@ -1,12 +1,12 @@
 package com.payu.discovery.proxy;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import org.apache.commons.lang.StringUtils;
 import org.springframework.remoting.caucho.HessianProxyFactoryBean;
 import org.springframework.remoting.caucho.HessianServiceExporter;
 import org.springframework.web.HttpRequestHandler;
+
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Strings.isNullOrEmpty;
 
 public final class BinaryTransportUtil {
 
@@ -16,7 +16,7 @@ public final class BinaryTransportUtil {
 
     public static <T> T createServiceClientProxy(Class<T> clazz, String serviceUrl) {
         checkNotNull(clazz, "Given service class cannot be null");
-        checkArgument(StringUtils.isNotBlank(serviceUrl), "Given serviceUrl class cannot be blank");
+        checkArgument(!isNullOrEmpty(serviceUrl), "Given serviceUrl class cannot be blank");
 
         HessianProxyFactoryBean proxyFactory = new HessianProxyFactoryBean();
         proxyFactory.setServiceUrl(serviceUrl);

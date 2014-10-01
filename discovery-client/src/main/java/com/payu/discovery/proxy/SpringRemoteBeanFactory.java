@@ -1,6 +1,5 @@
 package com.payu.discovery.proxy;
 
-
 import com.payu.discovery.client.DiscoveryClient;
 import com.payu.discovery.model.ServiceDescriptor;
 import org.springframework.beans.BeansException;
