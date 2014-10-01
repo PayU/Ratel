@@ -1,9 +1,10 @@
 package com.payu.server.model;
 
 import javax.xml.bind.annotation.XmlRootElement;
+import java.io.Serializable;
 
 @XmlRootElement
-public class Order {
+public class Order implements Serializable {
     private String what;
     private String amount;
 
