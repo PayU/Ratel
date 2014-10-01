@@ -18,12 +18,6 @@ public class MySpringApplication extends SpringApplication {
 	public ConfigurableApplicationContext run(String... args) {
 		return super.run(args);
 	}
-	
-	@Override
-	protected ConfigurableApplicationContext createApplicationContext() {
-		return new MyApplicationContext();
-	}
 
-	
 
 }

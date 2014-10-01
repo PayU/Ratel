@@ -17,12 +17,7 @@ public class ClientTestApp extends SpringBootServletInitializer {
 	public static void main(String[] args) {
 		ConfigurableApplicationContext ctx = new MySpringApplication(new Object[] { ClientTestApp.class, SoaFramework.class }).run(args);
 	}
-	
-	@Bean
-	public AutowireCapableBeanFactory getBeanFactory() { 
-		return new MyBeanFactory();
-	}
-	
+
     @Bean
     public SpringRemoteBeanFactory springRemoteBeanFactory() {
         return new SpringRemoteBeanFactory();
@@ -31,6 +26,20 @@ public class ClientTestApp extends SpringBootServletInitializer {
     @Bean
     public TestBean testBean() {
         return new TestBean();
+    }
+
+
+    @Bean
+    public MyAutowireCandidateResolver myAutowireCandidateResolver(){
+        return new MyAutowireCandidateResolver();
+    }
+
+    @Bean
+    public AutowireCandidateResolverConfigurer autowireCandidateResolverConfigurer(){
+        AutowireCandidateResolverConfigurer autowireCandidateResolverConfigurer = new AutowireCandidateResolverConfigurer();
+        autowireCandidateResolverConfigurer.setAutowireCandidateResolver(myAutowireCandidateResolver());
+        return autowireCandidateResolverConfigurer;
+
     }
 
 }
