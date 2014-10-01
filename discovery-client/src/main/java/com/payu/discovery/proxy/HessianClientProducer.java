@@ -1,15 +1,15 @@
 package com.payu.discovery.proxy;
 
 
-import com.payu.discovery.model.Service;
+import com.payu.discovery.model.ServiceDescriptor;
 
 import java.util.Map;
 
 public class HessianClientProducer {
 
-    private final Map<String, Service> allServices;
+    private final Map<String, ServiceDescriptor> allServices;
 
-    public HessianClientProducer(Map<String, Service> allServices) {
+    public HessianClientProducer(Map<String, ServiceDescriptor> allServices) {
         this.allServices = allServices;
     }
 

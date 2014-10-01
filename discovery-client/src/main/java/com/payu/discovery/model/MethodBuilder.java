@@ -23,8 +23,8 @@ public class MethodBuilder {
         return this;
     }
 
-    public com.payu.discovery.model.Service.Method build() {
-        return new com.payu.discovery.model.Service.Method(name, path);
+    public ServiceDescriptor.Method build() {
+        return new ServiceDescriptor.Method(name, path);
     }
 
 

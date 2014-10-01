@@ -1,7 +1,7 @@
 package com.payu.soa.example.client;
 
 import com.payu.discovery.client.DiscoveryClient;
-import com.payu.discovery.model.Service;
+import com.payu.discovery.model.ServiceDescriptor;
 import com.payu.discovery.proxy.HessianClientProducer;
 import com.payu.discovery.proxy.RemoteService;
 import org.springframework.beans.factory.config.DependencyDescriptor;
@@ -21,10 +21,10 @@ public class MyAutowireCandidateResolver extends
     private final DiscoveryClient discoveryClient = new DiscoveryClient();
 
     public MyAutowireCandidateResolver() {
-        final Map<String, Service> services = discoveryClient
+        final Map<String, ServiceDescriptor> services = discoveryClient
                 .fetchAllServices()
                 .stream()
-                .collect(Collectors.toMap(Service::getName, Function.<Service>identity()));
+                .collect(Collectors.toMap(ServiceDescriptor::getName, Function.<ServiceDescriptor>identity()));
 
         hessianClientProducer = new HessianClientProducer(services);
     }

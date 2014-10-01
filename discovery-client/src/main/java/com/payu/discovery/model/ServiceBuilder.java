@@ -5,7 +5,7 @@ import java.util.Collections;
 
 public class ServiceBuilder {
     private String name;
-    private Collection<Service.Method> methods = Collections.emptySet();
+    private Collection<ServiceDescriptor.Method> methods = Collections.emptySet();
     private String address;
     private String path;
 
@@ -21,12 +21,12 @@ public class ServiceBuilder {
         return this;
     }
 
-    public ServiceBuilder withMethods(Collection<Service.Method> methods) {
+    public ServiceBuilder withMethods(Collection<ServiceDescriptor.Method> methods) {
         this.methods = methods;
         return this;
     }
 
-    public ServiceBuilder withMethods(Service.Method method) {
+    public ServiceBuilder withMethods(ServiceDescriptor.Method method) {
         this.methods.add(method);
         return this;
     }
@@ -42,8 +42,8 @@ public class ServiceBuilder {
     }
 
 
-    public Service build() {
-        Service service = new Service(name, methods, address, path);
-        return service;
+    public ServiceDescriptor build() {
+        ServiceDescriptor serviceDescriptor = new ServiceDescriptor(name, methods, address, path);
+        return serviceDescriptor;
     }
 }

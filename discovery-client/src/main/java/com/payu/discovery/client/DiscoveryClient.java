@@ -2,7 +2,7 @@ package com.payu.discovery.client;
 
 
 import com.payu.discovery.ServiceDiscoveryApi;
-import com.payu.discovery.model.Service;
+import com.payu.discovery.model.ServiceDescriptor;
 import retrofit.RestAdapter;
 
 import java.util.Collection;
@@ -20,7 +20,7 @@ public class DiscoveryClient {
         api = restAdapter.create(ServiceDiscoveryApi.class);
     }
 
-    public Collection<Service> fetchAllServices() {
+    public Collection<ServiceDescriptor> fetchAllServices() {
         return api.fetchAllServices();
     }
 

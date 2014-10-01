@@ -1,5 +1,6 @@
 package com.payu.discovery.server.config;
 
+import com.payu.discovery.model.ServiceDescriptor;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanPostProcessor;
@@ -34,12 +35,12 @@ public class ServiceRegisterPostProcessor implements BeanPostProcessor {
     }
 
 	private void registerService(Object o) {
-		com.payu.discovery.model.Service service = buildService(o);
-		System.out.println("Registgering service " + service);
-		server.registerService(service);
+		ServiceDescriptor serviceDescriptor = buildService(o);
+		System.out.println("Registgering service " + serviceDescriptor);
+		server.registerService(serviceDescriptor);
 	}
 
-	private com.payu.discovery.model.Service buildService(Object o) {
+	private ServiceDescriptor buildService(Object o) {
 		String name = findServiceInterface(o).getCanonicalName();
 		return ServiceBuilder.aService().withName(name).withAddress(address).build();
 		
