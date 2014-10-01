@@ -50,11 +50,6 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.payu.hackathon</groupId>
-            <artifactId>discovery-client</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
         	<groupId>com.payu.hackathon</groupId>
         	<artifactId>order-api</artifactId>
         	<version>${project.version}</version>
@@ -63,9 +58,10 @@
         	<groupId>org.springframework</groupId>
         	<artifactId>spring-context</artifactId>
         </dependency>
+
         <dependency>
         	<groupId>com.payu.hackathon</groupId>
-        	<artifactId>discovery-client</artifactId>
+        	<artifactId>discovery-api</artifactId>
         	<version>${project.version}</version>
         </dependency>
     </dependencies>

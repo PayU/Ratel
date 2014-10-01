@@ -88,6 +88,11 @@
             <artifactId>guava</artifactId>
         </dependency>
 
+        <dependency>
+        	<groupId>com.payu.hackathon</groupId>
+        	<artifactId>discovery-api</artifactId>
+        	<version>${project.version}</version>
+        </dependency>
     </dependencies>
 
 

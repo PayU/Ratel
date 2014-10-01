@@ -1,14 +1,11 @@
 package com.payu.discovery.model;
 
-import com.google.common.collect.Sets;
-
 import java.util.Collection;
 
 public class ServiceDescriptor {
 
     private String name;
 
-    private Collection<Method> methods = Sets.newHashSet();
 
     private String address;
 
@@ -18,16 +15,12 @@ public class ServiceDescriptor {
 
     }
 
-    public ServiceDescriptor(String name, Collection<Method> methods, String address, String path) {
+    public ServiceDescriptor(String name, String address, String path) {
         this.name = name;
-        this.methods = methods;
         this.address = address;
         this.path = path;
     }
 
-    public Collection<Method> getMethods() {
-        return methods;
-    }
 
     public String getAddress() {
         return address;
@@ -45,10 +38,6 @@ public class ServiceDescriptor {
         this.name = name;
     }
 
-    public void setMethods(Collection<Method> methods) {
-        this.methods = methods;
-    }
-
     public void setAddress(String address) {
         this.address = address;
     }
@@ -61,7 +50,6 @@ public class ServiceDescriptor {
     public String toString() {
         return "Service{" +
                 "name='" + name + '\'' +
-                ", methods=" + methods +
                 ", address='" + address + '\'' +
                 ", path='" + path + '\'' +
                 '}';

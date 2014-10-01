@@ -23,9 +23,4 @@ public class MethodBuilder {
         return this;
     }
 
-    public ServiceDescriptor.Method build() {
-        return new ServiceDescriptor.Method(name, path);
-    }
-
-
 }

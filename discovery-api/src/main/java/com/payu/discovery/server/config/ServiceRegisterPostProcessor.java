@@ -7,7 +7,7 @@ import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-import com.payu.discovery.model.ServiceBuilder;
+import com.payu.discovery.model.ServiceDescriptionBuilder;
 import com.payu.discovery.server.RemoteRestDiscoveryServer;
 
 @Component
@@ -42,7 +42,7 @@ public class ServiceRegisterPostProcessor implements BeanPostProcessor {
 
 	private ServiceDescriptor buildService(Object o) {
 		String name = findServiceInterface(o).getCanonicalName();
-		return ServiceBuilder.aService().withName(name).withAddress(address).build();
+		return ServiceDescriptionBuilder.aService().withName(name).withAddress(address).build();
 		
 	}
 

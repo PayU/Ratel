@@ -1,6 +1,6 @@
 package com.payu.discovery.scanner;
 
-import static com.payu.discovery.model.ServiceBuilder.aService;
+import static com.payu.discovery.model.ServiceDescriptionBuilder.aService;
 
 import java.lang.annotation.Annotation;
 import java.util.function.Function;
