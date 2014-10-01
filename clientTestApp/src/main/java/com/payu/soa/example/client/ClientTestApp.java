@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Configuration;
 public class ClientTestApp extends SpringBootServletInitializer {
 
 	public static void main(String[] args) {
-		ConfigurableApplicationContext ctx = new MySpringApplication(new Object[] { ClientTestApp.class, SoaFramework.class }).run(args);
+		ConfigurableApplicationContext ctx = new MySpringApplication(new Object[] { ClientTestApp.class}).run(args);
 	}
 
     @Bean
@@ -29,11 +29,14 @@ public class ClientTestApp extends SpringBootServletInitializer {
     }
 
 
+    //TODO: move it to discovery-api
     @Bean
     public MyAutowireCandidateResolver myAutowireCandidateResolver(){
         return new MyAutowireCandidateResolver();
     }
 
+    
+    //TODO: move it to discovery-api
     @Bean
     public AutowireCandidateResolverConfigurer autowireCandidateResolverConfigurer(){
         AutowireCandidateResolverConfigurer autowireCandidateResolverConfigurer = new AutowireCandidateResolverConfigurer();

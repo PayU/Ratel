@@ -18,4 +18,17 @@ public class DiscoveryServiceConfig {
 		return new RemoteRestDiscoveryServer();
 	}
 	
+//    @Bean
+//    public MyAutowireCandidateResolver myAutowireCandidateResolver(){
+//        return new MyAutowireCandidateResolver();
+//    }
+//
+//    @Bean
+//    public AutowireCandidateResolverConfigurer autowireCandidateResolverConfigurer(){
+//        AutowireCandidateResolverConfigurer autowireCandidateResolverConfigurer = new AutowireCandidateResolverConfigurer();
+//        autowireCandidateResolverConfigurer.setAutowireCandidateResolver(myAutowireCandidateResolver());
+//        return autowireCandidateResolverConfigurer;
+//
+//    }
+	
 }
