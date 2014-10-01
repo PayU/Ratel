@@ -1,19 +1,25 @@
 package com.payu.soa.example.client;
 
-import com.payu.server.model.Order;
+import com.payu.discovery.proxy.RemoteService;
+import com.payu.order.server.model.Order;
+import com.payu.order.server.service.OrderService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import static org.assertj.core.api.BDDAssertions.then;
 
-@RunWith(org.springframework.test.context.junit4.SpringJUnit4ClassRunner.class)
+@RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = ClientTestApp.class)
-public class ClientTest {
+public class ClientVerification {
 
     @Autowired
-    private OrderServiceImpl testBean;
+    @Lazy
+    @RemoteService
+    private OrderService testBean;
 
     @Test
     public void shouldCreateAndGetOrder() throws Exception {

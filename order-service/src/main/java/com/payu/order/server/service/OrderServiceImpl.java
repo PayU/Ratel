@@ -1,7 +1,7 @@
-package com.payu.server.service;
+package com.payu.order.server.service;
 
-import com.payu.server.model.Order;
-import com.payu.server.model.OrderDatabase;
+import com.payu.order.server.model.Order;
+import com.payu.order.server.model.OrderDatabase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,4 +1,4 @@
-package com.payu.server.model;
+package com.payu.order.server.model;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;

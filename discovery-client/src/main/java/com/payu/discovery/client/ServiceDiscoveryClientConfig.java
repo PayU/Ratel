@@ -1,24 +1,11 @@
-package com.payu.discovery.client.config;
+package com.payu.discovery.client;
 
-import com.payu.discovery.server.AutowireCandidateResolverConfigurer;
-import com.payu.discovery.server.MyAutowireCandidateResolver;
-import com.payu.discovery.server.RemoteRestDiscoveryServer;
-import com.payu.discovery.server.config.ServiceRegisterPostProcessor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class DiscoveryServiceConfig {
-
-    @Bean
-    public ServiceRegisterPostProcessor getServiceRegisterPostProcessor() {
-        return new ServiceRegisterPostProcessor();
-    }
-
-    @Bean
-    public RemoteRestDiscoveryServer getDiscoveryServer() {
-        return new RemoteRestDiscoveryServer();
-    }
+//@Import(DiscoveryServiceConfig.class)
+public class ServiceDiscoveryClientConfig {
 
     @Bean
     public MyAutowireCandidateResolver myAutowireCandidateResolver() {
@@ -32,5 +19,4 @@ public class DiscoveryServiceConfig {
         return autowireCandidateResolverConfigurer;
 
     }
-
 }

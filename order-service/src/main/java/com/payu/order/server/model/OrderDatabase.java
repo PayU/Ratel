@@ -1,4 +1,4 @@
-package com.payu.server.model;
+package com.payu.order.server.model;
 
 import java.util.Comparator;
 import java.util.HashMap;

@@ -1,6 +1,5 @@
-package com.payu.discovery.server;
+package com.payu.discovery.client;
 
-import com.payu.discovery.client.DiscoveryClient;
 import com.payu.discovery.model.ServiceDescriptor;
 import com.payu.discovery.proxy.HessianClientProducer;
 import com.payu.discovery.proxy.RemoteService;
@@ -13,8 +12,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class MyAutowireCandidateResolver extends
-		ContextAnnotationAutowireCandidateResolver implements
-		AutowireCandidateResolver {
+        ContextAnnotationAutowireCandidateResolver implements
+        AutowireCandidateResolver {
 
     private final HessianClientProducer hessianClientProducer;
 
@@ -29,13 +28,13 @@ public class MyAutowireCandidateResolver extends
         hessianClientProducer = new HessianClientProducer(services);
     }
 
-	@Override
-	protected Object buildLazyResolutionProxy(DependencyDescriptor descriptor,
-			String beanName) {
-		if (descriptor.getField().isAnnotationPresent(RemoteService.class)) {
+    @Override
+    protected Object buildLazyResolutionProxy(DependencyDescriptor descriptor,
+                                              String beanName) {
+        if (descriptor.getField().isAnnotationPresent(RemoteService.class)) {
             return hessianClientProducer.produce(descriptor.getDependencyType());
-		}
-		return super.buildLazyResolutionProxy(descriptor, beanName);
-	}
+        }
+        return super.buildLazyResolutionProxy(descriptor, beanName);
+    }
 
 }

@@ -1,6 +1,6 @@
-package com.payu.server.service;
+package com.payu.order.server.service;
 
-import com.payu.server.model.Order;
+import com.payu.order.server.model.Order;
 
 public interface OrderService {
 

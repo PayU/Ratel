@@ -1,4 +1,4 @@
-package com.payu.discovery.server;
+package com.payu.discovery.client;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;

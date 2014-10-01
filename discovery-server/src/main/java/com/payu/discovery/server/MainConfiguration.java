@@ -18,6 +18,7 @@ import javax.servlet.ServletException;
 @ComponentScan(basePackages = "com.payu.discovery.server")
 @Configuration
 @EnableAutoConfiguration
+//@EnableServiceDiscovery
 public class MainConfiguration extends SpringBootServletInitializer {
 
     public static void main(String[] args) throws Exception {

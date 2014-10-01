@@ -1,11 +1,11 @@
-package com.payu.server;
+package com.payu.order.server;
 
 
-import com.payu.discovery.client.config.DiscoveryServiceConfig;
 import com.payu.discovery.server.ServiceRegister;
-import com.payu.server.model.OrderDatabase;
-import com.payu.server.service.OrderService;
-import com.payu.server.service.OrderServiceImpl;
+import com.payu.discovery.server.config.DiscoveryServiceConfig;
+import com.payu.order.server.model.OrderDatabase;
+import com.payu.order.server.service.OrderService;
+import com.payu.order.server.service.OrderServiceImpl;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -15,7 +15,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.remoting.caucho.HessianServiceExporter;
 
-@ComponentScan(basePackages = "com.payu.server")
+@ComponentScan(basePackages = "com.payu.order.server")
 @Configuration
 @EnableAutoConfiguration
 public class MainConfiguration extends SpringBootServletInitializer {
@@ -25,7 +25,7 @@ public class MainConfiguration extends SpringBootServletInitializer {
     public static void main(String[] args) throws Exception {
         SpringApplication.run(new Object[]{
                 MainConfiguration.class, DiscoveryServiceConfig.class}, args);
-        ServiceRegister serviceRegister = new ServiceRegister("com.payu", appAddress);
+        ServiceRegister serviceRegister = new ServiceRegister("com.payu.order.server", appAddress);
         serviceRegister.registerServices();
     }
 
