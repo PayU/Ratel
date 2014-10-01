@@ -1,11 +1,8 @@
 package com.payu.discovery.model;
 
-import java.util.Collection;
-
 public class ServiceDescriptor {
 
     private String name;
-
 
     private String address;
 

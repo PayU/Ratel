@@ -1,10 +1,8 @@
 package com.payu.discovery.server;
 
-
 import com.payu.discovery.ServiceDiscoveryApi;
 import com.payu.discovery.model.ServiceDescriptor;
 import retrofit.RestAdapter;
-
 
 public class RemoteRestDiscoveryServer {
 

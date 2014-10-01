@@ -31,4 +31,12 @@ public class Order implements Serializable {
     public void setAmount(String amount) {
         this.amount = amount;
     }
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "what='" + what + '\'' +
+                ", amount='" + amount + '\'' +
+                '}';
+    }
 }

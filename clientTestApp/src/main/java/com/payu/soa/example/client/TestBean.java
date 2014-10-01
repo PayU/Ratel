@@ -1,24 +1,25 @@
 package com.payu.soa.example.client;
 
-import com.payu.discovery.proxy.RemoteService;
 import com.payu.server.model.Order;
 import com.payu.server.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 
+@Component
 public class TestBean {
 
-    @Autowired
-    @Lazy
-    @RemoteService
-    private OrderService orderService;
+    private final OrderService orderService;
 
-    @PostConstruct
-    public void test() {
-        orderService.createOrder(new Order());
+    @Autowired
+    public TestBean(OrderService orderService) {
+        this.orderService = orderService;
     }
 
+    @PostConstruct
+    public void testConnection() {
+        orderService.createOrder(new Order());
+    }
 
 }
