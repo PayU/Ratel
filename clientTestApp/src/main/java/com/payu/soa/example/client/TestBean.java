@@ -1,5 +1,6 @@
 package com.payu.soa.example.client;
 
+import com.payu.discovery.proxy.RemoteService;
 import com.payu.server.model.Order;
 import com.payu.server.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ public class TestBean {
 
     @Autowired
     @Lazy
+    @RemoteService
     private OrderService orderService;
 
     @PostConstruct

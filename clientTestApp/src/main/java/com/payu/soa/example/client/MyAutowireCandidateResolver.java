@@ -3,7 +3,7 @@ package com.payu.soa.example.client;
 import com.payu.discovery.client.DiscoveryClient;
 import com.payu.discovery.model.Service;
 import com.payu.discovery.proxy.HessianClientProducer;
-import com.payu.server.service.OrderService;
+import com.payu.discovery.proxy.RemoteService;
 import org.springframework.beans.factory.config.DependencyDescriptor;
 import org.springframework.beans.factory.support.AutowireCandidateResolver;
 import org.springframework.context.annotation.ContextAnnotationAutowireCandidateResolver;
@@ -32,7 +32,7 @@ public class MyAutowireCandidateResolver extends
 	@Override
 	protected Object buildLazyResolutionProxy(DependencyDescriptor descriptor,
 			String beanName) {
-		if (descriptor.getField().getType().isAssignableFrom(OrderService.class)) {
+		if (descriptor.getField().isAnnotationPresent(RemoteService.class)) {
             return hessianClientProducer.produce(descriptor.getDependencyType());
 		}
 		return super.buildLazyResolutionProxy(descriptor, beanName);
