@@ -4,7 +4,7 @@ import com.google.common.collect.Sets;
 
 import java.util.Collection;
 
-public class Service {
+public class ServiceDescriptor {
 
     private String name;
 
@@ -14,11 +14,11 @@ public class Service {
 
     private String path;
 
-    public Service() {
+    public ServiceDescriptor() {
 
     }
 
-    public Service(String name, Collection<Method> methods, String address, String path) {
+    public ServiceDescriptor(String name, Collection<Method> methods, String address, String path) {
         this.name = name;
         this.methods = methods;
         this.address = address;

@@ -3,7 +3,7 @@ package com.payu.discovery.server;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import com.payu.discovery.model.Service;
+import com.payu.discovery.model.ServiceDescriptor;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.Consumes;
@@ -19,20 +19,20 @@ import java.util.concurrent.ConcurrentHashMap;
 @Path("/discovery")
 public class InMemoryDiscoveryServer implements DiscoveryServer {
 
-    private Map<String, Service> services = new ConcurrentHashMap<>();
+    private Map<String, ServiceDescriptor> services = new ConcurrentHashMap<>();
 
     @Override
     @POST
     @Consumes("application/json")
-    public void registerService(Service service) {
-        checkNotNull(service.getName(), "Given service name cannot be null");
-        services.putIfAbsent(service.getName(), service);
+    public void registerService(ServiceDescriptor serviceDescriptor) {
+        checkNotNull(serviceDescriptor.getName(), "Given service name cannot be null");
+        services.putIfAbsent(serviceDescriptor.getName(), serviceDescriptor);
     }
 
     @Override
     @GET
     @Produces("application/json")
-    public Collection<Service> fetchAllServices() {
+    public Collection<ServiceDescriptor> fetchAllServices() {
         return services.values();
     }
 }

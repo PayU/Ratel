@@ -1,13 +1,13 @@
 package com.payu.discovery.server;
 
-import com.payu.discovery.model.Service;
+import com.payu.discovery.model.ServiceDescriptor;
 
 import java.util.Collection;
 
 public interface DiscoveryServer {
 
-    void registerService(Service service);
+    void registerService(ServiceDescriptor serviceDescriptor);
 
-    Collection<Service> fetchAllServices();
+    Collection<ServiceDescriptor> fetchAllServices();
 
 }

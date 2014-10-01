@@ -2,7 +2,7 @@ package com.payu.discovery.server;
 
 
 import com.payu.discovery.ServiceDiscoveryApi;
-import com.payu.discovery.model.Service;
+import com.payu.discovery.model.ServiceDescriptor;
 import retrofit.RestAdapter;
 
 
@@ -19,7 +19,7 @@ public class RemoteRestDiscoveryServer {
         api = restAdapter.create(ServiceDiscoveryApi.class);
     }
 
-    public void registerService(Service service) {
-        api.registerService(service);
+    public void registerService(ServiceDescriptor serviceDescriptor) {
+        api.registerService(serviceDescriptor);
     }
 }
