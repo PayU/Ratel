@@ -9,6 +9,7 @@
     <version>1.0-SNAPSHOT</version>
     <modules>
         <module>discovery-client</module>
+        <module>discovery-api</module>
         <module>discovery-server</module>
 		<module>clientTestApp</module>
 		<module>order-api</module>
