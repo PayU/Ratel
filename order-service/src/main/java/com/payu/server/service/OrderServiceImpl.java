@@ -14,9 +14,11 @@ public class OrderServiceImpl implements OrderService {
 
     public void createOrder(Order order) {
         database.createOrder(order);
+        System.out.println("Real order service call : create order");
     }
 
     public Order getOrder(Long id) {
+    	System.out.println("Real order service call getById");
         return database.get(id);
     }
 
