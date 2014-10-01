@@ -15,10 +15,6 @@ public class OrderServiceImpl implements OrderService {
     @RemoteService
     private OrderService orderService;
 
-    public void test() {
-        createOrder(new Order());
-    }
-
     @Override
     public void createOrder(Order order) {
         orderService.createOrder(order);
