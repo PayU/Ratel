@@ -1,9 +1,11 @@
 package com.payu.discovery.client;
 
+import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
+@Configurable
 public class ServiceDiscoveryClientConfig {
 
     public static final String DEFAULT_DISCOVERY_URL = "http://localhost:8090/server/discovery";

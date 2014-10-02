@@ -19,10 +19,10 @@ import javax.servlet.ServletException;
 @Configuration
 @EnableAutoConfiguration
 //@EnableServiceDiscovery
-public class MainConfiguration extends SpringBootServletInitializer {
+public class MainConfiguration  {
 
     public static void main(String[] args) throws Exception {
-        SpringApplication.run(new Object[]{MainConfiguration.class}, args);
+        SpringApplication.run(MainConfiguration.class, args);
     }
 
     @Bean
@@ -31,11 +31,6 @@ public class MainConfiguration extends SpringBootServletInitializer {
         ServletRegistrationBean registration = new ServletRegistrationBean(servlet, "/server/*");
         registration.addInitParameter(ServletProperties.JAXRS_APPLICATION_CLASS, JerseyConfig.class.getName());
         return registration;
-    }
-
-    @Override
-    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-        return application.sources(MainConfiguration.class);
     }
 
 }
