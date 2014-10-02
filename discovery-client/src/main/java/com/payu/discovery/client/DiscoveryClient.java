@@ -9,13 +9,11 @@ import java.util.Collection;
 
 public class DiscoveryClient {
 
-    private static final String API_URL = "http://localhost:8090/server/discovery";
-
     final ServiceDiscoveryApi api;
 
-    public DiscoveryClient() {
+    public DiscoveryClient(String urlApi) {
         RestAdapter restAdapter = new RestAdapter.Builder()
-                .setEndpoint(API_URL)
+                .setEndpoint(urlApi)
                 .build();
         api = restAdapter.create(ServiceDiscoveryApi.class);
     }

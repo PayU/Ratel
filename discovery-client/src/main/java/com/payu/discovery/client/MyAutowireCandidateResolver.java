@@ -17,9 +17,7 @@ public class MyAutowireCandidateResolver extends
 
     private final HessianClientProducer hessianClientProducer;
 
-    private final DiscoveryClient discoveryClient = new DiscoveryClient();
-
-    public MyAutowireCandidateResolver() {
+    public MyAutowireCandidateResolver(DiscoveryClient discoveryClient) {
         final Map<String, ServiceDescriptor> services = discoveryClient
                 .fetchAllServices()
                 .stream()

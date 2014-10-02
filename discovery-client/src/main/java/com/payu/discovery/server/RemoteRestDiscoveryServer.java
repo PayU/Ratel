@@ -6,13 +6,11 @@ import retrofit.RestAdapter;
 
 public class RemoteRestDiscoveryServer {
 
-    private static final String API_URL = "http://localhost:8090/server/discovery";
-
     private final ServiceDiscoveryApi api;
 
-    public RemoteRestDiscoveryServer() {
+    public RemoteRestDiscoveryServer(String apiUrl) {
         RestAdapter restAdapter = new RestAdapter.Builder()
-                .setEndpoint(API_URL)
+                .setEndpoint(apiUrl)
                 .build();
         api = restAdapter.create(ServiceDiscoveryApi.class);
     }

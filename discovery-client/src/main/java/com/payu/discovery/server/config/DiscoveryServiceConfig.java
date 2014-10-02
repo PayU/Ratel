@@ -1,20 +1,27 @@
 package com.payu.discovery.server.config;
 
 import com.payu.discovery.server.RemoteRestDiscoveryServer;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 
 @Configuration
 public class DiscoveryServiceConfig {
 
+    public static final String DEFAULT_DISCOVERY_URL = "http://localhost:8090/server/discovery";
+
+    @Autowired
+    private Environment env;
+
     @Bean
-    public ServiceRegisterPostProcessor getServiceRegisterPostProcessor() {
+    public ServiceRegisterPostProcessor serviceRegisterPostProcessor() {
         return new ServiceRegisterPostProcessor();
     }
 
     @Bean
-    public RemoteRestDiscoveryServer getDiscoveryServer() {
-        return new RemoteRestDiscoveryServer();
+    public RemoteRestDiscoveryServer discoveryServer() {
+        return new RemoteRestDiscoveryServer(env.getProperty("serviceDiscovery.address", DEFAULT_DISCOVERY_URL));
     }
 
 }
