@@ -7,10 +7,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 
 @Configuration
-@Configurable
 public class ServiceDiscoveryClientConfig {
 
     public static final String DEFAULT_DISCOVERY_URL = "http://localhost:8090/server/discovery";
+
+    // FIXME
 
     @Autowired
     private Environment env;
