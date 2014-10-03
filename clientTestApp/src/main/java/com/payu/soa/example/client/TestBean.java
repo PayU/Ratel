@@ -20,6 +20,13 @@ public class TestBean {
     @PostConstruct
     public void testConnection() {
         orderService.createOrder(new Order());
+        orderService.createOrder(new Order());
+        orderService.createOrder(new Order());
+        orderService.createOrder(new Order());
+        orderService.createOrder(new Order());
+        orderService.createOrder(new Order());
+        orderService.createOrder(new Order());
+        orderService.createOrder(new Order());
     }
 
 }
