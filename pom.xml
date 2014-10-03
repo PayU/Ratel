@@ -14,6 +14,7 @@
         <module>clientTestApp</module>
         <module>order-api</module>
         <module>order-service</module>
+        <module>sandbox</module>
     </modules>
 
     <packaging>pom</packaging>
