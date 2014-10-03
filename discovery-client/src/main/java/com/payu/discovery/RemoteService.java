@@ -1,4 +1,4 @@
-package com.payu.discovery.proxy;
+package com.payu.discovery;
 
 import java.lang.annotation.ElementType;
 

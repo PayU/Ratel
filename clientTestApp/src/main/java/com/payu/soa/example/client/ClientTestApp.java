@@ -9,6 +9,7 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.PropertySource;
 
 @ComponentScan(basePackages = "com.payu.soa")
@@ -24,6 +25,7 @@ public class ClientTestApp {
 
     @Bean
     @Autowired
+    @Lazy
     public OrderService orderService(HessianClientProducer hessianClientProducer) {
         return (OrderService) hessianClientProducer.produce(OrderService.class);
     }
