@@ -1,9 +1,12 @@
 package com.payu.order.server.model;
 
+import org.springframework.stereotype.Service;
+
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
+@Service
 public class OrderDatabase {
     private Map<Long, Order> orders = new HashMap<>();
 

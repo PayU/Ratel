@@ -2,20 +2,29 @@ package com.payu.discovery.server.config;
 
 import com.payu.discovery.model.ServiceDescriptionBuilder;
 import com.payu.discovery.model.ServiceDescriptor;
+import com.payu.discovery.proxy.RemoteService;
 import com.payu.discovery.server.RemoteRestDiscoveryServer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.BeanPostProcessor;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.remoting.caucho.HessianServiceExporter;
 
 public class ServiceRegisterPostProcessor implements BeanPostProcessor {
+
+    private static Logger LOGGER = LoggerFactory.getLogger(ServiceRegisterPostProcessor.class);
 
     @Value("${app.address:http://localhost:8080}")
     private String address;
 
     @Autowired
     private RemoteRestDiscoveryServer server;
+
+    @Autowired
+    ConfigurableListableBeanFactory configurableListableBeanFactory;
 
     @Override
     public Object postProcessBeforeInitialization(Object o, String s) throws BeansException {
@@ -25,20 +34,22 @@ public class ServiceRegisterPostProcessor implements BeanPostProcessor {
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
         if (isService(bean)) {
-            registerService(bean, beanName);
-            System.out.println("Bean '" + bean + "' published as a service: " + bean.toString());
+            final String serviceName = getFirstInterface(bean).getSimpleName();
+            final HessianServiceExporter hessianServiceExporter = exportService(bean, serviceName);
+            registerService(hessianServiceExporter, "/" + serviceName);
+            LOGGER.info("Bean {} published as a service: {}", bean, bean.toString());
         }
         return bean;
     }
 
-    private void registerService(Object bean, String beanName) {
+    private void registerService(HessianServiceExporter bean, String beanName) {
         ServiceDescriptor serviceDescriptor = buildService(bean, beanName);
-        System.out.println("Registering service " + serviceDescriptor);
+        LOGGER.info("Registering service {}", serviceDescriptor);
         server.registerService(serviceDescriptor);
     }
 
-    private ServiceDescriptor buildService(Object bean, String beanName) {
-        String name = ((HessianServiceExporter)bean).getServiceInterface().getCanonicalName();
+    private ServiceDescriptor buildService(HessianServiceExporter bean, String beanName) {
+        String name = bean.getServiceInterface().getCanonicalName();
         return ServiceDescriptionBuilder
                 .aService()
                 .withName(name)
@@ -46,7 +57,29 @@ public class ServiceRegisterPostProcessor implements BeanPostProcessor {
                 .build();
     }
 
+    private HessianServiceExporter exportService(Object bean, String beanName) {
+        final HessianServiceExporter hessianExporterService = createHessianExporterService(bean);
+        configurableListableBeanFactory.registerSingleton("/" + beanName, hessianExporterService);
+        return hessianExporterService;
+    }
+
+    private HessianServiceExporter createHessianExporterService(Object bean) {
+        HessianServiceExporter hessianServiceExporter = new HessianServiceExporter();
+        hessianServiceExporter.setService(bean);
+        hessianServiceExporter.setServiceInterface(getFirstInterface(bean));
+        hessianServiceExporter.prepare();
+        return hessianServiceExporter;
+    }
+
+    private Class<?> getFirstInterface(Object bean) {
+        for(Class clazz : bean.getClass().getInterfaces()) {
+            return clazz;
+        }
+        return null;
+    }
+
     private boolean isService(Object o) {
-        return o.getClass().equals(HessianServiceExporter.class);
+        return !o.getClass().isInterface()
+                && o.getClass().isAnnotationPresent(RemoteService.class);
     }
 }
