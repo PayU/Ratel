@@ -1,6 +1,6 @@
 package com.payu.soa.example.client;
 
-import com.payu.discovery.proxy.RemoteService;
+import com.payu.discovery.RemoteService;
 import com.payu.order.server.model.Order;
 import com.payu.order.server.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;

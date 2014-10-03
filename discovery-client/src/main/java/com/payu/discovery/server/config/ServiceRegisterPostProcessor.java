@@ -3,7 +3,7 @@ package com.payu.discovery.server.config;
 import com.payu.discovery.model.ServiceDescriptionBuilder;
 import com.payu.discovery.model.ServiceDescriptor;
 import com.payu.discovery.proxy.ProxyMonitoring;
-import com.payu.discovery.proxy.RemoteService;
+import com.payu.discovery.RemoteService;
 import com.payu.discovery.server.RemoteRestDiscoveryServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

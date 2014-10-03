@@ -1,25 +1,44 @@
 package com.payu.discovery.proxy;
 
 
+import com.payu.discovery.client.DiscoveryClient;
 import com.payu.discovery.model.ServiceDescriptor;
 
 import java.lang.reflect.Proxy;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class HessianClientProducer {
 
-    private final Map<String, ServiceDescriptor> allServices;
+    private DiscoveryClient discoveryClient;
 
-    public HessianClientProducer(Map<String, ServiceDescriptor> allServices) {
-        this.allServices = allServices;
+    private volatile Map<String, ServiceDescriptor> allServices = null;
+
+    public HessianClientProducer(DiscoveryClient discoveryClient) {
+        this.discoveryClient = discoveryClient;
+    }
+
+    private Map<String, ServiceDescriptor> allServices() {
+        if (allServices == null) {
+            synchronized (this) {
+                if (allServices == null) {
+                    allServices = discoveryClient
+                            .fetchAllServices()
+                            .stream()
+                            .collect(Collectors.toMap(ServiceDescriptor::getName, Function.<ServiceDescriptor>identity()));
+                }
+            }
+        }
+        return allServices;
     }
 
     public Object produce(Class<?> clazz, boolean monitoring) {
         String serviceName = clazz.getName();
         return monitoring ? decorateWithMonitoring(BinaryTransportUtil.
-                createServiceClientProxy(clazz, allServices.get(serviceName).getAddress()), clazz)
+                createServiceClientProxy(clazz, allServices().get(serviceName).getAddress()), clazz)
                 : BinaryTransportUtil
-                .createServiceClientProxy(clazz, allServices.get(serviceName).getAddress());
+                .createServiceClientProxy(clazz, allServices().get(serviceName).getAddress());
     }
 
     public Object produce(Class<?> clazz) {

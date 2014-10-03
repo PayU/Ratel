@@ -1,6 +1,6 @@
 package com.payu.order.server.service;
 
-import com.payu.discovery.proxy.RemoteService;
+import com.payu.discovery.RemoteService;
 import com.payu.order.server.model.Order;
 import com.payu.order.server.model.OrderDatabase;
 import org.slf4j.Logger;

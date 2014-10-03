@@ -1,15 +1,10 @@
 package com.payu.discovery.client;
 
-import com.payu.discovery.model.ServiceDescriptor;
+import com.payu.discovery.RemoteService;
 import com.payu.discovery.proxy.HessianClientProducer;
-import com.payu.discovery.proxy.RemoteService;
 import org.springframework.beans.factory.config.DependencyDescriptor;
 import org.springframework.beans.factory.support.AutowireCandidateResolver;
 import org.springframework.context.annotation.ContextAnnotationAutowireCandidateResolver;
-
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 public class MyAutowireCandidateResolver extends
         ContextAnnotationAutowireCandidateResolver implements
@@ -18,12 +13,7 @@ public class MyAutowireCandidateResolver extends
     private final HessianClientProducer hessianClientProducer;
 
     public MyAutowireCandidateResolver(DiscoveryClient discoveryClient) {
-        final Map<String, ServiceDescriptor> services = discoveryClient
-                .fetchAllServices()
-                .stream()
-                .collect(Collectors.toMap(ServiceDescriptor::getName, Function.<ServiceDescriptor>identity()));
-
-        hessianClientProducer = new HessianClientProducer(services);
+        hessianClientProducer = new HessianClientProducer(discoveryClient);
     }
 
     @Override
