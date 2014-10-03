@@ -1,30 +1,37 @@
 package com.payu.discovery.client;
 
-import org.springframework.beans.factory.annotation.Configurable;
+import com.payu.discovery.model.ServiceDescriptor;
+import com.payu.discovery.proxy.HessianClientProducer;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
+
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Configuration
-@Configurable
 public class ServiceDiscoveryClientConfig {
 
     public static final String DEFAULT_DISCOVERY_URL = "http://localhost:8090/server/discovery";
 
-    @Bean
-    public MyAutowireCandidateResolver myAutowireCandidateResolver() {
-        return new MyAutowireCandidateResolver(discoveryClient());
-    }
+    @Autowired
+    private Environment env;
 
     @Bean
     public DiscoveryClient discoveryClient() {
-        return new DiscoveryClient(DEFAULT_DISCOVERY_URL);
+        return new DiscoveryClient(env.getProperty("serviceDiscovery.address", DEFAULT_DISCOVERY_URL));
     }
 
     @Bean
-    public AutowireCandidateResolverConfigurer autowireCandidateResolverConfigurer() {
-        AutowireCandidateResolverConfigurer autowireCandidateResolverConfigurer = new AutowireCandidateResolverConfigurer();
-        autowireCandidateResolverConfigurer.setAutowireCandidateResolver(myAutowireCandidateResolver());
-        return autowireCandidateResolverConfigurer;
+    public HessianClientProducer hessianClientProducer() {
+        final Map<String, ServiceDescriptor> services = discoveryClient()
+                .fetchAllServices()
+                .stream()
+                .collect(Collectors.toMap(ServiceDescriptor::getName, Function.<ServiceDescriptor>identity()));
 
+        return new HessianClientProducer(services);
     }
+
 }
