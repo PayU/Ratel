@@ -2,6 +2,7 @@ package com.payu.discovery.server.config;
 
 import com.payu.discovery.model.ServiceDescriptionBuilder;
 import com.payu.discovery.model.ServiceDescriptor;
+import com.payu.discovery.proxy.ProxyMonitoring;
 import com.payu.discovery.proxy.RemoteService;
 import com.payu.discovery.server.RemoteRestDiscoveryServer;
 import org.slf4j.Logger;
@@ -12,6 +13,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.remoting.caucho.HessianServiceExporter;
+
+import java.lang.reflect.Proxy;
 
 public class ServiceRegisterPostProcessor implements BeanPostProcessor {
 
@@ -65,10 +68,16 @@ public class ServiceRegisterPostProcessor implements BeanPostProcessor {
 
     private HessianServiceExporter createHessianExporterService(Object bean) {
         HessianServiceExporter hessianServiceExporter = new HessianServiceExporter();
-        hessianServiceExporter.setService(bean);
+        hessianServiceExporter.setService(decorateWithMonitoring(bean, getFirstInterface(bean)));
         hessianServiceExporter.setServiceInterface(getFirstInterface(bean));
         hessianServiceExporter.prepare();
         return hessianServiceExporter;
+    }
+
+    public Object decorateWithMonitoring(final Object object, final Class clazz) {
+        return Proxy
+                .newProxyInstance(Thread.currentThread().getContextClassLoader(),
+                        new Class[]{clazz}, new ProxyMonitoring(object));
     }
 
     private Class<?> getFirstInterface(Object bean) {

@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 import java.lang.reflect.Method;
 import java.util.stream.Collectors;
 
-class ProxyMonitoring implements java.lang.reflect.InvocationHandler {
+public class ProxyMonitoring implements java.lang.reflect.InvocationHandler {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ProxyMonitoring.class);
 
@@ -25,13 +25,20 @@ class ProxyMonitoring implements java.lang.reflect.InvocationHandler {
         final Object returned = method.invoke(object, args);
         long after = System.currentTimeMillis();
         long took = after - before;
-        LOGGER.info("Invocation of method {} took {} ms", method.getName(), took);
-        lastInvocations.add(took);
-        double avarage = (Double) lastInvocations.stream().collect(Collectors.averagingLong(inv -> (Long) inv));
-        LOGGER.info("Avg for last 10 invocations {}", avarage);
+        logTime(method, took);
+        logAvg(took);
         return returned;
     }
 
+    private void logTime(Method method, long took) {
+        LOGGER.info("Invocation of method {} took {} ms", method.getName(), took);
+    }
+
+    private void logAvg(long took) {
+        lastInvocations.add(took);
+        Double avarage = (Double) lastInvocations.stream().collect(Collectors.averagingLong(inv -> (Long) inv));
+        LOGGER.info("Avg time for the last {} invocations {}", lastInvocations.size(), avarage);
+    }
 
 
 }
