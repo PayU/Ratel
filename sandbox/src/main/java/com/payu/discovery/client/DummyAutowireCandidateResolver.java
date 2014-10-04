@@ -1,16 +1,13 @@
 package com.payu.discovery.client;
 
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
-
+import com.payu.discovery.RemoteService;
 import org.springframework.beans.factory.config.DependencyDescriptor;
 import org.springframework.beans.factory.support.AutowireCandidateResolver;
 import org.springframework.context.annotation.ContextAnnotationAutowireCandidateResolver;
 
-import scala.annotation.meta.getter;
-
-import com.payu.discovery.proxy.RemoteService;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 
 public class DummyAutowireCandidateResolver extends
         ContextAnnotationAutowireCandidateResolver implements
