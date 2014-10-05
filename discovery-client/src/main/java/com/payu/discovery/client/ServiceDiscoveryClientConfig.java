@@ -1,27 +1,47 @@
 package com.payu.discovery.client;
 
-import com.payu.discovery.proxy.HessianClientProducer;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.Environment;
+import org.springframework.core.io.support.PropertiesLoaderUtils;
+
+import java.io.IOException;
+import java.util.Properties;
 
 @Configuration
 public class ServiceDiscoveryClientConfig {
 
-    public static final String DEFAULT_DISCOVERY_URL = "http://localhost:8090/server/discovery";
+    private static final Logger log = LoggerFactory.getLogger(ServiceDiscoveryClientConfig.class);
 
-    @Autowired
-    private Environment env;
+    public static final String DEFAULT_DISCOVERY_URL = "http://localhost:8090/server/discovery";
 
     @Bean
     public DiscoveryClient discoveryClient() {
-        return new DiscoveryClient(env.getProperty("serviceDiscovery.address", DEFAULT_DISCOVERY_URL));
+
+        DiscoveryClient discoveryClient = null;
+        try {
+            // environment is injected too late
+            Properties properties = PropertiesLoaderUtils.loadAllProperties("service-discovery.properties");
+            final String property = properties.getProperty("serviceDiscovery.address", DEFAULT_DISCOVERY_URL);
+            discoveryClient = new DiscoveryClient(property);
+        } catch (IOException e) {
+            throw new ServiceDiscoveryConfigurationException("Error while reading from service-discovery.properties", e);
+        }
+
+        return discoveryClient;
     }
 
     @Bean
-    public HessianClientProducer hessianClientProducer() {
-        return new HessianClientProducer(discoveryClient());
+    public RemoteAutowireCandidateResolver remoteAutowireCandidateResolver() {
+        return new RemoteAutowireCandidateResolver(discoveryClient());
     }
 
+    @Bean
+    public AutowireCandidateResolverConfigurer autowireCandidateResolverConfigurer() {
+        AutowireCandidateResolverConfigurer autowireCandidateResolverConfigurer = new AutowireCandidateResolverConfigurer();
+        autowireCandidateResolverConfigurer.setAutowireCandidateResolver(remoteAutowireCandidateResolver());
+        return autowireCandidateResolverConfigurer;
+
+    }
 }

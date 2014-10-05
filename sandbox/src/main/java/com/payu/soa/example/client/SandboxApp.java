@@ -1,14 +1,13 @@
 package com.payu.soa.example.client;
 
+import com.payu.discovery.client.EnableServiceDiscovery;
+import com.payu.discovery.client.SandboxConfig;
+import com.payu.discovery.client.config.DummyClientConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
-
-import com.payu.discovery.EnableServiceDiscovery;
-import com.payu.discovery.client.SandboxConfig;
-import com.payu.discovery.client.config.DummyClientConfig;
 
 @ComponentScan(basePackages = "com.payu.soa")
 @Configuration

@@ -1,6 +1,5 @@
 package com.payu.discovery.client;
 
-
 import com.payu.discovery.ServiceDiscoveryApi;
 import com.payu.discovery.model.ServiceDescriptor;
 import retrofit.RestAdapter;

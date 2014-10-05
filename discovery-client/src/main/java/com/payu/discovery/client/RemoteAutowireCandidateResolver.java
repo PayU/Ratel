@@ -6,13 +6,13 @@ import org.springframework.beans.factory.config.DependencyDescriptor;
 import org.springframework.beans.factory.support.AutowireCandidateResolver;
 import org.springframework.context.annotation.ContextAnnotationAutowireCandidateResolver;
 
-public class MyAutowireCandidateResolver extends
+public class RemoteAutowireCandidateResolver extends
         ContextAnnotationAutowireCandidateResolver implements
         AutowireCandidateResolver {
 
     private final HessianClientProducer hessianClientProducer;
 
-    public MyAutowireCandidateResolver(DiscoveryClient discoveryClient) {
+    public RemoteAutowireCandidateResolver(DiscoveryClient discoveryClient) {
         hessianClientProducer = new HessianClientProducer(discoveryClient);
     }
 

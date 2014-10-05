@@ -1,9 +1,9 @@
 package com.payu.discovery.server.config;
 
+import com.payu.discovery.RemoteService;
 import com.payu.discovery.model.ServiceDescriptionBuilder;
 import com.payu.discovery.model.ServiceDescriptor;
 import com.payu.discovery.proxy.ProxyMonitoring;
-import com.payu.discovery.RemoteService;
 import com.payu.discovery.server.RemoteRestDiscoveryServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -81,7 +81,8 @@ public class ServiceRegisterPostProcessor implements BeanPostProcessor {
     }
 
     private Class<?> getFirstInterface(Object bean) {
-        for(Class clazz : bean.getClass().getInterfaces()) {
+        Class<?>[] interfaces = bean.getClass().getInterfaces();
+        for (Class<?> clazz : interfaces) {
             return clazz;
         }
         return null;
