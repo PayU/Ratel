@@ -1,5 +1,6 @@
 package com.payu.soa.example.client;
 
+import com.payu.discovery.EnableCache;
 import com.payu.discovery.RemoteService;
 import com.payu.order.server.model.Order;
 import com.payu.order.server.service.OrderService;
@@ -15,6 +16,7 @@ public class TestBean {
     @Autowired
     @Lazy
     @RemoteService
+    @EnableCache
     private OrderService orderService;
 
     @PostConstruct
