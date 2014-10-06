@@ -20,5 +20,9 @@ public class DiscoveryClient {
     public Collection<ServiceDescriptor> fetchAllServices() {
         return api.fetchAllServices();
     }
+    
+    public void deleteAllServices() {
+    	api.deleteAllServices();
+    }
 
 }

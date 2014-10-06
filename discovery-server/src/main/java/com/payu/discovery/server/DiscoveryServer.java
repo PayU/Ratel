@@ -9,5 +9,7 @@ public interface DiscoveryServer {
     void registerService(ServiceDescriptor serviceDescriptor);
 
     Collection<ServiceDescriptor> fetchAllServices();
+    
+    void deleteAllServices();
 
 }
