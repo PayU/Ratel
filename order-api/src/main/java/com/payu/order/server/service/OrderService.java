@@ -8,5 +8,7 @@ public interface OrderService {
 
     public Order getOrder(Long id);
 
+	public abstract int deletOrders();
+
 
 }

@@ -25,4 +25,14 @@ public class OrderDatabase {
     public Order get(Long id) {
         return orders.get(id);
     }
+
+	public int size() {
+		return orders.size();
+	}
+
+	public void clear() {
+		orders.clear();
+	}
+    
+    
 }
