@@ -26,16 +26,18 @@ public class OrderServiceImpl implements OrderService {
     private Environment env;
 
     public void createOrder(Order order) {
-    	forceExceptionIfNeeded();
+    	forceTimeoutIfNeeded();
         database.createOrder(order);
         log.info("Real order service call : create order {}", order);
     }
 
-	private void forceExceptionIfNeeded() {
+	private void forceTimeoutIfNeeded() {
 		int exceptionPeriod = env.getProperty("force.exception.period", Integer.class, 0);
-		if (exceptionPeriod > 0 && ((++counter) % exceptionPeriod  == 0) ){
-    		throw new RuntimeException();
-    	}
+		if (exceptionPeriod > 0 && ((++counter) % exceptionPeriod  != 0) ){
+            try {
+                Thread.sleep(6000);
+            } catch (InterruptedException e) {}
+        }
 	}
 
     public Order getOrder(Long id) {

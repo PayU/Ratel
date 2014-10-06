@@ -22,6 +22,8 @@ public final class BinaryTransportUtil {
         proxyFactory.setServiceUrl(serviceUrl);
         proxyFactory.setServiceInterface(clazz);
         proxyFactory.afterPropertiesSet();
+        proxyFactory.setConnectTimeout(5000);
+        proxyFactory.setReadTimeout(5000);
         return (T) proxyFactory.getObject();
 
     }
