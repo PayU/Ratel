@@ -10,7 +10,6 @@ import org.springframework.context.annotation.PropertySource;
 @ComponentScan(basePackages = "com.payu.soa")
 @Configuration
 @EnableAutoConfiguration
-@EnableServiceDiscovery
 @PropertySource("classpath:service-discovery.properties")
 public class ClientTestApp {
 
