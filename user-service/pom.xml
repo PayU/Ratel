@@ -10,7 +10,7 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>order-service</artifactId>
+    <artifactId>user-service</artifactId>
     <version>${parent.version}</version>
 
     <packaging>jar</packaging>
@@ -48,7 +48,7 @@
         </dependency>
         <dependency>
             <groupId>com.payu.hackathon</groupId>
-            <artifactId>order-api</artifactId>
+            <artifactId>user-api</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -61,6 +61,11 @@
             <artifactId>service-commons</artifactId>
             <version>${project.version}</version>
         </dependency>        
+        <dependency>
+        	<groupId>org.scala-lang</groupId>
+        	<artifactId>scala-library</artifactId>
+        	<version>2.10.4</version>
+        </dependency>
     </dependencies>
 
     <build>

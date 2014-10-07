@@ -28,6 +28,7 @@ public class DummyAutowireCandidateResolver extends
 				@Override
 				public Object invoke(Object proxy, Method method, Object[] args)
 						throws Throwable {
+					
 					System.out.printf("Method %s called on laizly injected proxy\n ",  method.getName());
 					return null;
 				}

@@ -1,5 +1,7 @@
 package com.payu.transaction.server.service;
 
+import java.util.Collection;
+
 import com.payu.transaction.server.model.Transaction;
 
 public interface TransactionService {
@@ -9,6 +11,8 @@ public interface TransactionService {
     public Transaction getTransactionById(Long id);
 
 	public abstract int deletTransactions();
+	
+	public Collection<Transaction> getTransactionByOrderId(long orderId);
 
 
 }

@@ -2,37 +2,23 @@ package com.payu.order.server.model;
 
 import org.springframework.stereotype.Service;
 
+import com.payu.training.database.GenericDatabase;
+
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
 @Service
-public class OrderDatabase {
-    private Map<Long, Order> orders = new HashMap<>();
+public class OrderDatabase extends GenericDatabase<Order> {
 
-    public void createOrder(Order order) {
-        Long key = 1L;
-        if (!orders.isEmpty())
-            key = obtainLastKey();
-        orders.put(key, order);
-
-    }
-
-    private Long obtainLastKey() {
-        return orders.entrySet().stream().max(Comparator.comparingLong(Map.Entry::getKey)).get().getKey() + 1;
-    }
-
-    public Order get(Long id) {
-        return orders.get(id);
-    }
-
-	public int size() {
-		return orders.size();
+	@Override
+	protected void setId(Order object, long id) {
+		object.setId(id);
 	}
 
-	public void clear() {
-		orders.clear();
+	@Override
+	protected long getId(Order object) {
+		return object.getId();
 	}
-    
-    
+	
 }

@@ -2,37 +2,17 @@ package com.payu.transaction.server.model;
 
 import org.springframework.stereotype.Service;
 
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
+import com.payu.training.database.GenericDatabase;
 
 @Service
-public class TransactionDatabase {
-    private Map<Long, Transaction> orders = new HashMap<>();
-
-    public void createTransaction(Transaction order) {
-        Long key = 1L;
-        if (!orders.isEmpty())
-            key = obtainLastKey();
-        orders.put(key, order);
-
-    }
-
-    private Long obtainLastKey() {
-        return orders.entrySet().stream().max(Comparator.comparingLong(Map.Entry::getKey)).get().getKey() + 1;
-    }
-
-    public Transaction get(Long id) {
-        return orders.get(id);
-    }
-
-	public int size() {
-		return orders.size();
+public class TransactionDatabase extends GenericDatabase<Transaction> {
+	@Override
+	protected void setId(Transaction object, long id) {
+		object.setId(id);
 	}
 
-	public void clear() {
-		orders.clear();
+	@Override
+	protected long getId(Transaction object) {
+		return object.getId();
 	}
-    
-    
 }

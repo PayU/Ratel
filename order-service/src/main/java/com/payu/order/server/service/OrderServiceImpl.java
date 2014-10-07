@@ -1,8 +1,8 @@
 package com.payu.order.server.service;
 
-import com.payu.discovery.RemoteService;
-import com.payu.order.server.model.Order;
-import com.payu.order.server.model.OrderDatabase;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,47 +10,43 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
+import com.payu.discovery.RemoteService;
+import com.payu.order.server.model.Order;
+import com.payu.order.server.model.OrderDatabase;
 
 @Service
 @RemoteService
 public class OrderServiceImpl implements OrderService {
-	
-	private int counter; 
 
-    private static final Logger log = LoggerFactory.getLogger(OrderServiceImpl.class);
+	private static final Logger log = LoggerFactory
+			.getLogger(OrderServiceImpl.class);
 
-    @Autowired
-    private OrderDatabase database;
-    
-    @Autowired
-    private Environment env;
+	@Autowired
+	private OrderDatabase database;
 
-    public void createOrder(Order order) {
-    	forceTimeoutIfNeeded();
-        database.createOrder(order);
-        log.info("Real order service call : create order {}", order);
-    }
+	@Autowired
+	private Environment env;
 
-	private void forceTimeoutIfNeeded() {
-		int exceptionPeriod = env.getProperty("force.exception.period", Integer.class, 0);
-		if (exceptionPeriod > 0 && ((++counter) % exceptionPeriod  != 0) ){
-            try {
-                Thread.sleep(6000);
-            } catch (InterruptedException e) {}
-        }
+	public void createOrder(Order order) {
+		log.info("Real order service call : create order {}", order);
+		database.create(order);
 	}
 
-    public Order getOrder(Long id) {
-        log.info("Real order service call getById {}", id);
-        return database.get(id);
-    }
-    
-    @Override
+	public Order getOrder(Long id) {
+		log.info("Real order service call getById {}", id);
+		return database.get(id);
+	}
+
+	@Override
 	public int deletOrders() {
-    	int result = database.size();
-    	database.clear();
-    	counter = 0;
-    	return result;
-    }
+		return database.clear();
+	}
+
+	@Override
+	public Collection<Order> getOrdersByUserId(long userId) {
+		return database.getAllObjects().stream()
+				.filter(t -> t.getUserId() == userId)
+				.collect(Collectors.toCollection(ArrayList::new));
+	}
 
 }
