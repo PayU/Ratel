@@ -21,9 +21,9 @@ import org.springframework.core.env.Environment;
 @ConditionalOnExpression("${com.payu.discovery.enabled:true}")
 public class ServiceDiscoveryClientConfig implements BeanFactoryAware {
 
-    private Environment environment;
+    private static final String DEFAULT_DISCOVERY_URL = "http://localhost:8090/server/discovery";
 
-    public static final String DEFAULT_DISCOVERY_URL = "http://localhost:8090/server/discovery";
+    private Environment environment;
 
     @Bean
     public DiscoveryClient discoveryClient() {
