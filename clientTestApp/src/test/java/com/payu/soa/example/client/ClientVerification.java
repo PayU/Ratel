@@ -7,7 +7,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import static org.assertj.core.api.BDDAssertions.then;
@@ -17,7 +16,6 @@ import static org.assertj.core.api.BDDAssertions.then;
 public class ClientVerification {
 
     @Autowired
-    @Lazy
     @RemoteService
     private OrderService testBean;
 
