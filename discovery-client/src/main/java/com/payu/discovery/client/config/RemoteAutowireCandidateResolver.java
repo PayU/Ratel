@@ -1,8 +1,9 @@
-package com.payu.discovery.client;
+package com.payu.discovery.client.config;
 
 import com.payu.discovery.EnableCache;
 import com.payu.discovery.EnableRetryPolicy;
 import com.payu.discovery.RemoteService;
+import com.payu.discovery.client.DiscoveryClient;
 import com.payu.discovery.proxy.HessianClientProducer;
 import com.payu.discovery.proxy.ProxyCache;
 import com.payu.discovery.proxy.ProxyRetryPolicy;
@@ -12,7 +13,7 @@ import org.springframework.context.annotation.ContextAnnotationAutowireCandidate
 
 import java.lang.reflect.Proxy;
 
-public class RemoteAutowireCandidateResolver extends
+class RemoteAutowireCandidateResolver extends
         ContextAnnotationAutowireCandidateResolver implements
         AutowireCandidateResolver {
 

@@ -1,5 +1,6 @@
 package com.payu.discovery.client;
 
+import com.payu.discovery.client.config.ServiceDiscoveryClientConfig;
 import org.springframework.context.annotation.Import;
 
 import java.lang.annotation.ElementType;

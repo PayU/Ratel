@@ -1,6 +1,7 @@
-package com.payu.discovery.client;
+package com.payu.discovery.client.config;
 
 import com.payu.discovery.RemoteService;
+import com.payu.discovery.client.DiscoveryClient;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
