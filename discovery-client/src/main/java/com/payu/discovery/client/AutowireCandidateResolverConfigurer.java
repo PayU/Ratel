@@ -8,19 +8,16 @@ import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 
 public class AutowireCandidateResolverConfigurer implements BeanFactoryPostProcessor {
 
-    private AutowireCandidateResolver autowireCandidateResolver;
+    private final AutowireCandidateResolver autowireCandidateResolver;
+
+    public AutowireCandidateResolverConfigurer(AutowireCandidateResolver autowireCandidateResolver) {
+        this.autowireCandidateResolver = autowireCandidateResolver;
+    }
 
     public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
         DefaultListableBeanFactory bf = (DefaultListableBeanFactory) beanFactory;
         bf.setAutowireCandidateResolver(autowireCandidateResolver);
     }
 
-    public AutowireCandidateResolver getAutowireCandidateResolver() {
-        return autowireCandidateResolver;
-    }
-
-    public void setAutowireCandidateResolver(AutowireCandidateResolver autowireCandidateResolver) {
-        this.autowireCandidateResolver = autowireCandidateResolver;
-    }
 }
 
