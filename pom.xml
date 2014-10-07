@@ -14,9 +14,12 @@
         <module>clientTestApp</module>
         <module>order-api</module>
         <module>order-service</module>
+        <module>user-api</module>
+        <module>user-service</module>
         <module>transaction-api</module>
         <module>transaction-service</module>
         <module>sandbox</module>
+		<module>service-commons</module>
     </modules>
 
     <packaging>pom</packaging>

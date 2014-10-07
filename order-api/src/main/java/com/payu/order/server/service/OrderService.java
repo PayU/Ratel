@@ -1,5 +1,7 @@
 package com.payu.order.server.service;
 
+import java.util.Collection;
+
 import com.payu.order.server.model.Order;
 
 public interface OrderService {
@@ -9,6 +11,8 @@ public interface OrderService {
     public Order getOrder(Long id);
 
 	public abstract int deletOrders();
+	
+	public Collection<Order> getOrdersByUserId(long userId);
 
 
 }
