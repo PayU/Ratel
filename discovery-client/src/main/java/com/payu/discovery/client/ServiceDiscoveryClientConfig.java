@@ -12,7 +12,7 @@ import java.util.Properties;
 @Configuration
 public class ServiceDiscoveryClientConfig {
 
-    private static final Logger log = LoggerFactory.getLogger(ServiceDiscoveryClientConfig.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ServiceDiscoveryClientConfig.class);
 
     public static final String DEFAULT_DISCOVERY_URL = "http://localhost:8090/server/discovery";
 

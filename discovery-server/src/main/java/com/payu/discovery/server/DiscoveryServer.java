@@ -12,4 +12,6 @@ public interface DiscoveryServer {
     
     void deleteAllServices();
 
+    void ping(String remoteAddress);
+
 }

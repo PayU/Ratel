@@ -14,26 +14,16 @@ public class HessianClientProducer {
 
     private DiscoveryClient discoveryClient;
 
-    private volatile Map<String, Collection<ServiceDescriptor>> allServices = null;
-
     public HessianClientProducer(DiscoveryClient discoveryClient) {
         this.discoveryClient = discoveryClient;
     }
 
     private Map<String, Collection<ServiceDescriptor>> allServices() {
-        if (allServices == null) {
-            synchronized (this) {
-                if (allServices == null) {
-                    allServices = discoveryClient
-                            .fetchAllServices()
-                            .stream()
-                            .collect(Collectors
-                                    .groupingBy(ServiceDescriptor::getName,
-                                            Collectors.toCollection(ArrayList::new)));
-                }
-            }
-        }
-        return allServices;
+        return discoveryClient
+                .fetchAllServices()
+                .stream()
+                .collect(Collectors.groupingBy(ServiceDescriptor::getName,
+                        Collectors.toCollection(ArrayList::new)));
     }
 
     public Object produce(Class<?> clazz, boolean monitoring) {

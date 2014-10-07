@@ -1,12 +1,12 @@
 package com.payu.discovery;
 
 import com.payu.discovery.model.ServiceDescriptor;
-
 import retrofit.client.Response;
 import retrofit.http.Body;
 import retrofit.http.DELETE;
 import retrofit.http.GET;
 import retrofit.http.POST;
+import retrofit.http.PUT;
 
 import java.util.Collection;
 
@@ -20,5 +20,8 @@ public interface ServiceDiscoveryApi {
     Collection<ServiceDescriptor> fetchAllServices();
     
     @DELETE("/")
-    void deleteAllServices();
+    Response deleteAllServices();
+
+    @PUT("/")
+    Response ping(@Body String address);
 }
