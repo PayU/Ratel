@@ -1,25 +1,22 @@
 package com.payu.order.server;
 
 
-import com.payu.discovery.server.config.DiscoveryServiceConfig;
+import com.payu.discovery.server.config.EnableServicePublish;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.scheduling.annotation.EnableScheduling;
 
 @ComponentScan(basePackages = {"com.payu.order.server", "com.payu.training"}	)
 @Configuration
 @EnableAutoConfiguration
-@EnableScheduling
+@EnableServicePublish
 @PropertySource("classpath:propertasy.properties")
-@Import(DiscoveryServiceConfig.class)
-public class MainConfiguration {
+public class OrderServiceMain {
 
     public static void main(String[] args) throws Exception {
-        SpringApplication.run(MainConfiguration.class, args);
+        SpringApplication.run(OrderServiceMain.class, args);
     }
 
 }

@@ -18,10 +18,10 @@ import javax.servlet.ServletException;
 @Configuration
 @EnableAutoConfiguration
 @EnableScheduling
-public class MainConfiguration  {
+public class DiscoveryServerMain {
 
     public static void main(String[] args) throws Exception {
-        SpringApplication.run(MainConfiguration.class, args);
+        SpringApplication.run(DiscoveryServerMain.class, args);
     }
 
     @Bean
