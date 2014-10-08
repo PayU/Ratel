@@ -13,12 +13,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.remoting.caucho.HessianServiceExporter;
+import org.springframework.scheduling.TaskScheduler;
 
 import java.lang.reflect.Proxy;
 
 public class ServiceRegisterPostProcessor implements BeanPostProcessor {
 
     private static Logger LOGGER = LoggerFactory.getLogger(ServiceRegisterPostProcessor.class);
+
+    public static final int SECONDS_20 = 20000;
 
     @Value("${app.address:http://localhost:8080}")
     private String address;
@@ -28,6 +31,9 @@ public class ServiceRegisterPostProcessor implements BeanPostProcessor {
 
     @Autowired
     ConfigurableListableBeanFactory configurableListableBeanFactory;
+
+    @Autowired
+    TaskScheduler taskScheduler;
 
     @Override
     public Object postProcessBeforeInitialization(Object o, String s) throws BeansException {
@@ -48,7 +54,7 @@ public class ServiceRegisterPostProcessor implements BeanPostProcessor {
     private void registerService(HessianServiceExporter bean, String beanName) {
         ServiceDescriptor serviceDescriptor = buildService(bean, beanName);
         LOGGER.info("Registering service {}", serviceDescriptor);
-        server.registerService(serviceDescriptor);
+        taskScheduler.scheduleAtFixedRate(() -> server.registerService(serviceDescriptor), SECONDS_20);
     }
 
     private ServiceDescriptor buildService(HessianServiceExporter bean, String beanName) {

@@ -14,7 +14,6 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import java.util.Collection;
@@ -35,7 +34,7 @@ public class InMemoryDiscoveryServer implements DiscoveryServer {
     private Set<ServiceDescriptor> services = Sets.newSetFromMap((Map<ServiceDescriptor, Boolean>)
             new ConcurrentHashMap<ServiceDescriptor, Boolean>());
 
-    private Map<String, Long> pingedServers = new ConcurrentHashMap<>();
+    private Map<ServiceDescriptor, Long> pingedServers = new ConcurrentHashMap<>();
 
     @Override
     @POST
@@ -43,6 +42,7 @@ public class InMemoryDiscoveryServer implements DiscoveryServer {
     public void registerService(ServiceDescriptor serviceDescriptor) {
         checkNotNull(serviceDescriptor.getName(), "Given service name cannot be null");
         services.add(serviceDescriptor);
+        pingedServers.put(serviceDescriptor, System.currentTimeMillis());
     }
 
     @Override
@@ -58,14 +58,6 @@ public class InMemoryDiscoveryServer implements DiscoveryServer {
 		services.clear();
 	}
 
-    @Override
-    @PUT
-    public void ping(final String remoteAddress) {
-        final String withoutBrackets = remoteAddress.substring(1, remoteAddress.length() - 1);
-        LOGGER.info("Pindged server {}", withoutBrackets);
-        pingedServers.put(withoutBrackets, System.currentTimeMillis());
-    }
-
     @Scheduled(fixedRate = SECONDS_20)
     public void checkActiveServices() {
         pingedServers.entrySet()
@@ -73,7 +65,7 @@ public class InMemoryDiscoveryServer implements DiscoveryServer {
                 .filter(entry -> entry.getValue() < System.currentTimeMillis() - SECONDS_25)
                 .forEach(filtered -> {
                     LOGGER.info("Removing services with address {}", filtered.getKey());
-                    services.removeIf(service -> service.getAddress().startsWith(filtered.getKey()));
+                    services.removeIf(service -> service.equals(filtered.getKey()));
                 });
     }
 }
