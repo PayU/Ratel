@@ -51,6 +51,7 @@
             <artifactId>transaction-api</artifactId>
             <version>${project.version}</version>
         </dependency>
+
         <dependency>
             <groupId>com.payu.hackathon</groupId>
             <artifactId>discovery-client</artifactId>
@@ -66,6 +67,11 @@
         	<artifactId>scala-library</artifactId>
         	<version>2.10.4</version>
         </dependency>
+        <dependency>
+            <groupId>com.payu.hackathon</groupId>
+            <artifactId>servicediscovery-annotations</artifactId>
+            <version>${project.version}</version>
+        </dependency>         
     </dependencies>
 
     <build>

@@ -51,17 +51,23 @@
             <artifactId>order-api</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency>
-            <groupId>com.payu.hackathon</groupId>
-            <artifactId>discovery-client</artifactId>
-            <version>${project.version}</version>
-        </dependency>
+
         <dependency>
             <groupId>com.payu.hackathon</groupId>
             <artifactId>service-commons</artifactId>
             <version>${project.version}</version>
         </dependency>
-    </dependencies>
+        <dependency>
+            <groupId>com.payu.hackathon</groupId>
+            <artifactId>servicediscovery-annotations</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.payu.hackathon</groupId>
+            <artifactId>discovery-client</artifactId>
+            <version>${project.version}</version>
+        </dependency>        
+     </dependencies>
 
     <build>
         <plugins>

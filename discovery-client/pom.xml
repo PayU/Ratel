@@ -55,6 +55,13 @@
         	<artifactId>discovery-api</artifactId>
         	<version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.payu.hackathon</groupId>
+            <artifactId>servicediscovery-annotations</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+         
+        
     </dependencies>
 
 

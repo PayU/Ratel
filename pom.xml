@@ -20,6 +20,7 @@
         <module>transaction-service</module>
         <module>sandbox</module>
 		<module>service-commons</module>
+		<module>servicediscovery-annotations</module>
     </modules>
 
     <packaging>pom</packaging>
