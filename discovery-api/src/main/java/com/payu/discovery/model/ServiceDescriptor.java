@@ -52,6 +52,26 @@ public class ServiceDescriptor {
                 '}';
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ServiceDescriptor that = (ServiceDescriptor) o;
+
+        if (!address.equals(that.address)) return false;
+        if (!name.equals(that.name)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name.hashCode();
+        result = 31 * result + address.hashCode();
+        return result;
+    }
+
     public static class Method {
 
         private String name;

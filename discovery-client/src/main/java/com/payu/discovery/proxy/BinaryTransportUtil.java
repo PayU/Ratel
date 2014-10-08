@@ -10,6 +10,8 @@ import org.springframework.web.HttpRequestHandler;
 
 public final class BinaryTransportUtil {
 
+    public static final int CONNECT_READ_TIMEOUT = 5000;
+
     private BinaryTransportUtil() {
         // hidden utility class constructor
     }
@@ -22,8 +24,8 @@ public final class BinaryTransportUtil {
         proxyFactory.setServiceUrl(serviceUrl);
         proxyFactory.setServiceInterface(clazz);
         proxyFactory.afterPropertiesSet();
-        proxyFactory.setConnectTimeout(5000);
-        proxyFactory.setReadTimeout(5000);
+        proxyFactory.setConnectTimeout(CONNECT_READ_TIMEOUT);
+        proxyFactory.setReadTimeout(CONNECT_READ_TIMEOUT);
         return (T) proxyFactory.getObject();
 
     }

@@ -23,7 +23,12 @@ public class TestBean {
     private OrderService orderService;
 
     @PostConstruct
-    public void testConnection() {
+    public void testConnection() throws InterruptedException {
+        try {
+            orderService.createOrder(new Order());
+        } catch (Throwable e) {
+            Thread.sleep(30000);
+        }
         orderService.createOrder(new Order());
     }
 
