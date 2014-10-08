@@ -1,8 +1,8 @@
 package com.payu.discovery.client.config;
 
-import com.payu.discovery.EnableCache;
-import com.payu.discovery.EnableRetryPolicy;
-import com.payu.discovery.RemoteService;
+import com.payu.discovery.Cachable;
+import com.payu.discovery.Discover;
+import com.payu.discovery.RetryPolicy;
 import com.payu.discovery.client.DiscoveryClient;
 import com.payu.discovery.proxy.HessianClientProducer;
 import com.payu.discovery.proxy.ProxyCache;
@@ -26,16 +26,16 @@ class RemoteAutowireCandidateResolver extends
     @Override
     protected Object buildLazyResolutionProxy(DependencyDescriptor descriptor,
                                               String beanName) {
-        if (descriptor.getField().isAnnotationPresent(RemoteService.class)) {
+        if (descriptor.getField().isAnnotationPresent(Discover.class)) {
             Object client = hessianClientProducer.produce(descriptor.getDependencyType());
 
-            if(descriptor.getField().isAnnotationPresent(EnableCache.class)) {
+            if (descriptor.getField().isAnnotationPresent(Cachable.class)) {
                 client = decorateWithCaching(client, descriptor.getDependencyType());
             }
 
-            if(descriptor.getField().isAnnotationPresent(EnableRetryPolicy.class)) {
-                final EnableRetryPolicy annotation = descriptor.
-                        getField().getAnnotation(EnableRetryPolicy.class);
+            if (descriptor.getField().isAnnotationPresent(RetryPolicy.class)) {
+                final RetryPolicy annotation = descriptor.
+                        getField().getAnnotation(RetryPolicy.class);
                 client = decorateWithRetryPolicy(client,
                         descriptor.getDependencyType(),
                         annotation.exception());

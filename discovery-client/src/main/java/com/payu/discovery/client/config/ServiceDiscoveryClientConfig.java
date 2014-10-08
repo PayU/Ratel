@@ -1,6 +1,6 @@
 package com.payu.discovery.client.config;
 
-import com.payu.discovery.RemoteService;
+import com.payu.discovery.Discover;
 import com.payu.discovery.client.DiscoveryClient;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
@@ -18,7 +18,7 @@ import org.springframework.core.env.Environment;
  * To disable auto export of annotation beans set <code>com.payu.discovery.enabled: false</code>.
  */
 @Configuration
-@ConditionalOnClass({RemoteService.class})
+@ConditionalOnClass({Discover.class})
 @ConditionalOnExpression("${com.payu.discovery.enabled:true}")
 public class ServiceDiscoveryClientConfig implements BeanFactoryAware {
 

@@ -1,7 +1,6 @@
 package com.payu.order.server;
 
 
-import com.payu.discovery.server.EnableServicePublish;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
@@ -11,7 +10,6 @@ import org.springframework.context.annotation.PropertySource;
 @ComponentScan(basePackages = {"com.payu.order.server", "com.payu.training"})
 @Configuration
 @EnableAutoConfiguration
-@EnableServicePublish
 @PropertySource("classpath:propertasy.properties")
 public class OrderServiceMain {
 

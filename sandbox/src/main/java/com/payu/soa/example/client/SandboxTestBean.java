@@ -1,6 +1,6 @@
 package com.payu.soa.example.client;
 
-import com.payu.discovery.RemoteService;
+import com.payu.discovery.Publish;
 import com.payu.order.server.model.Order;
 import com.payu.order.server.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +15,9 @@ public class SandboxTestBean {
 
     @Autowired
     @Lazy
-    @RemoteService
+    @Publish
     private OrderService orderService;
-    
+
     @Autowired
     private Environment env;
 
@@ -31,7 +31,7 @@ public class SandboxTestBean {
         orderService.createOrder(new Order());
         orderService.createOrder(new Order());
         orderService.createOrder(new Order());
-        
+
         System.err.println(env.getProperty("dummy.property"));
         System.err.println(env.getProperty("server.port"));
     }

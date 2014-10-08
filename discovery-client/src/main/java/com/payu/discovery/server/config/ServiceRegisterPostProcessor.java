@@ -1,6 +1,6 @@
 package com.payu.discovery.server.config;
 
-import com.payu.discovery.RemoteService;
+import com.payu.discovery.Publish;
 import com.payu.discovery.model.ServiceDescriptionBuilder;
 import com.payu.discovery.model.ServiceDescriptor;
 import com.payu.discovery.proxy.ProxyMonitoring;
@@ -96,6 +96,6 @@ public class ServiceRegisterPostProcessor implements BeanPostProcessor {
 
     private boolean isService(Object o) {
         return !o.getClass().isInterface()
-                && o.getClass().isAnnotationPresent(RemoteService.class);
+                && o.getClass().isAnnotationPresent(Publish.class);
     }
 }

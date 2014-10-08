@@ -1,20 +1,19 @@
 package com.payu.transaction.server.service;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.stream.Collectors;
-
+import com.payu.discovery.Publish;
+import com.payu.transaction.server.model.Transaction;
+import com.payu.transaction.server.model.TransactionDatabase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.payu.discovery.RemoteService;
-import com.payu.transaction.server.model.Transaction;
-import com.payu.transaction.server.model.TransactionDatabase;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.stream.Collectors;
 
 @Service
-@RemoteService
+@Publish
 public class TransactionServiceImpl implements TransactionService {
 
 	private static final Logger log = LoggerFactory

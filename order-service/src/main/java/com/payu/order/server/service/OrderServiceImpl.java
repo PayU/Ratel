@@ -1,21 +1,20 @@
 package com.payu.order.server.service;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.stream.Collectors;
-
+import com.payu.discovery.Publish;
+import com.payu.order.server.model.Order;
+import com.payu.order.server.model.OrderDatabase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
-import com.payu.discovery.RemoteService;
-import com.payu.order.server.model.Order;
-import com.payu.order.server.model.OrderDatabase;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.stream.Collectors;
 
 @Service
-@RemoteService
+@Publish
 public class OrderServiceImpl implements OrderService {
 
 	private static final Logger log = LoggerFactory

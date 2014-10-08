@@ -1,6 +1,6 @@
 package com.payu.soa.example.client;
 
-import com.payu.discovery.RemoteService;
+import com.payu.discovery.Discover;
 import com.payu.order.server.model.Order;
 import com.payu.order.server.service.OrderService;
 import org.junit.Test;
@@ -16,7 +16,7 @@ import static org.assertj.core.api.BDDAssertions.then;
 public class ClientVerification {
 
     @Autowired
-    @RemoteService
+    @Discover
     private OrderService testBean;
 
     @Test
