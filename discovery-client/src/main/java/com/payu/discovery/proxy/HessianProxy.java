@@ -8,28 +8,44 @@ import org.springframework.util.CollectionUtils;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class HessianProxy implements java.lang.reflect.InvocationHandler {
+
+    private class ServiceClient {
+        public String address;
+        public Object clientProxy;
+
+        private ServiceClient(String address, Object clientProxy) {
+            this.address = address;
+            this.clientProxy = clientProxy;
+        }
+    }
 
     private static final Logger LOGGER = LoggerFactory.getLogger(HessianProxy.class);
 
     private Class<?> serviceApi;
 
-    private List<Object> clients = new ArrayList<>();
+    private LinkedList<ServiceClient> clients = new LinkedList<>();
 
     private DiscoveryClient discoveryClient;
 
-    private Map<String, Collection<ServiceDescriptor>> allServices() {
+    private ListIterator<ServiceClient> listIterator;
+
+    private Map<String, List<ServiceDescriptor>> allServices() {
+
         return discoveryClient
                 .fetchAllServices()
                 .stream()
                 .collect(Collectors.groupingBy(ServiceDescriptor::getName,
-                        Collectors.toCollection(ArrayList::new)));
+                        Collectors.toList()));
     }
 
     public HessianProxy(DiscoveryClient discoveryClient, Class<?> serviceApi) {
@@ -38,17 +54,51 @@ public class HessianProxy implements java.lang.reflect.InvocationHandler {
     }
 
     @Override
-    public Object invoke(Object o, Method method, Object[] args) throws Throwable {
-        if(CollectionUtils.isEmpty(allServices().get(serviceApi.getName()))) {
+    public synchronized Object invoke(Object o, Method method, Object[] args) throws Throwable {
+        final Collection<ServiceDescriptor> fetchesServices = allServices().get(serviceApi.getName());
+        if(CollectionUtils.isEmpty(fetchesServices)) {
             throw new RuntimeException("Service " + serviceApi.getName() + " is not available");
         }
 
-        clients.clear();
-        clients.addAll(allServices().get(serviceApi.getName()).stream().map(serviceDescriptor -> decorateWithMonitoring(BinaryTransportUtil.
-                        createServiceClientProxy(serviceApi, serviceDescriptor.getAddress()),
-                serviceApi)).collect(Collectors.toList()));
+        if(clients == null) {
+            createAllServices(fetchesServices);
+        } else {
+            updateServices(fetchesServices);
+        }
 
-        return method.invoke(clients.iterator().next(), args);
+        if(!listIterator.hasNext()) {
+            listIterator = clients.listIterator();
+        }
+
+        return method.invoke(listIterator.next().clientProxy, args);
+    }
+
+    private void updateServices(Collection<ServiceDescriptor> fetchesServices) {
+        final Map<String, ServiceDescriptor> servicesMap = fetchesServices.stream().collect(Collectors.toMap(ServiceDescriptor::getAddress, Function.identity()));
+        final Iterator<ServiceClient> iterator = clients.iterator();
+        while(iterator.hasNext()) {
+            final ServiceClient next = iterator.next();
+            if(servicesMap.remove(next.address) == null) {
+                iterator.remove();
+            }
+        }
+
+        if(listIterator == null) {
+            listIterator = clients.listIterator();
+        }
+
+        servicesMap.values().stream()
+                .forEach(serviceDescriptor -> listIterator.add(createNewService(serviceDescriptor)));
+    }
+
+    private void createAllServices(Collection<ServiceDescriptor> fetchesServices) {
+        fetchesServices.stream().forEach(this::createNewService);
+    }
+
+    private ServiceClient createNewService(ServiceDescriptor serviceDescriptor) {
+        return new ServiceClient(serviceDescriptor.getAddress(), decorateWithMonitoring(BinaryTransportUtil
+                        .createServiceClientProxy(serviceApi, serviceDescriptor.getAddress()),
+                serviceApi));
     }
 
     public Object decorateWithMonitoring(final Object object, final Class clazz) {
