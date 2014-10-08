@@ -22,7 +22,7 @@ public class FailureGenerator {
 	
 	private Random random = new Random();
 
-	public void forceFailureIfNeeded() {
+	public void forceFailureIfNeeded() { 
 		if (shouldFailOn(TIMEOUT)) {
 			doTimeout();
 		}

@@ -59,7 +59,12 @@
         	<artifactId>scala-library</artifactId>
         	<version>2.10.4</version>
         </dependency>
-    </dependencies>
+        <dependency>
+            <groupId>com.payu.hackathon</groupId>
+            <artifactId>servicediscovery-annotations</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+     </dependencies>
 
     <build>
         <plugins>
