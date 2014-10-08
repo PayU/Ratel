@@ -8,12 +8,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -60,6 +55,7 @@ public class HessianProxy implements java.lang.reflect.InvocationHandler {
             throw new RuntimeException("Service " + serviceApi.getName() + " is not available");
         }
 
+        //FIXME: clients always is not null!
         if(clients == null) {
             createAllServices(fetchesServices);
         } else {
