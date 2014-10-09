@@ -66,6 +66,7 @@ public class InMemoryDiscoveryServer implements DiscoveryServer {
                 .forEach(filtered -> {
                     LOGGER.info("Removing services with address {}", filtered.getKey());
                     services.removeIf(service -> service.equals(filtered.getKey()));
+                    pingedServers.remove(filtered.getKey());
                 });
     }
 }
