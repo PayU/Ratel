@@ -61,7 +61,7 @@ public class HessianProxy implements java.lang.reflect.InvocationHandler {
             updateServices(fetchesServices);
         }
 
-        if(!listIterator.hasNext()) {
+        if(listIterator == null || !listIterator.hasNext()) {
             listIterator = clients.listIterator();
         }
 
@@ -87,13 +87,12 @@ public class HessianProxy implements java.lang.reflect.InvocationHandler {
     }
 
     private void createAllServices(Collection<ServiceDescriptor> fetchesServices) {
-        fetchesServices.stream().forEach(this::createNewService);
+        fetchesServices.stream().forEach(service -> clients.add(createNewService(service)));
     }
 
     private ServiceClient createNewService(ServiceDescriptor serviceDescriptor) {
         return new ServiceClient(serviceDescriptor.getAddress(), decorateWithMonitoring(BinaryTransportUtil
-                        .createServiceClientProxy(serviceApi, serviceDescriptor.getAddress()),
-                serviceApi));
+                        .createServiceClientProxy(serviceApi, serviceDescriptor.getAddress()), serviceApi));
     }
 
     public Object decorateWithMonitoring(final Object object, final Class clazz) {
