@@ -3,7 +3,7 @@ package com.payu.discovery.server.config;
 import com.payu.discovery.Publish;
 import com.payu.discovery.model.ServiceDescriptionBuilder;
 import com.payu.discovery.model.ServiceDescriptor;
-import com.payu.discovery.proxy.ProxyMonitoring;
+import com.payu.discovery.proxy.monitoring.MonitoringInvocationHandler;
 import com.payu.discovery.server.RemoteRestDiscoveryServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -83,7 +83,7 @@ public class ServiceRegisterPostProcessor implements BeanPostProcessor {
     public Object decorateWithMonitoring(final Object object, final Class clazz) {
         return Proxy
                 .newProxyInstance(Thread.currentThread().getContextClassLoader(),
-                        new Class[]{clazz}, new ProxyMonitoring(object));
+                        new Class[]{clazz}, new MonitoringInvocationHandler(object));
     }
 
     private Class<?> getFirstInterface(Object bean) {

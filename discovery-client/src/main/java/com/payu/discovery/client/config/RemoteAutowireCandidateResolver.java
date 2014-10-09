@@ -5,8 +5,8 @@ import com.payu.discovery.Discover;
 import com.payu.discovery.RetryPolicy;
 import com.payu.discovery.client.DiscoveryClient;
 import com.payu.discovery.proxy.HessianClientProducer;
-import com.payu.discovery.proxy.ProxyCache;
-import com.payu.discovery.proxy.ProxyRetryPolicy;
+import com.payu.discovery.proxy.CacheInvocationHandler;
+import com.payu.discovery.proxy.RetryPolicyInvocationHandler;
 import org.springframework.beans.factory.config.DependencyDescriptor;
 import org.springframework.beans.factory.support.AutowireCandidateResolver;
 import org.springframework.context.annotation.ContextAnnotationAutowireCandidateResolver;
@@ -49,13 +49,13 @@ class RemoteAutowireCandidateResolver extends
     public Object decorateWithCaching(final Object object, final Class clazz) {
         return Proxy
                 .newProxyInstance(Thread.currentThread().getContextClassLoader(),
-                        new Class[]{clazz}, new ProxyCache(object));
+                        new Class[]{clazz}, new CacheInvocationHandler(object));
     }
 
     public Object decorateWithRetryPolicy(final Object object, final Class clazz, final Class exception) {
         return Proxy
                 .newProxyInstance(Thread.currentThread().getContextClassLoader(),
-                        new Class[]{clazz}, new ProxyRetryPolicy(object, exception));
+                        new Class[]{clazz}, new RetryPolicyInvocationHandler(object, exception));
     }
 
 }

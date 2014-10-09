@@ -2,6 +2,7 @@ package com.payu.discovery.proxy;
 
 import com.payu.discovery.client.DiscoveryClient;
 import com.payu.discovery.model.ServiceDescriptor;
+import com.payu.discovery.proxy.monitoring.MonitoringInvocationHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
@@ -12,7 +13,7 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class HessianProxy implements java.lang.reflect.InvocationHandler {
+public class LoadBalancingInvocationHandler implements java.lang.reflect.InvocationHandler {
 
     private class ServiceClient {
         public String address;
@@ -24,7 +25,7 @@ public class HessianProxy implements java.lang.reflect.InvocationHandler {
         }
     }
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(HessianProxy.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(LoadBalancingInvocationHandler.class);
 
     private Class<?> serviceApi;
 
@@ -43,7 +44,7 @@ public class HessianProxy implements java.lang.reflect.InvocationHandler {
                         Collectors.toList()));
     }
 
-    public HessianProxy(DiscoveryClient discoveryClient, Class<?> serviceApi) {
+    public LoadBalancingInvocationHandler(DiscoveryClient discoveryClient, Class<?> serviceApi) {
         this.discoveryClient = discoveryClient;
         this.serviceApi = serviceApi;
     }
@@ -98,7 +99,7 @@ public class HessianProxy implements java.lang.reflect.InvocationHandler {
     public Object decorateWithMonitoring(final Object object, final Class clazz) {
         return Proxy
                 .newProxyInstance(Thread.currentThread().getContextClassLoader(),
-                        new Class[]{clazz}, new ProxyMonitoring(object));
+                        new Class[]{clazz}, new MonitoringInvocationHandler(object));
     }
 
 }

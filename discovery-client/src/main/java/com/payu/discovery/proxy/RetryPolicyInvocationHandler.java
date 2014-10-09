@@ -6,9 +6,9 @@ import org.slf4j.LoggerFactory;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-public class ProxyRetryPolicy implements java.lang.reflect.InvocationHandler {
+public class RetryPolicyInvocationHandler implements java.lang.reflect.InvocationHandler {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ProxyRetryPolicy.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(RetryPolicyInvocationHandler.class);
 
     private static final long RETRY_TIME = 5000;
 
@@ -18,7 +18,7 @@ public class ProxyRetryPolicy implements java.lang.reflect.InvocationHandler {
 
     private Object object;
 
-    public ProxyRetryPolicy(Object object, Class exception) {
+    public RetryPolicyInvocationHandler(Object object, Class exception) {
         this.object = object;
         this.exception = exception;
     }

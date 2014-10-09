@@ -1,4 +1,4 @@
-package com.payu.discovery.proxy;
+package com.payu.discovery.proxy.monitoring;
 
 import com.google.common.collect.EvictingQueue;
 import org.slf4j.Logger;
@@ -7,15 +7,15 @@ import org.slf4j.LoggerFactory;
 import java.lang.reflect.Method;
 import java.util.stream.Collectors;
 
-public class ProxyMonitoring implements java.lang.reflect.InvocationHandler {
+public class MonitoringInvocationHandler implements java.lang.reflect.InvocationHandler {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ProxyMonitoring.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(MonitoringInvocationHandler.class);
 
     private Object object;
 
     private EvictingQueue lastInvocations = EvictingQueue.create(10);
 
-    public ProxyMonitoring(Object object) {
+    public MonitoringInvocationHandler(Object object) {
         this.object = object;
     }
 

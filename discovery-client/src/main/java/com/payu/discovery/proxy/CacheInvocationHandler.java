@@ -9,9 +9,9 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
-public class ProxyCache implements java.lang.reflect.InvocationHandler {
+public class CacheInvocationHandler implements java.lang.reflect.InvocationHandler {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ProxyCache.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CacheInvocationHandler.class);
 
     private Object object;
 
@@ -20,7 +20,7 @@ public class ProxyCache implements java.lang.reflect.InvocationHandler {
             .expireAfterWrite(10, TimeUnit.MINUTES)
             .build();
 
-    public ProxyCache(Object object) {
+    public CacheInvocationHandler(Object object) {
         this.object = object;
     }
 

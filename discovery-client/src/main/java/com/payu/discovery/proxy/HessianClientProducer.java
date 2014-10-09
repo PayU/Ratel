@@ -16,7 +16,7 @@ public class HessianClientProducer {
     public Object produce(Class<?> clazz) {
         return Proxy
                 .newProxyInstance(Thread.currentThread().getContextClassLoader(),
-                        new Class[]{clazz}, new HessianProxy(discoveryClient, clazz));
+                        new Class[]{clazz}, new LoadBalancingInvocationHandler(discoveryClient, clazz));
     }
 
 }
