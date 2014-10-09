@@ -2,6 +2,8 @@ package com.payu.discovery.client.config;
 
 import com.payu.discovery.Discover;
 import com.payu.discovery.client.DiscoveryClient;
+import com.payu.discovery.proxy.monitoring.ServiceDiscoveryHealth;
+
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
@@ -40,6 +42,11 @@ public class ServiceDiscoveryClientConfig implements BeanFactoryAware {
     @Bean
     public AutowireCandidateResolverConfigurer autowireCandidateResolverConfigurer() {
         return new AutowireCandidateResolverConfigurer(remoteAutowireCandidateResolver());
+    }
+
+    @Bean
+    public ServiceDiscoveryHealth serviceDiscoveryHealth(){
+        return new ServiceDiscoveryHealth(discoveryClient());
     }
 
     @Override
