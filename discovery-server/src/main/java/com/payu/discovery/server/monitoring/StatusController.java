@@ -1,12 +1,15 @@
-package com.payu.discovery.server.monitoring;
+package com.payu.discovery.server;
 
 
-import com.payu.discovery.server.DiscoveryServer;
+import java.util.Collection;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+
+import com.payu.discovery.model.ServiceDescriptor;
 
 @Controller
 public class StatusController {
@@ -20,9 +23,10 @@ public class StatusController {
 
     @RequestMapping(value = "/services", method = RequestMethod.GET)
     public String greeting(Model model) {
-
-        model.addAttribute("services", discoveryServer.fetchAllServices());
-
+        Collection<ServiceDescriptor> services = discoveryServer.fetchAllServices();
+        if (!services.isEmpty()){
+            model.addAttribute("services", services);
+        }
         return "services";
     }
 
