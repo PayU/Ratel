@@ -5,17 +5,20 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 <body>
+
     <table>
         <thead>
         <tr>
             <th>Name</th>
             <th>Address</th>
+            <th>Path</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="service : ${services}">
-            <td th:text="${service.name}" />
-            <td th:text="${service.address}" />
+            <td th:text="${service.name}">Oranges</td>
+            <td th:text="${service.address}">Oranges</td>
+            <td th:text="${service.path}">0.99</td>
         </tr>
         </tbody>
     </table>
