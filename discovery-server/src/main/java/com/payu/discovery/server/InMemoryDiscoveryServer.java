@@ -7,6 +7,8 @@ import com.google.common.collect.Sets;
 import com.payu.discovery.model.ServiceDescriptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.actuate.metrics.GaugeService;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -35,6 +37,13 @@ public class InMemoryDiscoveryServer implements DiscoveryServer {
             new ConcurrentHashMap<ServiceDescriptor, Boolean>());
 
     private Map<ServiceDescriptor, Long> pingedServers = new ConcurrentHashMap<>();
+
+    private GaugeService gaugeService;
+
+    @Autowired
+    public InMemoryDiscoveryServer(GaugeService gaugeService) {
+        this.gaugeService = gaugeService;
+    }
 
     @Override
     @POST
@@ -68,5 +77,7 @@ public class InMemoryDiscoveryServer implements DiscoveryServer {
                     services.removeIf(service -> service.equals(filtered.getKey()));
                     pingedServers.remove(filtered.getKey());
                 });
+        gaugeService.submit("registered.services.count", services.size());
+        gaugeService.submit("registered.servers.count", pingedServers.size());
     }
 }
