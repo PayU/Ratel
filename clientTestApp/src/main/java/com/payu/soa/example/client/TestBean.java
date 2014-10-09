@@ -26,9 +26,6 @@ public class TestBean {
        orderService.createOrder(new Order());
        orderService.createOrder(new Order());
        orderService.createOrder(new Order());
-       orderService.createOrder(new Order());
-       orderService.createOrder(new Order());
-       orderService.createOrder(new Order());
     }
 
 }

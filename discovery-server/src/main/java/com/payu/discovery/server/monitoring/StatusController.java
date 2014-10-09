@@ -1,13 +1,12 @@
-package com.payu.discovery.server;
+package com.payu.discovery.server.monitoring;
 
 
+import com.payu.discovery.server.DiscoveryServer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-
-import com.payu.discovery.model.ServiceDescriptor;
 
 @Controller
 public class StatusController {
@@ -22,9 +21,7 @@ public class StatusController {
     @RequestMapping(value = "/services", method = RequestMethod.GET)
     public String greeting(Model model) {
 
-        for (ServiceDescriptor serviceDescriptor : discoveryServer.fetchAllServices()) {
-            model.addAttribute("service", serviceDescriptor.getName());
-        }
+        model.addAttribute("services", discoveryServer.fetchAllServices());
 
         return "services";
     }
