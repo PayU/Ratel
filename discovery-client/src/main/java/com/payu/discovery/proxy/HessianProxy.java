@@ -55,8 +55,7 @@ public class HessianProxy implements java.lang.reflect.InvocationHandler {
             throw new RuntimeException("Service " + serviceApi.getName() + " is not available");
         }
 
-        //FIXME: clients always is not null!
-        if(clients == null) {
+        if(clients.isEmpty()) {
             createAllServices(fetchesServices);
         } else {
             updateServices(fetchesServices);
