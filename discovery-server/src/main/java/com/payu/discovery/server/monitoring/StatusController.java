@@ -28,7 +28,7 @@ public class StatusController {
     }
 
     @ModelAttribute("services")
-    public Collection<ServiceDescriptor> populateFeatures() {
+    public Collection<ServiceDescriptor> populateServices() {
         return discoveryServer.fetchAllServices();
     }
 }
