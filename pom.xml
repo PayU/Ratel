@@ -16,6 +16,8 @@
         <module>order-service</module>
         <module>user-api</module>
         <module>user-service</module>
+        <module>pos-api</module>
+        <module>pos-service</module>
         <module>transaction-api</module>
         <module>transaction-service</module>
         <module>sandbox</module>

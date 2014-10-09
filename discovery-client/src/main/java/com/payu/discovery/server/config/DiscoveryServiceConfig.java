@@ -14,7 +14,6 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
 /**
  * {@link org.springframework.boot.autoconfigure.EnableAutoConfiguration Auto-configuration} to enable/disable Spring's
- * {@link com.payu.discovery.client.EnableServicePublish} mechanism based on configuration properties.
  * <p/>
  * To disable auto export of annotation beans set <code>com.payu.discovery.enabled: false</code>.
  */
