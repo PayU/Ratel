@@ -10,7 +10,7 @@ public interface OrderService {
 
     public Order getOrder(Long id);
 
-	public abstract int deletOrders();
+	public abstract int deleteOrderById();
 	
 	public Collection<Order> getOrdersByUserId(long userId);
 

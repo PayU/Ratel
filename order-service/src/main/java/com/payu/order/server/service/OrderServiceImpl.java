@@ -37,7 +37,7 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	@Override
-	public int deletOrders() {
+	public int deleteOrderById() {
 		return database.clear();
 	}
 
