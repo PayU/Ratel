@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
 
-@ComponentScan(basePackages = "com.payu.order.server")
+@ComponentScan(basePackages = {"com.payu.user.server", "com.payu.training.service"})
 @Configuration
 @EnableAutoConfiguration
 @PropertySource("classpath:propertasy.properties")
