@@ -21,6 +21,8 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
@@ -77,9 +79,13 @@ public class InMemoryDiscoveryServer implements DiscoveryServer {
     @PUT
     @Consumes("application/json")
     @Path("/service/{service}")
-    public void collectStatistics(@PathParam("service") String service,
+    public void collectStatistics(@PathParam("service") String address,
                                   Map<String, Map<String, String>> statistics) {
-        statisticsHolder.putStatistics(service, statistics);
+        try {
+            statisticsHolder.putStatistics(URLDecoder.decode(address, "UTF-8"), statistics);
+        } catch (UnsupportedEncodingException e) {
+            throw new AssertionError("UTF-8 must be supported");
+        }
     }
 
     @Scheduled(fixedRate = SECONDS_20)

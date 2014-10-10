@@ -37,6 +37,6 @@ public class StatusController {
                 .collect(Collectors
                         .toMap(Function.identity(),
                                 serviceDescriptor ->
-                                        statisticsHolder.getStatistics(serviceDescriptor.getName())));
+                                        statisticsHolder.getStatistics(serviceDescriptor.getAddress())));
     }
 }

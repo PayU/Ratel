@@ -7,6 +7,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import retrofit.RestAdapter;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 public class RemoteRestDiscoveryServer {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RemoteRestDiscoveryServer.class);
@@ -29,8 +32,12 @@ public class RemoteRestDiscoveryServer {
     }
 
     public void collectStatistics(ServiceDescriptor serviceDescriptor) {
-        api.collectStatistics(serviceDescriptor.getName(),
-                StatisticsHolder.getStatistics(serviceDescriptor.getName()));
+        try {
+            api.collectStatistics(URLEncoder.encode(serviceDescriptor.getAddress(), "UTF-8"),
+                    StatisticsHolder.getStatistics(serviceDescriptor.getName()));
+        } catch (UnsupportedEncodingException e) {
+            throw new AssertionError("UTF-8 must be supported");
+        }
     }
 
 }

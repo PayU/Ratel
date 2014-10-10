@@ -25,7 +25,7 @@ public interface ServiceDiscoveryApi {
     Response deleteAllServices();
 
     @PUT("/service/{service}")
-    Response collectStatistics(@Path("service") String service,
+    Response collectStatistics(@Path("service") String address,
                                @Body Map<String, Map<String, String>> statistics);
 
 }

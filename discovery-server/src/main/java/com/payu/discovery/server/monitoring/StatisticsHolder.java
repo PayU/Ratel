@@ -10,14 +10,14 @@ import java.util.concurrent.ConcurrentHashMap;
 public class StatisticsHolder {
 
     //TODO - refactor this bin for statically typed structure...
-    // Pair of static - value for methods of services
+    // Pair of server - value for methods of services
     private Map<String, Map<String, Map<String, String>>> statistics = new ConcurrentHashMap<>();
 
-    public void putStatistics(String service, Map<String, Map<String, String>> serviceStatistics) {
-        statistics.put(service, serviceStatistics);
+    public void putStatistics(String address, Map<String, Map<String, String>> serviceStatistics) {
+        statistics.put(address, serviceStatistics);
     }
 
-    public Map<String, Map<String, String>> getStatistics(String service) {
-        return statistics.containsKey(service) ? statistics.get(service) : new HashMap<>();
+    public Map<String, Map<String, String>> getStatistics(String address) {
+        return statistics.containsKey(address) ? statistics.get(address) : new HashMap<>();
     }
 }
