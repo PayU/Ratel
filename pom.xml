@@ -21,7 +21,6 @@
         <module>pos-service</module>
         <module>transaction-api</module>
         <module>transaction-service</module>
-        <module>sandbox</module>
         <module>service-commons</module>
         <module>servicediscovery-annotations</module>
     </modules>
