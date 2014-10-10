@@ -1,25 +1,27 @@
 package com.payu.discovery.server.monitoring;
 
-import java.util.Collection;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-
 import com.payu.discovery.model.ServiceDescriptor;
 import com.payu.discovery.server.DiscoveryServer;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Controller
 public class StatusController {
 
     private final DiscoveryServer discoveryServer;
 
+    private final StatisticsHolder statisticsHolder;
+
     @Autowired
-    public StatusController(DiscoveryServer discoveryServer) {
+    public StatusController(DiscoveryServer discoveryServer, StatisticsHolder statisticsHolder) {
         this.discoveryServer = discoveryServer;
+        this.statisticsHolder = statisticsHolder;
     }
 
     @RequestMapping(value = "/services")
@@ -28,7 +30,13 @@ public class StatusController {
     }
 
     @ModelAttribute("services")
-    public Collection<ServiceDescriptor> populateServices() {
-        return discoveryServer.fetchAllServices();
+    public Map<ServiceDescriptor, Map<String, Map<String, String>>> populateServices() {
+        return discoveryServer
+                .fetchAllServices()
+                .stream()
+                .collect(Collectors
+                        .toMap(Function.identity(),
+                                serviceDescriptor ->
+                                        statisticsHolder.getStatistics(serviceDescriptor.getName())));
     }
 }

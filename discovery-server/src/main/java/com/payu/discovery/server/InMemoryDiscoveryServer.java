@@ -5,6 +5,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.collect.Sets;
 import com.payu.discovery.model.ServiceDescriptor;
+import com.payu.discovery.server.monitoring.StatisticsHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,9 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import java.util.Collection;
 import java.util.Map;
@@ -33,16 +36,19 @@ public class InMemoryDiscoveryServer implements DiscoveryServer {
 
     public static final int SECONDS_25 = 25000;
 
-    private Set<ServiceDescriptor> services = Sets.newSetFromMap((Map<ServiceDescriptor, Boolean>)
+    private final Set<ServiceDescriptor> services = Sets.newSetFromMap((Map<ServiceDescriptor, Boolean>)
             new ConcurrentHashMap<ServiceDescriptor, Boolean>());
 
-    private Map<ServiceDescriptor, Long> pingedServers = new ConcurrentHashMap<>();
+    private final Map<ServiceDescriptor, Long> pingedServers = new ConcurrentHashMap<>();
 
-    private GaugeService gaugeService;
+    private final GaugeService gaugeService;
+
+    private final StatisticsHolder statisticsHolder;
 
     @Autowired
-    public InMemoryDiscoveryServer(GaugeService gaugeService) {
+    public InMemoryDiscoveryServer(GaugeService gaugeService, StatisticsHolder statisticsHolder) {
         this.gaugeService = gaugeService;
+        this.statisticsHolder = statisticsHolder;
     }
 
     @Override
@@ -67,11 +73,20 @@ public class InMemoryDiscoveryServer implements DiscoveryServer {
 		services.clear();
 	}
 
+    @Override
+    @PUT
+    @Consumes("application/json")
+    @Path("/service/{service}")
+    public void collectStatistics(@PathParam("service") String service,
+                                  Map<String, Map<String, String>> statistics) {
+        statisticsHolder.putStatistics(service, statistics);
+    }
+
     @Scheduled(fixedRate = SECONDS_20)
     public void checkActiveServices() {
         pingedServers.entrySet()
                 .stream()
-                .filter(entry -> entry.getValue() < System.currentTimeMillis() - SECONDS_25)
+                .filter(entry -> isActive(entry.getValue()))
                 .forEach(filtered -> {
                     LOGGER.info("Removing services with address {}", filtered.getKey());
                     services.removeIf(service -> service.equals(filtered.getKey()));
@@ -79,5 +94,9 @@ public class InMemoryDiscoveryServer implements DiscoveryServer {
                 });
         gaugeService.submit("registered.services.count", services.size());
         gaugeService.submit("registered.servers.count", pingedServers.size());
+    }
+
+    private boolean isActive(Long time) {
+        return time < System.currentTimeMillis() - SECONDS_25;
     }
 }

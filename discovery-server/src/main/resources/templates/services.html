@@ -42,13 +42,43 @@
                 <tr>
                     <th>Name</th>
                     <th>Address</th>
+                    <th>Statistics</th>
                 </tr>
                 </thead>
                 <tbody>
 
                 <tr th:each="service : ${services}">
-                    <td th:text="${service.name}"></td>
-                    <td th:text="${service.address}"></td>
+                    <td th:text="${service.key.name}"></td>
+                    <td th:text="${service.key.address}"></td>
+                    <td>
+                        <table class="table table-striped">
+                            <thead>
+                                <th>Method</th>
+                                <th>Statistics</th>
+                            </thead>
+                            <tbody>
+                                <tr th:each="method : ${service.value}">
+                                    <td th:text="${method.key}"></td>
+                                    <td>
+                                        <table class="table table-striped">
+                                            <thead>
+                                            <tr>
+                                                <th>Statistic</th>
+                                                <th>Value [ms]</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr th:each="stat : ${method.value}">
+                                                    <td th:text="${stat.key}"></td>
+                                                    <td th:text="${stat.value}"></td>
+                                                </tr>
+                                            </tbody>
+                                         </table>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
                 </tr>
                 </tbody>
             </table>

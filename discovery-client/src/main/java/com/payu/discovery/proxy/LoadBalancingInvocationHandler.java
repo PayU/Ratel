@@ -15,17 +15,18 @@ import java.util.stream.Collectors;
 
 public class LoadBalancingInvocationHandler implements java.lang.reflect.InvocationHandler {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(LoadBalancingInvocationHandler.class);
+
     private class ServiceClient {
         public String address;
-        public Object clientProxy;
 
+        public Object clientProxy;
         private ServiceClient(String address, Object clientProxy) {
             this.address = address;
             this.clientProxy = clientProxy;
         }
-    }
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(LoadBalancingInvocationHandler.class);
+    }
 
     private Class<?> serviceApi;
 
@@ -33,7 +34,7 @@ public class LoadBalancingInvocationHandler implements java.lang.reflect.Invocat
 
     private DiscoveryClient discoveryClient;
 
-    private ListIterator<ServiceClient> listIterator;
+    private ListIterator<ServiceClient> loadBalancingIterator;
 
     private Map<String, List<ServiceDescriptor>> allServices() {
 
@@ -62,11 +63,11 @@ public class LoadBalancingInvocationHandler implements java.lang.reflect.Invocat
             updateServices(fetchesServices);
         }
 
-        if(listIterator == null || !listIterator.hasNext()) {
-            listIterator = clients.listIterator();
+        if(loadBalancingIterator == null || !loadBalancingIterator.hasNext()) {
+            loadBalancingIterator = clients.listIterator();
         }
 
-        return method.invoke(listIterator.next().clientProxy, args);
+        return method.invoke(loadBalancingIterator.next().clientProxy, args);
     }
 
     private void updateServices(Collection<ServiceDescriptor> fetchesServices) {
@@ -79,12 +80,12 @@ public class LoadBalancingInvocationHandler implements java.lang.reflect.Invocat
             }
         }
 
-        if(listIterator == null) {
-            listIterator = clients.listIterator();
+        if(loadBalancingIterator == null) {
+            loadBalancingIterator = clients.listIterator();
         }
 
         servicesMap.values().stream()
-                .forEach(serviceDescriptor -> listIterator.add(createNewService(serviceDescriptor)));
+                .forEach(serviceDescriptor -> loadBalancingIterator.add(createNewService(serviceDescriptor)));
     }
 
     private void createAllServices(Collection<ServiceDescriptor> fetchesServices) {

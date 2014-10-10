@@ -54,7 +54,14 @@ public class ServiceRegisterPostProcessor implements BeanPostProcessor {
     private void registerService(HessianServiceExporter bean, String beanName) {
         ServiceDescriptor serviceDescriptor = buildService(bean, beanName);
         LOGGER.info("Registering service {}", serviceDescriptor);
-        taskScheduler.scheduleAtFixedRate(() -> server.registerService(serviceDescriptor), SECONDS_20);
+        applyHeartBeat(serviceDescriptor);
+    }
+
+    private void applyHeartBeat(ServiceDescriptor serviceDescriptor) {
+        taskScheduler.scheduleAtFixedRate(() -> {
+            server.registerService(serviceDescriptor);
+            server.collectStatistics(serviceDescriptor);
+        }, SECONDS_20);
     }
 
     private ServiceDescriptor buildService(HessianServiceExporter bean, String beanName) {
