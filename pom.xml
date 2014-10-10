@@ -4,16 +4,14 @@
         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.payu.hackathon</groupId>
-    <artifactId>servicediscovery</artifactId>
+    <groupId>org.ratel</groupId>
+    <artifactId>ratel-project</artifactId>
     <version>1.0-SNAPSHOT</version>
     <modules>
-        <module>discovery-client</module>
-        <module>discovery-api</module>
-        <module>discovery-server</module>
-        <module>discovery-tests</module>
-<!--        <module>clientTestApp</module>-->
-        <module>annotations</module>
+        <module>api</module>
+        <module>library</module>
+        <module>server</module>
+        <module>tests</module>
     </modules>
 
     <packaging>pom</packaging>
