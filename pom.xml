@@ -11,6 +11,7 @@
         <module>discovery-client</module>
         <module>discovery-api</module>
         <module>discovery-server</module>
+        <module>discovery-tests</module>
         <module>clientTestApp</module>
         <module>order-api</module>
         <module>order-service</module>
@@ -21,8 +22,8 @@
         <module>transaction-api</module>
         <module>transaction-service</module>
         <module>sandbox</module>
-		<module>service-commons</module>
-		<module>servicediscovery-annotations</module>
+        <module>service-commons</module>
+        <module>servicediscovery-annotations</module>
     </modules>
 
     <packaging>pom</packaging>
