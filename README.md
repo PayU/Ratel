@@ -2,7 +2,7 @@ ratel - service discovery
 =================
 
 
-<img href="client-ratel-server.png"/>
+![client->ratel->server](http://yuml.me/diagram/scruffy/class/[FooClient]-%3E[Ratel%20Server],%20[Ratel%20Server]-%3E[FooService])
 
 `FooClient.java` in **Client** application
 
