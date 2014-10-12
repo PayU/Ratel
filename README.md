@@ -2,7 +2,7 @@ ratel - service discovery
 =================
 
 
-![client->ratel->server](http://yuml.me/diagram/scruffy/class/[FooClient]-%3E[Ratel%20Server],%20[Ratel%20Server]-%3E[FooService])
+![client->ratel->server](http://yuml.me/diagram/scruffy/class/[FooClient]discover-%3E[Ratel%20Server],%20[FooServer]publish-%3E[Ratel%20Server],%20[FooClient]-%3E[FooServer])
 
 `FooClient.java` in **Client** application
 
