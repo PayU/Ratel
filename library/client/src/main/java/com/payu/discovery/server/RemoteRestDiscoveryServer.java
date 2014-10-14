@@ -6,6 +6,7 @@ import com.payu.discovery.proxy.monitoring.StatisticsHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import retrofit.RestAdapter;
+import retrofit.RetrofitError;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -26,8 +27,8 @@ public class RemoteRestDiscoveryServer {
     public void registerService(ServiceDescriptor serviceDescriptor) {
         try {
             api.registerService(serviceDescriptor);
-        } catch (Exception e) {
-            //nothing ... will be invoker at fixed rate
+        } catch (RetrofitError e) {
+            LOGGER.warn("Retrofit error was thrown while registering service. Try again.");
         }
     }
 
@@ -37,6 +38,8 @@ public class RemoteRestDiscoveryServer {
                     StatisticsHolder.getStatistics(serviceDescriptor.getName()));
         } catch (UnsupportedEncodingException e) {
             throw new AssertionError("UTF-8 must be supported");
+        } catch (RetrofitError e) {
+            LOGGER.warn("Retrofit error was thrown while collecting statistics. Try again.");
         }
     }
 
