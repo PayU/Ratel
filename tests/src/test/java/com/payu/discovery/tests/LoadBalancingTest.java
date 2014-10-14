@@ -93,7 +93,15 @@ public class LoadBalancingTest {
 
     @Test
     public void shouldLoadBalanceBetweenImplementations() throws InterruptedException {
-        await().atMost(5, TimeUnit.SECONDS).until(() -> assertThat(server.fetchAllServices()).hasSize(2));
+        await().atMost(5, TimeUnit.SECONDS).until(
+        		new Runnable() {
+					
+					@Override
+					public void run() {
+						assertThat(server.fetchAllServices()).hasSize(2);
+					}
+				});
+        		
 
         //when
         final int result = testService.incrementCounter();
