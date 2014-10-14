@@ -53,7 +53,19 @@ public class ServiceRegistrationTest {
 
     @Test
     public void shouldRegisterServices() throws InterruptedException {
-        await().atMost(5, TimeUnit.SECONDS).until(() -> assertThat(server.fetchAllServices()).hasSize(1));
+        await().atMost(5, TimeUnit.SECONDS).until (
+        		new Runnable() {
+					
+					@Override
+					public void run() {
+						assertThat(server.fetchAllServices()).hasSize(1);
+						
+					}
+				}
+        		);
+        
+        
+        
         assertThat(server.fetchAllServices().stream().findFirst().get().getName())
                 .isEqualTo("com.payu.discovery.tests.TestService");
     }
