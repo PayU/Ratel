@@ -3,6 +3,8 @@ package com.payu.discovery.tests;
 import static com.jayway.awaitility.Awaitility.await;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.payu.discovery.Discover;
+import com.payu.discovery.client.EnableServiceDiscovery;
 import com.payu.discovery.client.config.ServiceDiscoveryClientConfig;
 import com.payu.discovery.server.DiscoveryServerMain;
 import com.payu.discovery.server.InMemoryDiscoveryServer;
@@ -24,13 +26,18 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import java.util.concurrent.TimeUnit;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = DiscoveryServerMain.class)
+@SpringApplicationConfiguration(classes = {DiscoveryServerMain.class, ServiceDiscoverTest.class})
 @IntegrationTest("server.port:8060")
 @WebAppConfiguration
-public class ServiceRegistrationTest {
+@PropertySource("classpath:propertasy.properties")
+@EnableServiceDiscovery
+public class ServiceDiscoverTest {
 
     @Autowired
     private InMemoryDiscoveryServer server;
+
+    @Discover
+    private TestService testService;
 
     @Before
     public void before() throws InterruptedException {
@@ -52,11 +59,15 @@ public class ServiceRegistrationTest {
     }
 
     @Test
-    public void shouldRegisterServices() throws InterruptedException {
+    public void shouldDiscoverService() throws InterruptedException {
         await().atMost(5, TimeUnit.SECONDS).until(() ->
                 assertThat(server.fetchAllServices()).hasSize(1));
-        assertThat(server.fetchAllServices().stream().findFirst().get().getName())
-                .isEqualTo("com.payu.discovery.tests.TestService");
+
+        //when
+        final int result = testService.testMethod();
+
+        //then
+        assertThat(result).isEqualTo(100);
     }
 
 }
