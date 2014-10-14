@@ -25,17 +25,19 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = {DiscoveryServerMain.class, ServiceDiscoverTest.class})
-@IntegrationTest("server.port:8061")
+@SpringApplicationConfiguration(classes = {DiscoveryServerMain.class, LoadBalancingTest.class})
+@IntegrationTest("server.port:8060")
 @WebAppConfiguration
-@PropertySource("classpath:propertasy.properties")
 @EnableServiceDiscovery
-public class ServiceDiscoverTest {
+@PropertySource("classpath:propertasy.properties")
+public class LoadBalancingTest {
 
-    private ConfigurableApplicationContext remoteContext;
+    private List<ConfigurableApplicationContext> remoteContexts = new ArrayList<>();
 
     @Autowired
     private InMemoryDiscoveryServer server;
@@ -45,22 +47,27 @@ public class ServiceDiscoverTest {
 
     @Before
     public void before() throws InterruptedException {
-        remoteContext = SpringApplication.run(ServiceConfiguration.class,
+        remoteContexts.add(SpringApplication.run(ServiceConfiguration.class,
                 "--server.port=8031",
                 "--app.address=http://localhost:8031",
                 "--spring.jmx.enabled=false",
-                "--serviceDiscovery.address=http://localhost:8061/server/discovery");
+                "--serviceDiscovery.address=http://localhost:8060/server/discovery"));
+
+        remoteContexts.add(SpringApplication.run(SecondServiceConfiguration.class,
+                "--server.port=8032",
+                "--app.address=http://localhost:8032",
+                "--spring.jmx.enabled=false",
+                "--serviceDiscovery.address=http://localhost:8060/server/discovery"));
     }
 
     @After
     public void close() {
-        remoteContext.close();
+        remoteContexts.forEach(context -> context.close());
     }
 
     @Configuration
     @EnableAutoConfiguration
     @Import(ServiceDiscoveryClientConfig.class)
-    @WebAppConfiguration
     public static class ServiceConfiguration {
 
         @Bean
@@ -70,22 +77,33 @@ public class ServiceDiscoverTest {
 
     }
 
-    @Test
-    public void shouldDiscoverService() throws InterruptedException {
-        await().atMost(5, TimeUnit.SECONDS).until(new Runnable() {
+    @Configuration
+    @EnableAutoConfiguration
+    @Import(ServiceDiscoveryClientConfig.class)
+    public static class SecondServiceConfiguration {
 
-			@Override
-			public void run() {
-				assertThat(server.fetchAllServices()).hasSize(1);
-			}
-        	
-        });
+        @Bean
+        public TestService testService() {
+            return new TestServiceImpl();
+        }
+
+    }
+
+    @Test
+    public void shouldLoadBalanceBetweenImplementations() throws InterruptedException {
+        await().atMost(5, TimeUnit.SECONDS).until(() -> assertThat(server.fetchAllServices()).hasSize(2));
 
         //when
         final int result = testService.testMethod();
+        final int result2 = testService.testMethod();
+        final int result3 = testService.testMethod();
+        final int result4 = testService.testMethod();
 
         //then
         assertThat(result).isEqualTo(1);
+        assertThat(result2).isEqualTo(1);
+        assertThat(result3).isEqualTo(2);
+        assertThat(result4).isEqualTo(2);
     }
 
 }
