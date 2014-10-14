@@ -2,5 +2,7 @@ package com.payu.discovery.tests;
 
 public interface TestService {
 
-    int testMethod();
+    int incrementCounter();
+
+    int cached(String arg);
 }

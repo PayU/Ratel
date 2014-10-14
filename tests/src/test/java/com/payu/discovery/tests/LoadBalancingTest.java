@@ -31,7 +31,9 @@ import java.util.concurrent.TimeUnit;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = {DiscoveryServerMain.class, LoadBalancingTest.class})
-@IntegrationTest("server.port:8060")
+@IntegrationTest({
+        "server.port:8060",
+        "serviceDiscovery.address:http://localhost:8060/server/discovery"})
 @WebAppConfiguration
 @EnableServiceDiscovery
 @PropertySource("classpath:propertasy.properties")
@@ -94,10 +96,10 @@ public class LoadBalancingTest {
         await().atMost(5, TimeUnit.SECONDS).until(() -> assertThat(server.fetchAllServices()).hasSize(2));
 
         //when
-        final int result = testService.testMethod();
-        final int result2 = testService.testMethod();
-        final int result3 = testService.testMethod();
-        final int result4 = testService.testMethod();
+        final int result = testService.incrementCounter();
+        final int result2 = testService.incrementCounter();
+        final int result3 = testService.incrementCounter();
+        final int result4 = testService.incrementCounter();
 
         //then
         assertThat(result).isEqualTo(1);

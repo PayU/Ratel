@@ -3,6 +3,7 @@ package com.payu.discovery.tests;
 import static com.jayway.awaitility.Awaitility.await;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.payu.discovery.Cachable;
 import com.payu.discovery.Discover;
 import com.payu.discovery.client.EnableServiceDiscovery;
 import com.payu.discovery.client.config.ServiceDiscoveryClientConfig;
@@ -28,14 +29,14 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import java.util.concurrent.TimeUnit;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = {DiscoveryServerMain.class, ServiceDiscoverTest.class})
+@SpringApplicationConfiguration(classes = {DiscoveryServerMain.class, ClientCacheTest.class})
 @IntegrationTest({
-        "server.port:8061",
-        "serviceDiscovery.address:http://localhost:8061/server/discovery"})
+        "server.port:8063",
+        "serviceDiscovery.address:http://localhost:8063/server/discovery"})
 @WebAppConfiguration
 @PropertySource("classpath:propertasy.properties")
 @EnableServiceDiscovery
-public class ServiceDiscoverTest {
+public class ClientCacheTest {
 
     private ConfigurableApplicationContext remoteContext;
 
@@ -43,6 +44,7 @@ public class ServiceDiscoverTest {
     private InMemoryDiscoveryServer server;
 
     @Discover
+    @Cachable
     private TestService testService;
 
     @Before
@@ -51,7 +53,7 @@ public class ServiceDiscoverTest {
                 "--server.port=8031",
                 "--app.address=http://localhost:8031",
                 "--spring.jmx.enabled=false",
-                "--serviceDiscovery.address=http://localhost:8061/server/discovery");
+                "--serviceDiscovery.address=http://localhost:8063/server/discovery");
     }
 
     @After
@@ -73,7 +75,7 @@ public class ServiceDiscoverTest {
     }
 
     @Test
-    public void shouldDiscoverService() throws InterruptedException {
+    public void shouldCacheResults() throws InterruptedException {
         await().atMost(5, TimeUnit.SECONDS).until(new Runnable() {
 
 			@Override
@@ -85,9 +87,14 @@ public class ServiceDiscoverTest {
 
         //when
         final int result = testService.incrementCounter();
+        final int firstResult = testService.cached("cached");
+        final int result2 = testService.incrementCounter();
+        final int cachedResult = testService.cached("cached");
+        final int newResult = testService.cached("new");
 
         //then
-        assertThat(result).isEqualTo(1);
+        assertThat(firstResult).isEqualTo(cachedResult).isEqualTo(result);
+        assertThat(result2).isEqualTo(newResult);
     }
 
 }

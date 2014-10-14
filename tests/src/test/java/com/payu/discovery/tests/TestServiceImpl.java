@@ -8,7 +8,12 @@ public class TestServiceImpl implements TestService {
     private int counter = 0;
 
     @Override
-    public int testMethod() {
+    public int incrementCounter() {
         return ++counter;
+    }
+
+    @Override
+    public int cached(String arg) {
+        return counter;
     }
 }
