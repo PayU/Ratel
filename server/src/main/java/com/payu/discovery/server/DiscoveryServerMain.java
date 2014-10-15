@@ -1,7 +1,7 @@
 package com.payu.discovery.server;
 
 
-import com.payu.discovery.server.config.JerseyConfig;
+import com.payu.discovery.register.config.JerseyConfig;
 import org.glassfish.jersey.servlet.ServletContainer;
 import org.glassfish.jersey.servlet.ServletProperties;
 import org.springframework.boot.SpringApplication;

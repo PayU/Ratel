@@ -1,4 +1,4 @@
-package com.payu.discovery.server.config;
+package com.payu.discovery.register.config;
 
 import com.payu.discovery.Publish;
 import com.payu.discovery.model.ServiceDescriptionBuilder;

@@ -3,12 +3,10 @@ package com.payu.discovery.tests;
 import static com.jayway.awaitility.Awaitility.await;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.payu.discovery.Cachable;
 import com.payu.discovery.Discover;
 import com.payu.discovery.client.EnableServiceDiscovery;
 import com.payu.discovery.server.DiscoveryServerMain;
 import com.payu.discovery.server.InMemoryDiscoveryServer;
-import com.payu.discovery.register.config.DiscoveryServiceConfig;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,28 +19,30 @@ import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.util.concurrent.TimeUnit;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = {DiscoveryServerMain.class, ClientCacheTest.class})
+@SpringApplicationConfiguration(classes = {
+        DiscoveryServerMain.class,
+        HeartBeatServiceUnregisterTest.class})
 @IntegrationTest({
-        "server.port:8063",
-        "serviceDiscovery.address:http://localhost:8063/server/discovery"})
+        "server.port:8066",
+        "serviceDiscovery.address:http://localhost:8066/server/discovery",
+        "com.payu.discovery.enabled:false"})
 @WebAppConfiguration
 @EnableServiceDiscovery
-public class ClientCacheTest {
+public class HeartBeatServiceUnregisterTest {
 
     private ConfigurableApplicationContext remoteContext;
+    private ConfigurableApplicationContext secondRemoteContext;
 
     @Autowired
     private InMemoryDiscoveryServer server;
 
     @Discover
-    @Cachable
     private TestService testService;
 
     @Before
@@ -51,7 +51,13 @@ public class ClientCacheTest {
                 "--server.port=8031",
                 "--app.address=http://localhost:8031",
                 "--spring.jmx.enabled=false",
-                "--serviceDiscovery.address=http://localhost:8063/server/discovery");
+                "--serviceDiscovery.address=http://localhost:8066/server/discovery");
+
+        secondRemoteContext = SpringApplication.run(ServiceConfiguration.class,
+                "--server.port=8032",
+                "--app.address=http://localhost:8032",
+                "--spring.jmx.enabled=false",
+                "--serviceDiscovery.address=http://localhost:8066/server/discovery");
     }
 
     @After
@@ -61,7 +67,6 @@ public class ClientCacheTest {
 
     @Configuration
     @EnableAutoConfiguration
-    @Import(DiscoveryServiceConfig.class)
     @WebAppConfiguration
     public static class ServiceConfiguration {
 
@@ -73,26 +78,28 @@ public class ClientCacheTest {
     }
 
     @Test
-    public void shouldCacheResults() throws InterruptedException {
+    public void shouldUnregisterService() throws InterruptedException {
         await().atMost(5, TimeUnit.SECONDS).until(new Runnable() {
 
 			@Override
 			public void run() {
-				assertThat(server.fetchAllServices()).hasSize(1);
+				assertThat(server.fetchAllServices()).hasSize(2);
 			}
         	
         });
 
         //when
-        final int result = testService.incrementCounter();
-        final int firstResult = testService.cached("cached");
-        final int result2 = testService.incrementCounter();
-        final int cachedResult = testService.cached("cached");
-        final int newResult = testService.cached("new");
+        secondRemoteContext.close();
 
         //then
-        assertThat(firstResult).isEqualTo(cachedResult).isEqualTo(result);
-        assertThat(result2).isEqualTo(newResult);
+        await().atMost(60, TimeUnit.SECONDS).until(new Runnable() {
+
+            @Override
+            public void run() {
+                assertThat(server.fetchAllServices()).hasSize(1);
+            }
+
+        });
     }
 
 }

@@ -5,9 +5,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.payu.discovery.Discover;
 import com.payu.discovery.client.EnableServiceDiscovery;
-import com.payu.discovery.client.config.ServiceDiscoveryClientConfig;
 import com.payu.discovery.server.DiscoveryServerMain;
 import com.payu.discovery.server.InMemoryDiscoveryServer;
+import com.payu.discovery.register.config.DiscoveryServiceConfig;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -59,7 +59,7 @@ public class ServiceDiscoverTest {
 
     @Configuration
     @EnableAutoConfiguration
-    @Import(ServiceDiscoveryClientConfig.class)
+    @Import(DiscoveryServiceConfig.class)
     @WebAppConfiguration
     public static class ServiceConfiguration {
 
