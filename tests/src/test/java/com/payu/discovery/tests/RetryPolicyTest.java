@@ -4,6 +4,7 @@ import static com.jayway.awaitility.Awaitility.await;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.payu.discovery.Discover;
+import com.payu.discovery.RetryPolicy;
 import com.payu.discovery.client.EnableServiceDiscovery;
 import com.payu.discovery.client.config.ServiceDiscoveryClientConfig;
 import com.payu.discovery.server.DiscoveryServerMain;
@@ -24,50 +25,44 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = {DiscoveryServerMain.class, LoadBalancingTest.class})
+@SpringApplicationConfiguration(classes = {DiscoveryServerMain.class, RetryPolicyTest.class})
 @IntegrationTest({
-        "server.port:8060",
-        "serviceDiscovery.address:http://localhost:8060/server/discovery"})
+        "server.port:8065",
+        "serviceDiscovery.address:http://localhost:8065/server/discovery"})
 @WebAppConfiguration
 @EnableServiceDiscovery
-public class LoadBalancingTest {
+public class RetryPolicyTest {
 
-    private List<ConfigurableApplicationContext> remoteContexts = new ArrayList<>();
+    private ConfigurableApplicationContext remoteContext;
 
     @Autowired
     private InMemoryDiscoveryServer server;
 
     @Discover
+    @RetryPolicy(exception = MyException.class)
     private TestService testService;
 
     @Before
     public void before() throws InterruptedException {
-        remoteContexts.add(SpringApplication.run(ServiceConfiguration.class,
+        remoteContext = SpringApplication.run(ServiceConfiguration.class,
                 "--server.port=8031",
                 "--app.address=http://localhost:8031",
                 "--spring.jmx.enabled=false",
-                "--serviceDiscovery.address=http://localhost:8060/server/discovery"));
-
-        remoteContexts.add(SpringApplication.run(SecondServiceConfiguration.class,
-                "--server.port=8032",
-                "--app.address=http://localhost:8032",
-                "--spring.jmx.enabled=false",
-                "--serviceDiscovery.address=http://localhost:8060/server/discovery"));
+                "--serviceDiscovery.address=http://localhost:8065/server/discovery");
     }
 
     @After
     public void close() {
-        remoteContexts.forEach(context -> context.close());
+        remoteContext.close();
     }
 
     @Configuration
     @EnableAutoConfiguration
     @Import(ServiceDiscoveryClientConfig.class)
+    @WebAppConfiguration
     public static class ServiceConfiguration {
 
         @Bean
@@ -77,41 +72,22 @@ public class LoadBalancingTest {
 
     }
 
-    @Configuration
-    @EnableAutoConfiguration
-    @Import(ServiceDiscoveryClientConfig.class)
-    public static class SecondServiceConfiguration {
-
-        @Bean
-        public TestService testService() {
-            return new TestServiceImpl();
-        }
-
-    }
-
     @Test
-    public void shouldLoadBalanceBetweenImplementations() throws InterruptedException {
-        await().atMost(5, TimeUnit.SECONDS).until(
-        		new Runnable() {
-					
-					@Override
-					public void run() {
-						assertThat(server.fetchAllServices()).hasSize(2);
-					}
-				});
-        		
+    public void shouldNotThrowException() throws InterruptedException {
+        await().atMost(5, TimeUnit.SECONDS).until(new Runnable() {
+
+			@Override
+			public void run() {
+				assertThat(server.fetchAllServices()).hasSize(1);
+			}
+        	
+        });
 
         //when
-        final int result = testService.incrementCounter();
-        final int result2 = testService.incrementCounter();
-        final int result3 = testService.incrementCounter();
-        final int result4 = testService.incrementCounter();
+        testService.throwsException();
 
         //then
-        assertThat(result).isEqualTo(1);
-        assertThat(result2).isEqualTo(1);
-        assertThat(result3).isEqualTo(2);
-        assertThat(result4).isEqualTo(2);
+        //nothing
     }
 
 }

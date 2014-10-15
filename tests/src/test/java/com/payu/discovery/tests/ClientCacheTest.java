@@ -22,7 +22,6 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
@@ -34,7 +33,6 @@ import java.util.concurrent.TimeUnit;
         "server.port:8063",
         "serviceDiscovery.address:http://localhost:8063/server/discovery"})
 @WebAppConfiguration
-@PropertySource("classpath:propertasy.properties")
 @EnableServiceDiscovery
 public class ClientCacheTest {
 

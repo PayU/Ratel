@@ -16,4 +16,11 @@ public class TestServiceImpl implements TestService {
     public int cached(String arg) {
         return counter;
     }
+
+    @Override
+    public void throwsException() throws MyException {
+        incrementCounter();
+        if(counter % 3 != 0)
+            throw new MyException();
+    }
 }

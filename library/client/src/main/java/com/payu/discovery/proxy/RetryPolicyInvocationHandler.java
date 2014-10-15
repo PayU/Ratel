@@ -43,7 +43,7 @@ public class RetryPolicyInvocationHandler implements java.lang.reflect.Invocatio
     }
 
     private boolean isInStacktrace(Throwable stackTrace, Class target) {
-        while(stackTrace.getCause() != null) {
+        while(stackTrace != null) {
             if(stackTrace.getClass().equals(target)) {
                 return true;
             }
