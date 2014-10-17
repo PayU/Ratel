@@ -74,7 +74,7 @@ public class ClientCacheTest {
 
     @Test
     public void shouldCacheResults() throws InterruptedException {
-        await().atMost(5, TimeUnit.SECONDS).until(new Runnable() {
+        await().atMost(10, TimeUnit.SECONDS).until(new Runnable() {
 
 			@Override
 			public void run() {

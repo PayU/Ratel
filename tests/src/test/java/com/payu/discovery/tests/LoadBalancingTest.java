@@ -91,7 +91,7 @@ public class LoadBalancingTest {
 
     @Test
     public void shouldLoadBalanceBetweenImplementations() throws InterruptedException {
-        await().atMost(5, TimeUnit.SECONDS).until(
+        await().atMost(10, TimeUnit.SECONDS).until(
         		new Runnable() {
 					
 					@Override

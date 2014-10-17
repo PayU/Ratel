@@ -64,7 +64,7 @@ public class ServiceRegistrationTest {
 
     @Test
     public void shouldRegisterServices() throws InterruptedException {
-        await().atMost(5, TimeUnit.SECONDS).until (
+        await().atMost(8, TimeUnit.SECONDS).until (
         		new Runnable() {
 
 					@Override

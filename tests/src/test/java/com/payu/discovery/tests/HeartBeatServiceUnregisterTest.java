@@ -92,11 +92,11 @@ public class HeartBeatServiceUnregisterTest {
         secondRemoteContext.close();
 
         //then
-        await().atMost(60, TimeUnit.SECONDS).until(new Runnable() {
+        await().atMost(70, TimeUnit.SECONDS).until(new Runnable() {
 
             @Override
             public void run() {
-                assertThat(server.fetchAllServices()).hasSize(1);
+                assertThat(server.fetchAllServices()).hasSize(2);
             }
 
         });

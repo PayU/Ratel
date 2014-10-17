@@ -4,6 +4,6 @@ import java.io.Serializable;
 
 public interface EventCannon {
 
-    void fireThatShit(Serializable shit);
+    void fireEvent(Serializable shit);
 
 }
