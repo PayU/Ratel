@@ -34,9 +34,7 @@ public class InMemoryDiscoveryServer implements DiscoveryServer {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(InMemoryDiscoveryServer.class);
 
-    public static final int SECONDS_20 = 20000;
-
-    public static final int SECONDS_25 = 25000;
+    public static final int MINUTE = 60000;
 
     private final Set<ServiceDescriptor> services = Sets.newSetFromMap((Map<ServiceDescriptor, Boolean>)
             new ConcurrentHashMap<ServiceDescriptor, Boolean>());
@@ -88,7 +86,7 @@ public class InMemoryDiscoveryServer implements DiscoveryServer {
         }
     }
 
-    @Scheduled(fixedRate = SECONDS_20)
+    @Scheduled(fixedRate = MINUTE)
     public void checkActiveServices() {
         pingedServers.entrySet()
                 .stream()
@@ -103,6 +101,6 @@ public class InMemoryDiscoveryServer implements DiscoveryServer {
     }
 
     private boolean isActive(Long time) {
-        return time < System.currentTimeMillis() - SECONDS_25;
+        return time < System.currentTimeMillis() - MINUTE;
     }
 }
