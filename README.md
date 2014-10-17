@@ -23,7 +23,7 @@ ratel - service discovery
 
     @Service
     @Publish
-    public class FooService {
+    public class FooServiceImpl implements FooService {
 
         ...
         
