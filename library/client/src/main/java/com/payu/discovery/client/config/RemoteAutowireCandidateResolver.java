@@ -4,8 +4,9 @@ import com.payu.discovery.Cachable;
 import com.payu.discovery.Discover;
 import com.payu.discovery.RetryPolicy;
 import com.payu.discovery.client.DiscoveryClient;
-import com.payu.discovery.proxy.HessianClientProducer;
+import com.payu.discovery.event.EventCannon;
 import com.payu.discovery.proxy.CacheInvocationHandler;
+import com.payu.discovery.proxy.HessianClientProducer;
 import com.payu.discovery.proxy.RetryPolicyInvocationHandler;
 import org.springframework.beans.factory.config.DependencyDescriptor;
 import org.springframework.beans.factory.support.AutowireCandidateResolver;
@@ -27,23 +28,37 @@ class RemoteAutowireCandidateResolver extends
     protected Object buildLazyResolutionProxy(DependencyDescriptor descriptor,
                                               String beanName) {
         if (descriptor.getField().isAnnotationPresent(Discover.class)) {
-            Object client = hessianClientProducer.produce(descriptor.getDependencyType());
 
-            if (descriptor.getField().isAnnotationPresent(Cachable.class)) {
-                client = decorateWithCaching(client, descriptor.getDependencyType());
+            if(descriptor.getDependencyType().equals(EventCannon.class)) {
+                return produceEventCannonProxy();
+            } else {
+                return produceServiceProxy(descriptor);
             }
-
-            if (descriptor.getField().isAnnotationPresent(RetryPolicy.class)) {
-                final RetryPolicy annotation = descriptor.
-                        getField().getAnnotation(RetryPolicy.class);
-                client = decorateWithRetryPolicy(client,
-                        descriptor.getDependencyType(),
-                        annotation.exception());
-            }
-
-            return client;
         }
+
         return super.buildLazyResolutionProxy(descriptor, beanName);
+    }
+
+    private Object produceEventCannonProxy() {
+        return hessianClientProducer.produceBroadcaster();
+    }
+
+    private Object produceServiceProxy(DependencyDescriptor descriptor) {
+        Object client = hessianClientProducer.produceLoadBalancer(descriptor.getDependencyType());
+
+        if (descriptor.getField().isAnnotationPresent(Cachable.class)) {
+            client = decorateWithCaching(client, descriptor.getDependencyType());
+        }
+
+        if (descriptor.getField().isAnnotationPresent(RetryPolicy.class)) {
+            final RetryPolicy annotation = descriptor.
+                    getField().getAnnotation(RetryPolicy.class);
+            client = decorateWithRetryPolicy(client,
+                    descriptor.getDependencyType(),
+                    annotation.exception());
+        }
+
+        return client;
     }
 
     public Object decorateWithCaching(final Object object, final Class clazz) {

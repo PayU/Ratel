@@ -2,6 +2,7 @@ package com.payu.discovery.proxy;
 
 
 import com.payu.discovery.client.DiscoveryClient;
+import com.payu.discovery.event.EventCannon;
 
 import java.lang.reflect.Proxy;
 
@@ -13,10 +14,15 @@ public class HessianClientProducer {
         this.discoveryClient = discoveryClient;
     }
 
-    public Object produce(Class<?> clazz) {
+    public Object produceLoadBalancer(Class<?> clazz) {
         return Proxy
                 .newProxyInstance(Thread.currentThread().getContextClassLoader(),
                         new Class[]{clazz}, new LoadBalancingInvocationHandler(discoveryClient, clazz));
     }
 
+    public Object produceBroadcaster() {
+        return Proxy
+                .newProxyInstance(Thread.currentThread().getContextClassLoader(),
+                        new Class[]{EventCannon.class}, new BroadcastingInvocationHandler(discoveryClient));
+    }
 }
