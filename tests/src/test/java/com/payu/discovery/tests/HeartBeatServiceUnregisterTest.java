@@ -1,8 +1,5 @@
 package com.payu.discovery.tests;
 
-import static com.jayway.awaitility.Awaitility.await;
-import static org.assertj.core.api.Assertions.assertThat;
-
 import com.payu.discovery.Discover;
 import com.payu.discovery.client.EnableServiceDiscovery;
 import com.payu.discovery.server.DiscoveryServerMain;
@@ -24,13 +21,17 @@ import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.util.concurrent.TimeUnit;
 
+import static com.jayway.awaitility.Awaitility.await;
+import static com.payu.discovery.config.ServerDiscoveryConfig.SERVICE_DISCOVERY_ADDRESS;
+import static org.assertj.core.api.Assertions.assertThat;
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = {
         DiscoveryServerMain.class,
         HeartBeatServiceUnregisterTest.class})
 @IntegrationTest({
         "server.port:8066",
-        "serviceDiscovery.address:http://localhost:8066/server/discovery",
+        SERVICE_DISCOVERY_ADDRESS + ":http://localhost:8066/server/discovery",
         "com.payu.discovery.enabled:false"})
 @WebAppConfiguration
 @EnableServiceDiscovery
@@ -51,13 +52,13 @@ public class HeartBeatServiceUnregisterTest {
                 "--server.port=8031",
                 "--app.address=http://localhost:8031",
                 "--spring.jmx.enabled=false",
-                "--serviceDiscovery.address=http://localhost:8066/server/discovery");
+                "--" + SERVICE_DISCOVERY_ADDRESS + "=http://localhost:8066/server/discovery");
 
         secondRemoteContext = SpringApplication.run(ServiceConfiguration.class,
                 "--server.port=8032",
                 "--app.address=http://localhost:8032",
                 "--spring.jmx.enabled=false",
-                "--serviceDiscovery.address=http://localhost:8066/server/discovery");
+                "--" + SERVICE_DISCOVERY_ADDRESS + "=http://localhost:8066/server/discovery");
     }
 
     @After

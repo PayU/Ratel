@@ -6,7 +6,7 @@ import com.payu.discovery.event.EventCannon;
 
 import java.lang.reflect.Proxy;
 
-public class HessianClientProducer {
+public class HessianClientProducer implements ClientProducer {
 
     private DiscoveryClient discoveryClient;
 
@@ -14,12 +14,14 @@ public class HessianClientProducer {
         this.discoveryClient = discoveryClient;
     }
 
+    @Override
     public Object produceLoadBalancer(Class<?> clazz) {
         return Proxy
                 .newProxyInstance(Thread.currentThread().getContextClassLoader(),
                         new Class[]{clazz}, new LoadBalancingInvocationHandler(discoveryClient, clazz));
     }
 
+    @Override
     public Object produceBroadcaster() {
         return Proxy
                 .newProxyInstance(Thread.currentThread().getContextClassLoader(),

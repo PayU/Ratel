@@ -3,10 +3,9 @@ package com.payu.discovery.client.config;
 import com.payu.discovery.Cachable;
 import com.payu.discovery.Discover;
 import com.payu.discovery.RetryPolicy;
-import com.payu.discovery.client.DiscoveryClient;
 import com.payu.discovery.event.EventCannon;
 import com.payu.discovery.proxy.CacheInvocationHandler;
-import com.payu.discovery.proxy.HessianClientProducer;
+import com.payu.discovery.proxy.ClientProducer;
 import com.payu.discovery.proxy.RetryPolicyInvocationHandler;
 import org.springframework.beans.factory.config.DependencyDescriptor;
 import org.springframework.beans.factory.support.AutowireCandidateResolver;
@@ -18,10 +17,10 @@ class RemoteAutowireCandidateResolver extends
         ContextAnnotationAutowireCandidateResolver implements
         AutowireCandidateResolver {
 
-    private final HessianClientProducer hessianClientProducer;
+    private final ClientProducer clientProducer;
 
-    public RemoteAutowireCandidateResolver(DiscoveryClient discoveryClient) {
-        hessianClientProducer = new HessianClientProducer(discoveryClient);
+    public RemoteAutowireCandidateResolver(ClientProducer clientProducer) {
+        this.clientProducer = clientProducer;
     }
 
     @Override
@@ -40,11 +39,11 @@ class RemoteAutowireCandidateResolver extends
     }
 
     private Object produceEventCannonProxy() {
-        return hessianClientProducer.produceBroadcaster();
+        return clientProducer.produceBroadcaster();
     }
 
     private Object produceServiceProxy(DependencyDescriptor descriptor) {
-        Object client = hessianClientProducer.produceLoadBalancer(descriptor.getDependencyType());
+        Object client = clientProducer.produceLoadBalancer(descriptor.getDependencyType());
 
         if (descriptor.getField().isAnnotationPresent(Cachable.class)) {
             client = decorateWithCaching(client, descriptor.getDependencyType());
@@ -72,5 +71,7 @@ class RemoteAutowireCandidateResolver extends
                 .newProxyInstance(Thread.currentThread().getContextClassLoader(),
                         new Class[]{clazz}, new RetryPolicyInvocationHandler(object, exception));
     }
+
+
 
 }

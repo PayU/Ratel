@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanPostProcessor;
-import org.springframework.scheduling.TaskScheduler;
 
 import java.lang.reflect.Method;
 
@@ -16,8 +15,6 @@ public class EventSubscriberPostProcessor implements BeanPostProcessor {
     @Autowired
     EventListener eventListener;
 
-    @Autowired
-    TaskScheduler taskScheduler;
 
     @Override
     public Object postProcessBeforeInitialization(Object o, String s) throws BeansException {

@@ -1,8 +1,5 @@
 package com.payu.discovery.tests;
 
-import static com.jayway.awaitility.Awaitility.await;
-import static org.assertj.core.api.Assertions.assertThat;
-
 import com.payu.discovery.Discover;
 import com.payu.discovery.RetryPolicy;
 import com.payu.discovery.client.EnableServiceDiscovery;
@@ -27,11 +24,15 @@ import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.util.concurrent.TimeUnit;
 
+import static com.jayway.awaitility.Awaitility.await;
+import static com.payu.discovery.config.ServerDiscoveryConfig.SERVICE_DISCOVERY_ADDRESS;
+import static org.assertj.core.api.Assertions.assertThat;
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = {DiscoveryServerMain.class, RetryPolicyTest.class})
 @IntegrationTest({
         "server.port:8065",
-        "serviceDiscovery.address:http://localhost:8065/server/discovery"})
+        SERVICE_DISCOVERY_ADDRESS + ":http://localhost:8065/server/discovery"})
 @WebAppConfiguration
 @EnableServiceDiscovery
 public class RetryPolicyTest {
@@ -51,7 +52,7 @@ public class RetryPolicyTest {
                 "--server.port=8031",
                 "--app.address=http://localhost:8031",
                 "--spring.jmx.enabled=false",
-                "--serviceDiscovery.address=http://localhost:8065/server/discovery");
+                "--" + SERVICE_DISCOVERY_ADDRESS + "=http://localhost:8065/server/discovery");
     }
 
     @After
