@@ -7,6 +7,10 @@ import com.payu.discovery.config.ServerDiscoveryConfig;
 import com.payu.discovery.register.config.DiscoveryServiceConfig;
 import com.payu.discovery.server.DiscoveryServerMain;
 import com.payu.discovery.server.InMemoryDiscoveryServer;
+import com.payu.discovery.register.config.DiscoveryServiceConfig;
+import com.payu.discovery.tests.service.TestService;
+import com.payu.discovery.tests.service.TestServiceImpl;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

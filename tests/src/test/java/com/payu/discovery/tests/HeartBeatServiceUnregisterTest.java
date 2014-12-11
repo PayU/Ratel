@@ -4,6 +4,9 @@ import com.payu.discovery.Discover;
 import com.payu.discovery.client.EnableServiceDiscovery;
 import com.payu.discovery.server.DiscoveryServerMain;
 import com.payu.discovery.server.InMemoryDiscoveryServer;
+import com.payu.discovery.tests.service.TestService;
+import com.payu.discovery.tests.service.TestServiceImpl;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

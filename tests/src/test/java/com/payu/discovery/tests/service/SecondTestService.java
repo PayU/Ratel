@@ -1,4 +1,4 @@
-package com.payu.discovery.tests;
+package com.payu.discovery.tests.service;
 
 public interface SecondTestService {
 

@@ -1,4 +1,4 @@
-package com.payu.discovery.tests;
+package com.payu.discovery.tests.service;
 
 import com.payu.discovery.Publish;
 
@@ -6,6 +6,11 @@ import com.payu.discovery.Publish;
 public class TestServiceImpl implements TestService {
 
     private int counter = 0;
+
+    @Override
+    public String hello() {
+        return "success";
+    }
 
     @Override
     public int incrementCounter() {
