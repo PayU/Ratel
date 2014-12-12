@@ -89,12 +89,6 @@
         </dependency>
         <dependency>
             <groupId>org.apache.curator</groupId>
-            <artifactId>apache-curator</artifactId>
-            <version>2.7.0</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.curator</groupId>
             <artifactId>curator-framework</artifactId>
             <version>2.7.0</version>
             <scope>test</scope>
