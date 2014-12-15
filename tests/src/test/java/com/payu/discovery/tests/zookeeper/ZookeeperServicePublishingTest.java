@@ -12,6 +12,7 @@ import org.apache.curator.x.discovery.ServiceDiscovery;
 import org.apache.curator.x.discovery.ServiceProvider;
 import org.apache.curator.x.discovery.strategies.RoundRobinStrategy;
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -26,21 +27,21 @@ import org.springframework.test.context.web.WebAppConfiguration;
 
 import com.payu.discovery.Discover;
 import com.payu.discovery.client.EnableServiceDiscovery;
+import com.payu.discovery.config.ZookeeperDiscoveryConfig;
 import com.payu.discovery.server.DiscoveryServerMain;
 import com.payu.discovery.tests.service.ServiceConfiguration;
 import com.payu.discovery.tests.service.TestService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = {DiscoveryServerMain.class})
+@SpringApplicationConfiguration(classes = {DiscoveryServerMain.class, ZookeeperDiscoveryConfig.class})
 @IntegrationTest({
-        "server.port:8061",
         SERVICE_DISCOVERY_ZK_HOST + ":127.0.0.1:" + ZookeeperServicePublishingTest.ZK_PORT
 })
 @WebAppConfiguration
 @EnableServiceDiscovery
 public class ZookeeperServicePublishingTest {
     public static final String SPRING_JMX_ENABLED_FALSE = "--spring.jmx.enabled=false";
-    public static final int ZK_PORT = 2181;
+    public static final int ZK_PORT = 2185;
 
     private ConfigurableApplicationContext remoteContext;
 
@@ -51,6 +52,7 @@ public class ZookeeperServicePublishingTest {
 
     @Autowired
     ServiceDiscovery<TestService> serviceDiscovery;
+
     private ServiceProvider<TestService> serviceProvider;
 
     @BeforeClass
@@ -61,8 +63,8 @@ public class ZookeeperServicePublishingTest {
     @Before
     public void before() throws Exception {
         remoteContext = SpringApplication.run(ServiceConfiguration.class,
-                "--server.port=8031",
-                "--app.address=http://localhost:8031",
+                "--server.port=8035",
+                "--app.address=http://localhost:8035",
                 "--" + SERVICE_DISCOVERY_ZK_HOST + "=127.0.0.1:" + ZK_PORT,
                 SPRING_JMX_ENABLED_FALSE);
 
@@ -76,6 +78,10 @@ public class ZookeeperServicePublishingTest {
     @After
     public void close() throws IOException {
         remoteContext.close();
+    }
+
+    @AfterClass
+    public static void closeZookeeper() throws IOException {
         zkServer.stop();
     }
 
