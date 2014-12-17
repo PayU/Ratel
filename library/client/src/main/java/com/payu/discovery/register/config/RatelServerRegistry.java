@@ -1,11 +1,12 @@
 package com.payu.discovery.register.config;
 
-import com.payu.discovery.model.ServiceDescriptionBuilder;
-import com.payu.discovery.model.ServiceDescriptor;
-import com.payu.discovery.server.RemoteRestDiscoveryServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.TaskScheduler;
+
+import com.payu.discovery.model.ServiceDescriptionBuilder;
+import com.payu.discovery.model.ServiceDescriptor;
+import com.payu.discovery.server.RemoteRestDiscoveryServer;
 
 public class RatelServerRegistry implements RegisterStrategy {
 
@@ -29,10 +30,14 @@ public class RatelServerRegistry implements RegisterStrategy {
         applyHeartBeat(serviceDescriptor);
     }
 
-    private void applyHeartBeat(ServiceDescriptor serviceDescriptor) {
-        taskScheduler.scheduleAtFixedRate(() -> {
-            server.registerService(serviceDescriptor);
-            server.collectStatistics(serviceDescriptor);
+    private void applyHeartBeat(final ServiceDescriptor serviceDescriptor) {
+        taskScheduler.scheduleAtFixedRate(new Runnable() {
+            @Override
+            public void run() {
+                server.registerService(serviceDescriptor);
+                server.collectStatistics(serviceDescriptor);
+
+            }
         }, SECONDS_20);
     }
 

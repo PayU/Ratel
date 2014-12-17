@@ -1,15 +1,10 @@
 package com.payu.discovery.tests;
 
-import com.payu.discovery.Cachable;
-import com.payu.discovery.Discover;
-import com.payu.discovery.client.EnableServiceDiscovery;
-import com.payu.discovery.config.ServerDiscoveryConfig;
-import com.payu.discovery.register.config.DiscoveryServiceConfig;
-import com.payu.discovery.server.DiscoveryServerMain;
-import com.payu.discovery.server.InMemoryDiscoveryServer;
-import com.payu.discovery.register.config.DiscoveryServiceConfig;
-import com.payu.discovery.tests.service.TestService;
-import com.payu.discovery.tests.service.TestServiceImpl;
+import static com.jayway.awaitility.Awaitility.await;
+import static com.payu.discovery.config.ServerDiscoveryConfig.SERVICE_DISCOVERY_ADDRESS;
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.util.concurrent.TimeUnit;
 
 import org.junit.After;
 import org.junit.Before;
@@ -27,11 +22,15 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import java.util.concurrent.TimeUnit;
-
-import static com.jayway.awaitility.Awaitility.await;
-import static com.payu.discovery.config.ServerDiscoveryConfig.SERVICE_DISCOVERY_ADDRESS;
-import static org.assertj.core.api.Assertions.assertThat;
+import com.payu.discovery.Cachable;
+import com.payu.discovery.Discover;
+import com.payu.discovery.client.EnableServiceDiscovery;
+import com.payu.discovery.config.ServerDiscoveryConfig;
+import com.payu.discovery.register.config.DiscoveryServiceConfig;
+import com.payu.discovery.server.DiscoveryServerMain;
+import com.payu.discovery.server.InMemoryDiscoveryServer;
+import com.payu.discovery.tests.service.TestService;
+import com.payu.discovery.tests.service.TestServiceImpl;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = {DiscoveryServerMain.class, ClientCacheTest.class})
@@ -81,7 +80,6 @@ public class ClientCacheTest {
     @Test
     public void shouldCacheResults() throws InterruptedException {
         await().atMost(10, TimeUnit.SECONDS).until(new Runnable() {
-
 			@Override
 			public void run() {
 				assertThat(server.fetchAllServices()).hasSize(1);

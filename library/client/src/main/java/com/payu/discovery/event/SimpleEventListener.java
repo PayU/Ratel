@@ -46,7 +46,7 @@ public class SimpleEventListener implements EventListener {
         eventListeners.add(listener);
 
         if(!subscribedMethods.containsKey(listener)) {
-            subscribedMethods.put(listener, new HashSet<>());
+            subscribedMethods.put(listener, new HashSet<Method>());
         }
 
         final Collection<Method> methods = subscribedMethods.get(listener);
@@ -57,16 +57,16 @@ public class SimpleEventListener implements EventListener {
     public void listen(Serializable event) {
         final Collection<Object> eventListeners = listeners.get(event.getClass());
         if(eventListeners != null) {
-            eventListeners.stream().parallel().forEach(listener ->
-                    subscribedMethods.get(listener).stream().forEach(method -> {
-                        try {
-                            method.invoke(listener, new Object[]{event});
-                        } catch (IllegalAccessException e) {
-                            throw new RuntimeException(e);
-                        } catch (InvocationTargetException e) {
-                            throw new RuntimeException(e);
-                        }
-                    }));
+            for(Object listener : eventListeners){
+                Collection<Method> methods = subscribedMethods.get(listener);
+                for(Method method : methods){
+                    try {
+                        method.invoke(listener, event);
+                    } catch (IllegalAccessException | InvocationTargetException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
         }
     }
 

@@ -1,17 +1,23 @@
 package com.payu.discovery.proxy;
 
-import com.payu.discovery.client.DiscoveryClient;
-import com.payu.discovery.model.ServiceDescriptor;
-import com.payu.discovery.proxy.monitoring.MonitoringInvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
 
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
-import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
+import com.payu.discovery.client.DiscoveryClient;
+import com.payu.discovery.model.ServiceDescriptor;
+import com.payu.discovery.proxy.monitoring.MonitoringInvocationHandler;
 
 public class LoadBalancingInvocationHandler implements java.lang.reflect.InvocationHandler {
 
@@ -38,11 +44,21 @@ public class LoadBalancingInvocationHandler implements java.lang.reflect.Invocat
 
     private Map<String, List<ServiceDescriptor>> allServices() {
 
-        return discoveryClient
-                .fetchAllServices()
-                .stream()
-                .collect(Collectors.groupingBy(ServiceDescriptor::getName,
-                        Collectors.toList()));
+        Collection<ServiceDescriptor> serviceDescriptors = discoveryClient.fetchAllServices();
+
+        Map<String, List<ServiceDescriptor>> allServices = new HashMap<>();
+
+        for(ServiceDescriptor serviceDescriptor:serviceDescriptors){
+            String name = serviceDescriptor.getName();
+
+            if(!allServices.containsKey(name)){
+                allServices.put(name, new ArrayList<ServiceDescriptor>());
+            }
+
+            allServices.get(name).add(serviceDescriptor);
+        }
+
+        return allServices;
     }
 
     public LoadBalancingInvocationHandler(DiscoveryClient discoveryClient, Class<?> serviceApi) {
@@ -71,7 +87,12 @@ public class LoadBalancingInvocationHandler implements java.lang.reflect.Invocat
     }
 
     private void updateServices(Collection<ServiceDescriptor> fetchesServices) {
-        final Map<String, ServiceDescriptor> servicesMap = fetchesServices.stream().collect(Collectors.toMap(ServiceDescriptor::getAddress, Function.identity()));
+        final Map<String, ServiceDescriptor> servicesMap = new HashMap<>();
+
+        for(ServiceDescriptor serviceDescriptor:fetchesServices){
+            servicesMap.put(serviceDescriptor.getAddress(), serviceDescriptor);
+        }
+
         final Iterator<ServiceClient> iterator = clients.iterator();
         while(iterator.hasNext()) {
             final ServiceClient next = iterator.next();
@@ -84,12 +105,15 @@ public class LoadBalancingInvocationHandler implements java.lang.reflect.Invocat
             loadBalancingIterator = clients.listIterator();
         }
 
-        servicesMap.values().stream()
-                .forEach(serviceDescriptor -> loadBalancingIterator.add(createNewService(serviceDescriptor)));
+        for(ServiceDescriptor serviceDescriptor: servicesMap.values()){
+            loadBalancingIterator.add(createNewService(serviceDescriptor));
+        }
     }
 
     private void createAllServices(Collection<ServiceDescriptor> fetchesServices) {
-        fetchesServices.stream().forEach(service -> clients.add(createNewService(service)));
+        for (ServiceDescriptor service : fetchesServices){
+            clients.add(createNewService(service));
+        }
     }
 
     private ServiceClient createNewService(ServiceDescriptor serviceDescriptor) {
