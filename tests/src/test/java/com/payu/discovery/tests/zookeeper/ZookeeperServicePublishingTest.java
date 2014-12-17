@@ -5,6 +5,7 @@ import static com.payu.discovery.config.ZookeeperDiscoveryConfig.SERVICE_DISCOVE
 import static org.assertj.core.api.BDDAssertions.then;
 
 import java.io.IOException;
+import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.curator.test.TestingServer;
@@ -70,7 +71,7 @@ public class ZookeeperServicePublishingTest {
 
         serviceProvider = serviceDiscovery.serviceProviderBuilder()
                 .serviceName(TestService.class.getName())
-                .providerStrategy(new RoundRobinStrategy<>())
+                .providerStrategy(new RoundRobinStrategy<TestService>())
                 .build();
         serviceProvider.start();
     }
@@ -87,7 +88,12 @@ public class ZookeeperServicePublishingTest {
 
     @Test
     public void shouldDiscoverService() throws InterruptedException {
-        await().atMost(10, TimeUnit.SECONDS).until(() -> serviceProvider.getInstance() != null);
+        await().atMost(10, TimeUnit.SECONDS).until(new Callable<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+                return serviceProvider.getInstance() != null;
+            }
+        });
 
         //when
         final String result = testService.hello();

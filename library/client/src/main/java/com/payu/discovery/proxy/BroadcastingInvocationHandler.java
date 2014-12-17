@@ -1,24 +1,25 @@
 package com.payu.discovery.proxy;
 
-import com.payu.discovery.client.DiscoveryClient;
-import com.payu.discovery.event.EventReceiver;
-import com.payu.discovery.model.ServiceDescriptor;
-import com.payu.discovery.proxy.monitoring.MonitoringInvocationHandler;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.util.CollectionUtils;
-
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.util.CollectionUtils;
+
+import com.payu.discovery.client.DiscoveryClient;
+import com.payu.discovery.event.EventReceiver;
+import com.payu.discovery.model.ServiceDescriptor;
+import com.payu.discovery.proxy.monitoring.MonitoringInvocationHandler;
 
 public class BroadcastingInvocationHandler implements java.lang.reflect.InvocationHandler {
 
@@ -52,12 +53,21 @@ public class BroadcastingInvocationHandler implements java.lang.reflect.Invocati
     private DiscoveryClient discoveryClient;
 
     private Map<String, List<ServiceDescriptor>> allServices() {
+        Collection<ServiceDescriptor> serviceDescriptors = discoveryClient.fetchAllServices();
 
-        return discoveryClient
-                .fetchAllServices()
-                .stream()
-                .collect(Collectors.groupingBy(ServiceDescriptor::getName,
-                        Collectors.toList()));
+        Map<String, List<ServiceDescriptor>> allServices = new HashMap<>();
+
+        for(ServiceDescriptor serviceDescriptor:serviceDescriptors){
+            String name = serviceDescriptor.getName();
+
+            if(!allServices.containsKey(name)){
+                allServices.put(name, new ArrayList<ServiceDescriptor>());
+            }
+
+            allServices.get(name).add(serviceDescriptor);
+        }
+
+        return allServices;
     }
 
     public BroadcastingInvocationHandler(DiscoveryClient discoveryClient) {
@@ -77,20 +87,25 @@ public class BroadcastingInvocationHandler implements java.lang.reflect.Invocati
             updateServices(fetchesServices);
         }
 
-        clients.stream().forEach(client -> {
+        for(ServiceClient client:clients){
             try {
                 LOGGER.info("Sending events to ");
                 RECEIVE_METHOD_HANDLER.invoke(client.clientProxy, args);
             } catch (InvocationTargetException | IllegalAccessException e) {
                 throw new RuntimeException(e);
             }
-        });
+        }
 
         return null;
     }
 
     private void updateServices(Collection<ServiceDescriptor> fetchesServices) {
-        final Map<String, ServiceDescriptor> servicesMap = fetchesServices.stream().collect(Collectors.toMap(ServiceDescriptor::getAddress, Function.identity()));
+        final Map<String, ServiceDescriptor> servicesMap = new HashMap<>();
+
+        for(ServiceDescriptor serviceDescriptor:fetchesServices){
+            servicesMap.put(serviceDescriptor.getAddress(), serviceDescriptor);
+        }
+
         final Iterator<ServiceClient> iterator = clients.iterator();
         while(iterator.hasNext()) {
             final ServiceClient next = iterator.next();
@@ -101,7 +116,9 @@ public class BroadcastingInvocationHandler implements java.lang.reflect.Invocati
     }
 
     private void createAllServices(Collection<ServiceDescriptor> fetchesServices) {
-        fetchesServices.stream().forEach(service -> clients.add(createNewService(service)));
+        for (ServiceDescriptor service : fetchesServices){
+            clients.add(createNewService(service));
+        }
     }
 
     private ServiceClient createNewService(ServiceDescriptor serviceDescriptor) {

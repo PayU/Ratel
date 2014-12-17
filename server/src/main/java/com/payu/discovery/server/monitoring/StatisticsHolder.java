@@ -1,10 +1,10 @@
 package com.payu.discovery.server.monitoring;
 
-import org.springframework.stereotype.Component;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
+import org.springframework.stereotype.Component;
 
 @Component
 public class StatisticsHolder {
@@ -18,6 +18,6 @@ public class StatisticsHolder {
     }
 
     public Map<String, Map<String, String>> getStatistics(String address) {
-        return statistics.containsKey(address) ? statistics.get(address) : new HashMap<>();
+        return statistics.containsKey(address) ? statistics.get(address) : new HashMap<String, Map<String, String>>();
     }
 }

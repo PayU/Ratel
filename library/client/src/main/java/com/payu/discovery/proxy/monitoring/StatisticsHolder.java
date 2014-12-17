@@ -15,6 +15,6 @@ public class StatisticsHolder {
     }
 
     public static Map<String, Map<String, String>> getStatistics(String service) {
-        return statistics.containsKey(service) ? statistics.get(service) : new HashMap<>();
+        return statistics.containsKey(service) ? statistics.get(service) : new HashMap<String, Map<String, String>>();
     }
 }

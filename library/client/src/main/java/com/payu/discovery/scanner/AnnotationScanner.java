@@ -1,13 +1,15 @@
 package com.payu.discovery.scanner;
 
 import java.lang.annotation.Annotation;
+import java.util.Collection;
 import java.util.Set;
-import java.util.function.Function;
-import java.util.stream.Stream;
 
 import org.reflections.Reflections;
 import org.reflections.scanners.MethodAnnotationsScanner;
 import org.reflections.scanners.TypeAnnotationsScanner;
+
+import com.google.common.base.Function;
+import com.google.common.collect.Collections2;
 
 public abstract class AnnotationScanner<K extends Annotation, T> {
 
@@ -34,8 +36,9 @@ public abstract class AnnotationScanner<K extends Annotation, T> {
 	
 	}
 	
-	public Stream<T> scan() {
-		return scanClasses(serviceAnnotationClass).stream().map(mapper);
+	public Collection<? extends T> scan() {
+        Set<Class<?>> classes = scanClasses(serviceAnnotationClass);
+        return Collections2.transform(classes, mapper);
 	}
 	
 	protected Set<Class<?>> scanClasses(

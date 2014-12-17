@@ -3,15 +3,12 @@ package com.payu.discovery.server;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import com.google.common.collect.Sets;
-import com.payu.discovery.model.ServiceDescriptor;
-import com.payu.discovery.server.monitoring.StatisticsHolder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.actuate.metrics.GaugeService;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -21,12 +18,19 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.actuate.metrics.GaugeService;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
+
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Sets;
+import com.payu.discovery.model.ServiceDescriptor;
+import com.payu.discovery.server.monitoring.StatisticsHolder;
 
 @Component
 @Path("/discovery")
@@ -88,14 +92,19 @@ public class InMemoryDiscoveryServer implements DiscoveryServer {
 
     @Scheduled(fixedRate = MINUTE)
     public void checkActiveServices() {
-        pingedServers.entrySet()
-                .stream()
-                .filter(entry -> isActive(entry.getValue()))
-                .forEach(filtered -> {
-                    LOGGER.info("Removing services with address {}", filtered.getKey());
-                    services.removeIf(service -> service.equals(filtered.getKey()));
-                    pingedServers.remove(filtered.getKey());
+        for(final Map.Entry<ServiceDescriptor, Long> entry:pingedServers.entrySet()){
+            if(isActive(entry.getValue())){
+
+                LOGGER.info("Removing services with address {}", entry.getKey());
+                Iterables.removeIf(services, new Predicate<ServiceDescriptor>() {
+                    @Override
+                    public boolean apply(ServiceDescriptor service) {
+                        return service.equals(entry.getKey());
+                    }
                 });
+                pingedServers.remove(entry.getKey());
+            }
+        }
         gaugeService.submit("registered.services.count", services.size());
         gaugeService.submit("registered.servers.count", pingedServers.size());
     }

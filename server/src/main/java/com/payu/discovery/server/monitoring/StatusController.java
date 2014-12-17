@@ -1,15 +1,16 @@
 package com.payu.discovery.server.monitoring;
 
-import com.payu.discovery.model.ServiceDescriptor;
-import com.payu.discovery.server.DiscoveryServer;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
+import com.payu.discovery.model.ServiceDescriptor;
+import com.payu.discovery.server.DiscoveryServer;
 
 @Controller
 public class StatusController {
@@ -31,12 +32,14 @@ public class StatusController {
 
     @ModelAttribute("services")
     public Map<ServiceDescriptor, Map<String, Map<String, String>>> populateServices() {
-        return discoveryServer
-                .fetchAllServices()
-                .stream()
-                .collect(Collectors
-                        .toMap(Function.identity(),
-                                serviceDescriptor ->
-                                        statisticsHolder.getStatistics(serviceDescriptor.getAddress())));
+        Map<ServiceDescriptor, Map<String, Map<String, String>>> services = new HashMap<>();
+
+        Collection<ServiceDescriptor> serviceDescriptors = discoveryServer
+                .fetchAllServices();
+        for(ServiceDescriptor serviceDescriptor:serviceDescriptors){
+            services.put(serviceDescriptor, statisticsHolder.getStatistics(serviceDescriptor.getAddress()));
+        }
+
+        return services;
     }
 }

@@ -3,8 +3,8 @@ package com.payu.discovery.scanner;
 import static com.payu.discovery.model.ServiceDescriptionBuilder.aService;
 
 import java.lang.annotation.Annotation;
-import java.util.function.Function;
 
+import com.google.common.base.Function;
 import com.payu.discovery.model.ServiceDescriptor;
 
 public class ServiceAnnotationScanner<K extends Annotation> extends AnnotationScanner<K, ServiceDescriptor> {
@@ -18,8 +18,13 @@ public class ServiceAnnotationScanner<K extends Annotation> extends AnnotationSc
 	}
 
 	protected Function<? super Class<?>, ? extends ServiceDescriptor> getMapper() {
-		return it -> aService().withName(it.getName())
-				.withAddress(this.appAddress).build();
+		return new Function<Class<?>, ServiceDescriptor>() {
+            @Override
+            public ServiceDescriptor apply(Class<?> it) {
+                return aService().withName(it.getName())
+                        .withAddress(ServiceAnnotationScanner.this.appAddress).build();
+            }
+        };
 	}
 
 }
