@@ -1,11 +1,8 @@
 package com.payu.discovery.config;
 
 import com.payu.discovery.client.ClientProxyDecorator;
-import com.payu.discovery.client.ClientProxyGenerator;
-import com.payu.discovery.client.FetchStrategy;
 import com.payu.discovery.client.zookeeper.ZookeeperFetcher;
 import com.payu.discovery.client.zookeeper.ZookeeperProxyGenerator;
-import com.payu.discovery.register.RegisterStrategy;
 import com.payu.discovery.register.zookeeper.ZookeeperRegistry;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
@@ -28,12 +25,12 @@ public class ZookeeperDiscoveryConfig implements BeanFactoryAware {
 
     private Environment env;
 
-    @Bean( initMethod = "start", destroyMethod = "close" )
+    @Bean(initMethod = "start", destroyMethod = "close")
     public CuratorFramework curator() {
         return CuratorFrameworkFactory.newClient(env.getProperty(SERVICE_DISCOVERY_ZK_HOST), new ExponentialBackoffRetry(1000, 3));
     }
 
-    @Bean( initMethod = "start", destroyMethod = "close" )
+    @Bean(initMethod = "start", destroyMethod = "close")
     public ServiceDiscovery discovery() {
         return ServiceDiscoveryBuilder.builder(Void.class)
                 .client(curator())
@@ -42,17 +39,17 @@ public class ZookeeperDiscoveryConfig implements BeanFactoryAware {
     }
 
     @Bean(destroyMethod = "close")
-    public FetchStrategy fetchStrategy() {
+    public ZookeeperFetcher fetchStrategy() {
         return new ZookeeperFetcher(discovery());
     }
 
     @Bean
-    public ClientProxyGenerator clientProxyGenerator() {
+    public ZookeeperProxyGenerator clientProxyGenerator() {
         return new ZookeeperProxyGenerator(new ClientProxyDecorator());
     }
 
     @Bean
-    public RegisterStrategy registerStrategy() {
+    public ZookeeperRegistry registerStrategy() {
         return new ZookeeperRegistry(discovery());
     }
 
