@@ -1,26 +1,29 @@
-package com.payu.discovery.client.config;
+package com.payu.discovery.client;
 
 import com.payu.discovery.Cachable;
 import com.payu.discovery.Discover;
 import com.payu.discovery.RetryPolicy;
 import com.payu.discovery.event.EventCannon;
+import com.payu.discovery.proxy.BroadcastingInvocationHandler;
 import com.payu.discovery.proxy.CacheInvocationHandler;
-import com.payu.discovery.proxy.ClientProducer;
 import com.payu.discovery.proxy.RetryPolicyInvocationHandler;
+import com.payu.discovery.proxy.UnicastingInvocationHandler;
 import org.springframework.beans.factory.config.DependencyDescriptor;
 import org.springframework.beans.factory.support.AutowireCandidateResolver;
 import org.springframework.context.annotation.ContextAnnotationAutowireCandidateResolver;
 
 import java.lang.reflect.Proxy;
 
-class RemoteAutowireCandidateResolver extends
+public class RemoteAutowireCandidateResolver extends
         ContextAnnotationAutowireCandidateResolver implements
         AutowireCandidateResolver {
 
-    private final ClientProducer clientProducer;
+    private FetchStrategy fetchStrategy;
+    private ClientProxyGenerator clientProxyGenerator;
 
-    public RemoteAutowireCandidateResolver(ClientProducer clientProducer) {
-        this.clientProducer = clientProducer;
+    public RemoteAutowireCandidateResolver(FetchStrategy fetchStrategy, ClientProxyGenerator clientProxyGenerator) {
+        this.fetchStrategy = fetchStrategy;
+        this.clientProxyGenerator = clientProxyGenerator;
     }
 
     @Override
@@ -39,11 +42,11 @@ class RemoteAutowireCandidateResolver extends
     }
 
     private Object produceEventCannonProxy() {
-        return clientProducer.produceBroadcaster();
+        return produceBroadcaster();
     }
 
     private Object produceServiceProxy(DependencyDescriptor descriptor) {
-        Object client = clientProducer.produceLoadBalancer(descriptor.getDependencyType());
+        Object client = produceUnicaster(descriptor.getDependencyType());
 
         if (descriptor.getField().isAnnotationPresent(Cachable.class)) {
             client = decorateWithCaching(client, descriptor.getDependencyType());
@@ -72,6 +75,16 @@ class RemoteAutowireCandidateResolver extends
                         new Class[]{clazz}, new RetryPolicyInvocationHandler(object, exception));
     }
 
+    public Object produceUnicaster(Class<?> clazz) {
+        return Proxy
+                .newProxyInstance(Thread.currentThread().getContextClassLoader(),
+                        new Class[]{clazz}, new UnicastingInvocationHandler(fetchStrategy, clazz, clientProxyGenerator));
+    }
 
+    public Object produceBroadcaster() {
+        return Proxy
+                .newProxyInstance(Thread.currentThread().getContextClassLoader(),
+                        new Class[]{EventCannon.class}, new BroadcastingInvocationHandler(fetchStrategy, clientProxyGenerator));
+    }
 
 }

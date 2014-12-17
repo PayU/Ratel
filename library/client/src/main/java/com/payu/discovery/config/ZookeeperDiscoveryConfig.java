@@ -1,9 +1,12 @@
 package com.payu.discovery.config;
 
-import com.payu.discovery.proxy.ClientProducer;
-import com.payu.discovery.proxy.ZookeeperClientProducer;
-import com.payu.discovery.register.config.RegisterStrategy;
-import com.payu.discovery.register.config.ZookeeperRegistry;
+import com.payu.discovery.client.ClientProxyDecorator;
+import com.payu.discovery.client.ClientProxyGenerator;
+import com.payu.discovery.client.FetchStrategy;
+import com.payu.discovery.client.zookeeper.ZookeeperFetcher;
+import com.payu.discovery.client.zookeeper.ZookeeperProxyGenerator;
+import com.payu.discovery.register.RegisterStrategy;
+import com.payu.discovery.register.zookeeper.ZookeeperRegistry;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.retry.ExponentialBackoffRetry;
@@ -38,9 +41,14 @@ public class ZookeeperDiscoveryConfig implements BeanFactoryAware {
                 .build();
     }
 
+    @Bean(destroyMethod = "close")
+    public FetchStrategy fetchStrategy() {
+        return new ZookeeperFetcher(discovery());
+    }
+
     @Bean
-    public ClientProducer clientProducer() {
-        return new ZookeeperClientProducer(discovery());
+    public ClientProxyGenerator clientProxyGenerator() {
+        return new ZookeeperProxyGenerator(new ClientProxyDecorator());
     }
 
     @Bean

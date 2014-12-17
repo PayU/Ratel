@@ -1,15 +1,14 @@
 package com.payu.discovery.scanner;
 
-import java.lang.annotation.Annotation;
-import java.util.Collection;
-import java.util.Set;
-
+import com.google.common.base.Function;
+import com.google.common.collect.Collections2;
 import org.reflections.Reflections;
 import org.reflections.scanners.MethodAnnotationsScanner;
 import org.reflections.scanners.TypeAnnotationsScanner;
 
-import com.google.common.base.Function;
-import com.google.common.collect.Collections2;
+import java.lang.annotation.Annotation;
+import java.util.Collection;
+import java.util.Set;
 
 public abstract class AnnotationScanner<K extends Annotation, T> {
 

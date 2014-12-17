@@ -1,4 +1,4 @@
-package com.payu.discovery.client;
+package com.payu.discovery.client.inmemory;
 
 import com.payu.discovery.ServiceDiscoveryApi;
 import com.payu.discovery.model.ServiceDescriptor;

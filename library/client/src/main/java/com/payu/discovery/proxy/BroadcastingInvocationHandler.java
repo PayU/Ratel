@@ -1,135 +1,57 @@
 package com.payu.discovery.proxy;
 
-import java.io.Serializable;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
+import com.payu.discovery.client.ClientProxyGenerator;
+import com.payu.discovery.client.FetchStrategy;
+import com.payu.discovery.event.EventReceiver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
 
-import com.payu.discovery.client.DiscoveryClient;
-import com.payu.discovery.event.EventReceiver;
-import com.payu.discovery.model.ServiceDescriptor;
-import com.payu.discovery.proxy.monitoring.MonitoringInvocationHandler;
+import java.io.Serializable;
+import java.lang.reflect.Method;
+import java.util.Collection;
 
 public class BroadcastingInvocationHandler implements java.lang.reflect.InvocationHandler {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BroadcastingInvocationHandler.class);
+    private static Class<EventReceiver> eventReceiverClazz = EventReceiver.class;
+
+    private final FetchStrategy fetchStrategy;
+    private final ClientProxyGenerator clientProxyGenerator;
+
 
     private static final Method RECEIVE_METHOD_HANDLER = getReceiveEventHandler();
 
     private static Method getReceiveEventHandler() {
         try {
-            return EventReceiver.class.getDeclaredMethod("receiveEvent", Serializable.class);
+            return eventReceiverClazz.getDeclaredMethod("receiveEvent", Serializable.class);
         } catch (NoSuchMethodException e) {
             throw new AssertionError(e);
         }
     }
 
-    private class ServiceClient {
 
-        public String address;
-
-        public Object clientProxy;
-
-        private ServiceClient(String address, Object clientProxy) {
-            this.address = address;
-            this.clientProxy = clientProxy;
-        }
-
-    }
-
-    private LinkedList<ServiceClient> clients = new LinkedList<>();
-
-    private DiscoveryClient discoveryClient;
-
-    private Map<String, List<ServiceDescriptor>> allServices() {
-        Collection<ServiceDescriptor> serviceDescriptors = discoveryClient.fetchAllServices();
-
-        Map<String, List<ServiceDescriptor>> allServices = new HashMap<>();
-
-        for(ServiceDescriptor serviceDescriptor:serviceDescriptors){
-            String name = serviceDescriptor.getName();
-
-            if(!allServices.containsKey(name)){
-                allServices.put(name, new ArrayList<ServiceDescriptor>());
-            }
-
-            allServices.get(name).add(serviceDescriptor);
-        }
-
-        return allServices;
-    }
-
-    public BroadcastingInvocationHandler(DiscoveryClient discoveryClient) {
-        this.discoveryClient = discoveryClient;
+    public BroadcastingInvocationHandler(FetchStrategy fetchStrategy, ClientProxyGenerator clientProxyGenerator) {
+        this.fetchStrategy = fetchStrategy;
+        this.clientProxyGenerator = clientProxyGenerator;
     }
 
     @Override
     public synchronized Object invoke(Object o, Method method, Object[] args) throws Throwable {
-        final Collection<ServiceDescriptor> fetchesServices = allServices().get(EventReceiver.class.getName());
-        if(CollectionUtils.isEmpty(fetchesServices)) {
+        Collection<String> serviceAddresses = fetchStrategy.fetchServiceAddresses(eventReceiverClazz.getName());
+
+        if (CollectionUtils.isEmpty(serviceAddresses)) {
+            LOGGER.error("No instance named {}", eventReceiverClazz.getName());
             return null;
         }
 
-        if(clients.isEmpty()) {
-            createAllServices(fetchesServices);
-        } else {
-            updateServices(fetchesServices);
-        }
 
-        for(ServiceClient client:clients){
-            try {
-                LOGGER.info("Sending events to ");
-                RECEIVE_METHOD_HANDLER.invoke(client.clientProxy, args);
-            } catch (InvocationTargetException | IllegalAccessException e) {
-                throw new RuntimeException(e);
-            }
+        for (String serviceAddress : serviceAddresses) {
+            final Object clientProxy = clientProxyGenerator.generate(eventReceiverClazz, serviceAddress);
+            RECEIVE_METHOD_HANDLER.invoke(clientProxy, args);
         }
 
         return null;
-    }
-
-    private void updateServices(Collection<ServiceDescriptor> fetchesServices) {
-        final Map<String, ServiceDescriptor> servicesMap = new HashMap<>();
-
-        for(ServiceDescriptor serviceDescriptor:fetchesServices){
-            servicesMap.put(serviceDescriptor.getAddress(), serviceDescriptor);
-        }
-
-        final Iterator<ServiceClient> iterator = clients.iterator();
-        while(iterator.hasNext()) {
-            final ServiceClient next = iterator.next();
-            if(servicesMap.remove(next.address) == null) {
-                iterator.remove();
-            }
-        }
-    }
-
-    private void createAllServices(Collection<ServiceDescriptor> fetchesServices) {
-        for (ServiceDescriptor service : fetchesServices){
-            clients.add(createNewService(service));
-        }
-    }
-
-    private ServiceClient createNewService(ServiceDescriptor serviceDescriptor) {
-        return new ServiceClient(serviceDescriptor.getAddress(), decorateWithMonitoring(BinaryTransportUtil
-                        .createServiceClientProxy(EventReceiver.class, serviceDescriptor.getAddress()), EventReceiver.class));
-    }
-
-    public Object decorateWithMonitoring(final Object object, final Class<EventReceiver> clazz) {
-        return Proxy
-                .newProxyInstance(Thread.currentThread().getContextClassLoader(),
-                        new Class[]{clazz}, new MonitoringInvocationHandler(object));
     }
 
 }

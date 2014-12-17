@@ -1,4 +1,4 @@
-package com.payu.discovery.server;
+package com.payu.discovery.register.inmemory;
 
 import com.payu.discovery.ServiceDiscoveryApi;
 import com.payu.discovery.model.ServiceDescriptor;

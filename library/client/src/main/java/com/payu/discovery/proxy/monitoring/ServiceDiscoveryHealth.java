@@ -1,13 +1,12 @@
 package com.payu.discovery.proxy.monitoring;
 
 
-import java.util.Collection;
-
+import com.payu.discovery.client.inmemory.DiscoveryClient;
+import com.payu.discovery.model.ServiceDescriptor;
 import org.springframework.boot.actuate.health.AbstractHealthIndicator;
 import org.springframework.boot.actuate.health.Health;
 
-import com.payu.discovery.client.DiscoveryClient;
-import com.payu.discovery.model.ServiceDescriptor;
+import java.util.Collection;
 
 public class ServiceDiscoveryHealth extends AbstractHealthIndicator {
 

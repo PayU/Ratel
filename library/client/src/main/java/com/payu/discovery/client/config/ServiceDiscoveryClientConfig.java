@@ -1,11 +1,17 @@
 package com.payu.discovery.client.config;
 
 import com.payu.discovery.Discover;
-import com.payu.discovery.proxy.ClientProducer;
+import com.payu.discovery.client.AutowireCandidateResolverConfigurer;
+import com.payu.discovery.client.ClientProxyGenerator;
+import com.payu.discovery.client.FetchStrategy;
+import com.payu.discovery.client.RemoteAutowireCandidateResolver;
+import com.payu.discovery.config.ServerDiscoveryConfig;
+import com.payu.discovery.config.ZookeeperDiscoveryConfig;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 
 
 /**
@@ -17,16 +23,14 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ConditionalOnClass({Discover.class})
 @ConditionalOnExpression("${com.payu.discovery.enabled:true}")
+@Import({ZookeeperDiscoveryConfig.class, ServerDiscoveryConfig.class})
 public class ServiceDiscoveryClientConfig {
 
     @Bean
-    public RemoteAutowireCandidateResolver remoteAutowireCandidateResolver(ClientProducer clientProducer) {
-        return new RemoteAutowireCandidateResolver(clientProducer);
-    }
+    public AutowireCandidateResolverConfigurer autowireCandidateResolverConfigurer(FetchStrategy fetchStrategy,
+                                                                                   ClientProxyGenerator clientProxyGenerator) {
 
-    @Bean
-    public AutowireCandidateResolverConfigurer autowireCandidateResolverConfigurer(ClientProducer clientProducer) {
-        return new AutowireCandidateResolverConfigurer(remoteAutowireCandidateResolver(clientProducer));
+        return new AutowireCandidateResolverConfigurer(new RemoteAutowireCandidateResolver(fetchStrategy, clientProxyGenerator));
     }
 
 }

@@ -1,5 +1,6 @@
-package com.payu.discovery.register.config;
+package com.payu.discovery.register.zookeeper;
 
+import com.payu.discovery.register.RegisterStrategy;
 import org.apache.curator.x.discovery.ServiceDiscovery;
 import org.apache.curator.x.discovery.ServiceInstance;
 import org.slf4j.Logger;

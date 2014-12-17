@@ -1,12 +1,15 @@
 package com.payu.discovery.config;
 
-import com.payu.discovery.client.DiscoveryClient;
-import com.payu.discovery.proxy.ClientProducer;
-import com.payu.discovery.proxy.HessianClientProducer;
+import com.payu.discovery.client.ClientProxyDecorator;
+import com.payu.discovery.client.ClientProxyGenerator;
+import com.payu.discovery.client.FetchStrategy;
+import com.payu.discovery.client.inmemory.DiscoveryClient;
+import com.payu.discovery.client.inmemory.RatelServerFetcher;
+import com.payu.discovery.client.inmemory.RatelServerProxyGenerator;
 import com.payu.discovery.proxy.monitoring.ServiceDiscoveryHealth;
-import com.payu.discovery.register.config.RatelServerRegistry;
-import com.payu.discovery.register.config.RegisterStrategy;
-import com.payu.discovery.server.RemoteRestDiscoveryServer;
+import com.payu.discovery.register.RegisterStrategy;
+import com.payu.discovery.register.inmemory.RatelServerRegistry;
+import com.payu.discovery.register.inmemory.RemoteRestDiscoveryServer;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
@@ -50,8 +53,13 @@ public class ServerDiscoveryConfig implements BeanFactoryAware {
     }
 
     @Bean
-    public ClientProducer clientProducer() {
-        return new HessianClientProducer(discoveryClient());
+    public FetchStrategy fetchStrategy() {
+        return new RatelServerFetcher(discoveryClient());
+    }
+
+    @Bean
+    public ClientProxyGenerator clientProxyGenerator() {
+        return new RatelServerProxyGenerator(new ClientProxyDecorator());
     }
 
     @Bean

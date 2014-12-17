@@ -1,4 +1,4 @@
-package com.payu.discovery.register.config;
+package com.payu.discovery.register;
 
 import com.payu.discovery.Publish;
 import com.payu.discovery.proxy.monitoring.MonitoringInvocationHandler;

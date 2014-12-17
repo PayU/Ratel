@@ -1,12 +1,11 @@
-package com.payu.discovery.register.config;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.scheduling.TaskScheduler;
+package com.payu.discovery.register.inmemory;
 
 import com.payu.discovery.model.ServiceDescriptionBuilder;
 import com.payu.discovery.model.ServiceDescriptor;
-import com.payu.discovery.server.RemoteRestDiscoveryServer;
+import com.payu.discovery.register.RegisterStrategy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.TaskScheduler;
 
 public class RatelServerRegistry implements RegisterStrategy {
 
