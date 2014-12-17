@@ -1,6 +1,8 @@
-package com.payu.discovery.tests;
+package com.payu.discovery.tests.service;
 
 public interface TestService {
+
+    String hello();
 
     int incrementCounter();
 
