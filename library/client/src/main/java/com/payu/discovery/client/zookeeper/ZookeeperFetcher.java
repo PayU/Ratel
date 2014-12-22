@@ -7,6 +7,8 @@ import org.apache.curator.x.discovery.ServiceDiscovery;
 import org.apache.curator.x.discovery.ServiceInstance;
 import org.apache.curator.x.discovery.ServiceProvider;
 import org.apache.curator.x.discovery.strategies.RoundRobinStrategy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Nullable;
@@ -18,6 +20,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import static com.google.common.collect.Collections2.transform;
 
 public class ZookeeperFetcher implements FetchStrategy {
+
+    private static Logger LOGGER = LoggerFactory.getLogger(ZookeeperFetcher.class);
 
     public static final Function<ServiceInstance, String> SERVICE_INSTANCE_STRING_FUNCTION = new Function<ServiceInstance, String>() {
         @Nullable
@@ -46,6 +50,7 @@ public class ZookeeperFetcher implements FetchStrategy {
     @Override
     public Collection<String> fetchServiceAddresses(String serviceName) throws Exception {
         final Collection<ServiceInstance> serviceInstances = serviceProviderHandler.getProvider(serviceName).getAllInstances();
+        LOGGER.info("Fetching addresses for {}", serviceName);
 
         return transform(serviceInstances, SERVICE_INSTANCE_STRING_FUNCTION);
     }

@@ -25,8 +25,10 @@ public class ZookeeperDiscoveryConfig implements BeanFactoryAware {
 
     private Environment env;
 
+    //TODO refactor property
     @Bean(initMethod = "start", destroyMethod = "close")
     public CuratorFramework curator() {
+        System.setProperty("zookeeper.sasl.client", "false");
         return CuratorFrameworkFactory.newClient(env.getProperty(SERVICE_DISCOVERY_ZK_HOST), new ExponentialBackoffRetry(1000, 3));
     }
 

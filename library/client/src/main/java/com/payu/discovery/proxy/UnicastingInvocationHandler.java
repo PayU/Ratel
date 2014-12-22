@@ -35,6 +35,8 @@ public class UnicastingInvocationHandler implements InvocationHandler {
 
         final Object clientProxy = clientProxyGenerator.generate(serviceApi, serviceAddress);
 
+        LOGGER.debug("Calling {} on address {}", serviceApi.getName(), serviceAddress);
+
         return method.invoke(clientProxy, args);
     }
 }

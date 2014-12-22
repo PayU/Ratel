@@ -10,7 +10,6 @@ import com.payu.discovery.proxy.RetryPolicyInvocationHandler;
 import com.payu.discovery.proxy.UnicastingInvocationHandler;
 import org.springframework.beans.factory.config.DependencyDescriptor;
 import org.springframework.beans.factory.support.AutowireCandidateResolver;
-import org.springframework.context.annotation.ContextAnnotationAutowireCandidateResolver;
 
 import java.lang.reflect.Proxy;
 
