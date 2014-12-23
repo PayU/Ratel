@@ -5,8 +5,6 @@ import com.payu.discovery.proxy.monitoring.MonitoringInvocationHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.remoting.caucho.HessianServiceExporter;
@@ -17,16 +15,16 @@ public class ServiceRegisterPostProcessor implements BeanPostProcessor {
 
     private static Logger LOGGER = LoggerFactory.getLogger(ServiceRegisterPostProcessor.class);
 
+    private final ConfigurableListableBeanFactory configurableListableBeanFactory;
     private final RegisterStrategy registerStrategy;
+    private final String address;
 
-    @Value("${app.address:http://localhost:8080}")
-    private String address;
 
-    @Autowired
-    ConfigurableListableBeanFactory configurableListableBeanFactory;
-
-    public ServiceRegisterPostProcessor(RegisterStrategy registerStrategy) {
+    public ServiceRegisterPostProcessor(ConfigurableListableBeanFactory configurableListableBeanFactory,
+                                        RegisterStrategy registerStrategy, String address) {
+        this.configurableListableBeanFactory = configurableListableBeanFactory;
         this.registerStrategy = registerStrategy;
+        this.address = address;
     }
 
     @Override
@@ -39,7 +37,7 @@ public class ServiceRegisterPostProcessor implements BeanPostProcessor {
         if (isService(bean)) {
             final String serviceName = getFirstInterface(bean).getSimpleName();
             final HessianServiceExporter hessianServiceExporter = exportService(bean, serviceName);
-            registerStrategy.registerService(hessianServiceExporter.getServiceInterface().getCanonicalName(), address + "/" + serviceName);
+            registerStrategy.registerService(hessianServiceExporter.getServiceInterface().getCanonicalName(), address + serviceName);
             LOGGER.info("Bean {} published as a service: {}", bean, bean.toString());
         }
         return bean;

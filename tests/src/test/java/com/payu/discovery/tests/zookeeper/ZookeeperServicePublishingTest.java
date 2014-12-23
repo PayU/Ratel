@@ -1,22 +1,16 @@
 package com.payu.discovery.tests.zookeeper;
 
-import static com.jayway.awaitility.Awaitility.await;
-import static com.payu.discovery.config.ZookeeperDiscoveryConfig.SERVICE_DISCOVERY_ZK_HOST;
-import static org.assertj.core.api.BDDAssertions.then;
-
-import java.io.IOException;
-import java.util.concurrent.Callable;
-import java.util.concurrent.TimeUnit;
-
+import com.payu.discovery.Discover;
+import com.payu.discovery.client.EnableServiceDiscovery;
+import com.payu.discovery.config.ZookeeperDiscoveryConfig;
+import com.payu.discovery.server.DiscoveryServerMain;
+import com.payu.discovery.tests.service.ServiceConfiguration;
+import com.payu.discovery.tests.service.TestService;
 import org.apache.curator.test.TestingServer;
 import org.apache.curator.x.discovery.ServiceDiscovery;
 import org.apache.curator.x.discovery.ServiceProvider;
 import org.apache.curator.x.discovery.strategies.RoundRobinStrategy;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -26,12 +20,15 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import com.payu.discovery.Discover;
-import com.payu.discovery.client.EnableServiceDiscovery;
-import com.payu.discovery.config.ZookeeperDiscoveryConfig;
-import com.payu.discovery.server.DiscoveryServerMain;
-import com.payu.discovery.tests.service.ServiceConfiguration;
-import com.payu.discovery.tests.service.TestService;
+import java.io.IOException;
+import java.util.concurrent.Callable;
+import java.util.concurrent.TimeUnit;
+
+import static com.jayway.awaitility.Awaitility.await;
+import static com.payu.discovery.config.ZookeeperDiscoveryConfig.SERVICE_DISCOVERY_ZK_HOST;
+import static com.payu.discovery.register.config.DiscoveryServiceConfig.JBOSS_BIND_ADDRESS;
+import static com.payu.discovery.register.config.DiscoveryServiceConfig.JBOSS_BIND_PORT;
+import static org.assertj.core.api.BDDAssertions.then;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = {DiscoveryServerMain.class, ZookeeperDiscoveryConfig.class})
@@ -65,7 +62,8 @@ public class ZookeeperServicePublishingTest {
     public void before() throws Exception {
         remoteContext = SpringApplication.run(ServiceConfiguration.class,
                 "--server.port=8035",
-                "--app.address=http://localhost:8035",
+                "--" + JBOSS_BIND_ADDRESS + "=localhost",
+                "--" + JBOSS_BIND_PORT + "=8035",
                 "--" + SERVICE_DISCOVERY_ZK_HOST + "=127.0.0.1:" + ZK_PORT,
                 SPRING_JMX_ENABLED_FALSE);
 
