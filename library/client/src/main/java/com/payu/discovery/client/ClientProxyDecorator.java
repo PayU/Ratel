@@ -23,7 +23,7 @@ public class ClientProxyDecorator {
         checkNotNull(clazz, "Given service class cannot be null");
         checkArgument(!isNullOrEmpty(serviceUrl), "Given serviceUrl class cannot be blank");
 
-        HessianProxyFactoryBean proxyFactory = new HessianProxyFactoryBean();
+        HessianProxyFactoryBean proxyFactory = new RatelHessianProxyFactoryBean();
         proxyFactory.setServiceUrl(serviceUrl);
         proxyFactory.setServiceInterface(clazz);
         proxyFactory.afterPropertiesSet();
