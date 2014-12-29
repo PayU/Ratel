@@ -14,6 +14,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.env.Environment;
 
+import javax.servlet.ServletContext;
+
 /**
  * {@link org.springframework.boot.autoconfigure.EnableAutoConfiguration Auto-configuration} to enable/disable Spring's
  * <p/>
@@ -27,9 +29,13 @@ public class DiscoveryServiceConfig {
 
     public static final String JBOSS_BIND_ADDRESS = "jboss.bind.address";
     public static final String JBOSS_BIND_PORT = "jboss.bind.port";
+    public static final String RATEL_PATH = "/ratelServices/";
 
     @Autowired
     private Environment environment;
+
+    @Autowired(required = false)
+    private ServletContext servletContext;
 
     @Bean
     public ServiceRegisterPostProcessor serviceRegisterPostProcessor(ConfigurableListableBeanFactory configurableListableBeanFactory,
@@ -37,7 +43,9 @@ public class DiscoveryServiceConfig {
 
         final String host = environment.getProperty(JBOSS_BIND_ADDRESS, "localhost");
         final String port = environment.getProperty(JBOSS_BIND_PORT, "8080");
-        String address = String.format("http://%s:%s/", host, port);
+        final String contextRoot = servletContext != null ? servletContext.getContextPath() : "";
+
+        final String address = String.format("http://%s:%s%s%s", host, port, contextRoot, RATEL_PATH);
 
         return new ServiceRegisterPostProcessor(configurableListableBeanFactory, registerStrategy, address);
     }

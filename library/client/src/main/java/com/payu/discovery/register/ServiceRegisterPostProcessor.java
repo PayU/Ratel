@@ -11,6 +11,8 @@ import org.springframework.remoting.caucho.HessianServiceExporter;
 
 import java.lang.reflect.Proxy;
 
+import static com.payu.discovery.register.config.DiscoveryServiceConfig.RATEL_PATH;
+
 public class ServiceRegisterPostProcessor implements BeanPostProcessor {
 
     private static Logger LOGGER = LoggerFactory.getLogger(ServiceRegisterPostProcessor.class);
@@ -45,7 +47,7 @@ public class ServiceRegisterPostProcessor implements BeanPostProcessor {
 
     private HessianServiceExporter exportService(Object bean, String beanName) {
         final HessianServiceExporter hessianExporterService = createHessianExporterService(bean);
-        configurableListableBeanFactory.registerSingleton("/" + beanName, hessianExporterService);
+        configurableListableBeanFactory.registerSingleton(RATEL_PATH + beanName, hessianExporterService);
         return hessianExporterService;
     }
 
