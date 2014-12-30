@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @ConditionalOnClass({Subscribe.class})
-@ConditionalOnExpression("${com.payu.discovery.enabled:true}")
+@ConditionalOnExpression("${serviceDiscovery.enabled:true}")
 public class EventDrivenConfig {
 
     @Bean

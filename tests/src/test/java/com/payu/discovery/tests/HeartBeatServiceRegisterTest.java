@@ -36,7 +36,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @IntegrationTest({
         "server.port:8067",
         SERVICE_DISCOVERY_ADDRESS + ":http://localhost:8067/server/discovery",
-        "com.payu.discovery.enabled:false"})
+        "serviceDiscovery.enabled:false"})
 @WebAppConfiguration
 @EnableServiceDiscovery
 public class HeartBeatServiceRegisterTest {

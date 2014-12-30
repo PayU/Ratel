@@ -19,11 +19,11 @@ import javax.servlet.ServletContext;
 /**
  * {@link org.springframework.boot.autoconfigure.EnableAutoConfiguration Auto-configuration} to enable/disable Spring's
  * <p/>
- * To disable auto export of annotation beans set <code>com.payu.discovery.enabled: false</code>.
+ * To disable auto export of annotation beans set <code>serviceDiscovery.enabled: false</code>.
  */
 @Configuration
 @ConditionalOnClass({Publish.class})
-@ConditionalOnExpression("${com.payu.discovery.enabled:true}")
+@ConditionalOnExpression("${serviceDiscovery.enabled:true}")
 @Import({ZookeeperDiscoveryConfig.class, ServerDiscoveryConfig.class})
 public class DiscoveryServiceConfig {
 
