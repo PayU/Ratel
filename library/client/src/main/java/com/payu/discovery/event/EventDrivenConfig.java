@@ -1,13 +1,13 @@
 package com.payu.discovery.event;
 
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
+
+import static com.payu.discovery.config.RatelContextInitializer.SERVICE_DISCOVERY_ENABLED;
 
 @Configuration
-@ConditionalOnClass({Subscribe.class})
-@ConditionalOnExpression("${serviceDiscovery.enabled:true}")
+@Profile(SERVICE_DISCOVERY_ENABLED)
 public class EventDrivenConfig {
 
     @Bean

@@ -12,16 +12,16 @@ import org.apache.curator.x.discovery.ServiceDiscoveryBuilder;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.Environment;
 
-@Configuration
-@ConditionalOnProperty(ZookeeperDiscoveryConfig.SERVICE_DISCOVERY_ZK_HOST)
-public class ZookeeperDiscoveryConfig implements BeanFactoryAware {
+import static com.payu.discovery.config.RatelContextInitializer.SERVICE_DISCOVERY_ZK_HOST;
 
-    public static final String SERVICE_DISCOVERY_ZK_HOST = "serviceDiscovery.zkHost";
+@Configuration
+@Profile(SERVICE_DISCOVERY_ZK_HOST)
+public class ZookeeperDiscoveryConfig implements BeanFactoryAware {
 
     private Environment env;
 

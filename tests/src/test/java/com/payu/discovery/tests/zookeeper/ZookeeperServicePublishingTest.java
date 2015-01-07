@@ -2,6 +2,7 @@ package com.payu.discovery.tests.zookeeper;
 
 import com.payu.discovery.Discover;
 import com.payu.discovery.client.EnableServiceDiscovery;
+import com.payu.discovery.config.RatelContextInitializer;
 import com.payu.discovery.config.ZookeeperDiscoveryConfig;
 import com.payu.discovery.server.DiscoveryServerMain;
 import com.payu.discovery.tests.service.ServiceConfiguration;
@@ -25,13 +26,14 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
 import static com.jayway.awaitility.Awaitility.await;
-import static com.payu.discovery.config.ZookeeperDiscoveryConfig.SERVICE_DISCOVERY_ZK_HOST;
+import static com.payu.discovery.config.RatelContextInitializer.SERVICE_DISCOVERY_ZK_HOST;
 import static com.payu.discovery.register.config.DiscoveryServiceConfig.JBOSS_BIND_ADDRESS;
 import static com.payu.discovery.register.config.DiscoveryServiceConfig.JBOSS_BIND_PORT;
 import static org.assertj.core.api.BDDAssertions.then;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = {DiscoveryServerMain.class, ZookeeperDiscoveryConfig.class})
+@SpringApplicationConfiguration(classes = {DiscoveryServerMain.class, ZookeeperDiscoveryConfig.class},
+        initializers = RatelContextInitializer.class)
 @IntegrationTest({
         SERVICE_DISCOVERY_ZK_HOST + ":127.0.0.1:" + ZookeeperServicePublishingTest.ZK_PORT
 })
@@ -60,8 +62,10 @@ public class ZookeeperServicePublishingTest {
 
     @Before
     public void before() throws Exception {
-        remoteContext = SpringApplication.run(ServiceConfiguration.class,
-                "--server.port=8035",
+        final SpringApplication remoteContextSpringApplication = new SpringApplication(ServiceConfiguration.class);
+        remoteContextSpringApplication.addInitializers(new RatelContextInitializer());
+
+        remoteContext = remoteContextSpringApplication.run("--server.port=8035",
                 "--" + JBOSS_BIND_ADDRESS + "=localhost",
                 "--" + JBOSS_BIND_PORT + "=8035",
                 "--" + SERVICE_DISCOVERY_ZK_HOST + "=127.0.0.1:" + ZK_PORT,

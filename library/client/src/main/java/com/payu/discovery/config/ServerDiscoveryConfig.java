@@ -10,26 +10,27 @@ import com.payu.discovery.register.inmemory.RemoteRestDiscoveryServer;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.Environment;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
+import static com.payu.discovery.config.RatelContextInitializer.SERVICE_DISCOVERY_ADDRESS;
+
 @Configuration
-@ConditionalOnProperty(ServerDiscoveryConfig.SERVICE_DISCOVERY_ADDRESS)
+@Profile(SERVICE_DISCOVERY_ADDRESS)
 @EnableScheduling
 public class ServerDiscoveryConfig implements BeanFactoryAware {
-    public static final String SERVICE_DISCOVERY_ADDRESS = "serviceDiscovery.address";
     private static final String DEFAULT_DISCOVERY_URL = "http://localhost:8090/server/discovery";
 
     private Environment env;
 
     @Bean
     public DiscoveryClient discoveryClient() {
-        final String property = env.getProperty(ServerDiscoveryConfig.SERVICE_DISCOVERY_ADDRESS, DEFAULT_DISCOVERY_URL);
+        final String property = env.getProperty(SERVICE_DISCOVERY_ADDRESS, DEFAULT_DISCOVERY_URL);
         return new DiscoveryClient(property);
     }
 

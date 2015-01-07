@@ -1,20 +1,20 @@
 package com.payu.discovery.register.config;
 
-import com.payu.discovery.Publish;
 import com.payu.discovery.config.ServerDiscoveryConfig;
 import com.payu.discovery.config.ZookeeperDiscoveryConfig;
 import com.payu.discovery.register.RegisterStrategy;
 import com.payu.discovery.register.ServiceRegisterPostProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.Environment;
 
 import javax.servlet.ServletContext;
+
+import static com.payu.discovery.config.RatelContextInitializer.SERVICE_DISCOVERY_ENABLED;
 
 /**
  * {@link org.springframework.boot.autoconfigure.EnableAutoConfiguration Auto-configuration} to enable/disable Spring's
@@ -22,8 +22,7 @@ import javax.servlet.ServletContext;
  * To disable auto export of annotation beans set <code>serviceDiscovery.enabled: false</code>.
  */
 @Configuration
-@ConditionalOnClass({Publish.class})
-@ConditionalOnExpression("${serviceDiscovery.enabled:true}")
+@Profile(SERVICE_DISCOVERY_ENABLED)
 @Import({ZookeeperDiscoveryConfig.class, ServerDiscoveryConfig.class})
 public class DiscoveryServiceConfig {
 
