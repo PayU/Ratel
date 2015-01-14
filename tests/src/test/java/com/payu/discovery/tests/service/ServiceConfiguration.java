@@ -6,11 +6,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import com.payu.discovery.register.config.DiscoveryServiceConfig;
+import com.payu.discovery.config.ServiceDiscoveryConfig;
 
 @Configuration
 @EnableAutoConfiguration
-@Import(DiscoveryServiceConfig.class)
+@Import(ServiceDiscoveryConfig.class)
 @WebAppConfiguration
 public class ServiceConfiguration {
 

@@ -1,7 +1,14 @@
 package com.payu.discovery.client.zookeeper;
 
-import com.google.common.base.Function;
-import com.payu.discovery.client.FetchStrategy;
+import static com.google.common.collect.Collections2.transform;
+
+import java.io.IOException;
+import java.util.Collection;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+import javax.annotation.Nullable;
+
 import org.apache.curator.x.discovery.ProviderStrategy;
 import org.apache.curator.x.discovery.ServiceDiscovery;
 import org.apache.curator.x.discovery.ServiceInstance;
@@ -11,13 +18,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
-import javax.annotation.Nullable;
-import java.io.IOException;
-import java.util.Collection;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
-import static com.google.common.collect.Collections2.transform;
+import com.google.common.base.Function;
+import com.payu.discovery.client.FetchStrategy;
 
 public class ZookeeperFetcher implements FetchStrategy {
 
@@ -30,7 +32,7 @@ public class ZookeeperFetcher implements FetchStrategy {
             return serviceInstance.getAddress();
         }
     };
-    private final ProviderStrategy instancePickStrategy = new RoundRobinStrategy();
+    private final ProviderStrategy pickInstanceStrategy = new RoundRobinStrategy();
     private final ServiceProviderHandler serviceProviderHandler = new ServiceProviderHandler();
 
     private final ServiceDiscovery serviceDiscovery;
@@ -71,7 +73,7 @@ public class ZookeeperFetcher implements FetchStrategy {
 
             if (provider == null) {
                 provider = serviceDiscovery.serviceProviderBuilder().serviceName(serviceName)
-                        .providerStrategy(instancePickStrategy).build();
+                        .providerStrategy(pickInstanceStrategy).build();
                 provider.start();
 
                 providers.put(serviceName, provider);

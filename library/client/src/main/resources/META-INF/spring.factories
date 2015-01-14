@@ -1,6 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-com.payu.discovery.client.config.ServiceDiscoveryClientConfig,\
-com.payu.discovery.register.config.DiscoveryServiceConfig,\
-com.payu.discovery.config.ServerDiscoveryConfig,\
-com.payu.discovery.config.ZookeeperDiscoveryConfig
-

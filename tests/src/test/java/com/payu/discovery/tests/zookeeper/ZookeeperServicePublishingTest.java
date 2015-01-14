@@ -1,17 +1,24 @@
 package com.payu.discovery.tests.zookeeper;
 
-import com.payu.discovery.Discover;
-import com.payu.discovery.client.EnableServiceDiscovery;
-import com.payu.discovery.config.RatelContextInitializer;
-import com.payu.discovery.config.ZookeeperDiscoveryConfig;
-import com.payu.discovery.server.DiscoveryServerMain;
-import com.payu.discovery.tests.service.ServiceConfiguration;
-import com.payu.discovery.tests.service.TestService;
+import static com.jayway.awaitility.Awaitility.await;
+import static com.payu.discovery.config.RatelContextInitializer.SERVICE_DISCOVERY_ZK_HOST;
+import static com.payu.discovery.config.ServiceDiscoveryConfig.JBOSS_BIND_ADDRESS;
+import static com.payu.discovery.config.ServiceDiscoveryConfig.JBOSS_BIND_PORT;
+import static org.assertj.core.api.BDDAssertions.then;
+
+import java.io.IOException;
+import java.util.concurrent.Callable;
+import java.util.concurrent.TimeUnit;
+
 import org.apache.curator.test.TestingServer;
 import org.apache.curator.x.discovery.ServiceDiscovery;
 import org.apache.curator.x.discovery.ServiceProvider;
 import org.apache.curator.x.discovery.strategies.RoundRobinStrategy;
-import org.junit.*;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -21,24 +28,20 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import java.io.IOException;
-import java.util.concurrent.Callable;
-import java.util.concurrent.TimeUnit;
-
-import static com.jayway.awaitility.Awaitility.await;
-import static com.payu.discovery.config.RatelContextInitializer.SERVICE_DISCOVERY_ZK_HOST;
-import static com.payu.discovery.register.config.DiscoveryServiceConfig.JBOSS_BIND_ADDRESS;
-import static com.payu.discovery.register.config.DiscoveryServiceConfig.JBOSS_BIND_PORT;
-import static org.assertj.core.api.BDDAssertions.then;
+import com.payu.discovery.Discover;
+import com.payu.discovery.config.RatelContextInitializer;
+import com.payu.discovery.config.ServiceDiscoveryConfig;
+import com.payu.discovery.server.DiscoveryServerMain;
+import com.payu.discovery.tests.service.ServiceConfiguration;
+import com.payu.discovery.tests.service.TestService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = {DiscoveryServerMain.class, ZookeeperDiscoveryConfig.class},
+@SpringApplicationConfiguration(classes = {ServiceDiscoveryConfig.class, DiscoveryServerMain.class},
         initializers = RatelContextInitializer.class)
 @IntegrationTest({
         SERVICE_DISCOVERY_ZK_HOST + ":127.0.0.1:" + ZookeeperServicePublishingTest.ZK_PORT
 })
 @WebAppConfiguration
-@EnableServiceDiscovery
 public class ZookeeperServicePublishingTest {
     public static final String SPRING_JMX_ENABLED_FALSE = "--spring.jmx.enabled=false";
     public static final int ZK_PORT = 2185;
@@ -80,6 +83,7 @@ public class ZookeeperServicePublishingTest {
 
     @After
     public void close() throws IOException {
+        serviceProvider.close();
         remoteContext.close();
     }
 

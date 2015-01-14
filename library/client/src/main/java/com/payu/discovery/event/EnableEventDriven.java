@@ -1,8 +1,9 @@
 package com.payu.discovery.event;
 
-import com.payu.discovery.register.config.DiscoveryServiceConfig;
 import org.springframework.context.annotation.Import;
 
-@Import({EventDrivenConfig.class, DiscoveryServiceConfig.class})
+import com.payu.discovery.config.ServiceDiscoveryConfig;
+
+@Import({EventDrivenConfig.class, ServiceDiscoveryConfig.class})
 public @interface EnableEventDriven {
 }

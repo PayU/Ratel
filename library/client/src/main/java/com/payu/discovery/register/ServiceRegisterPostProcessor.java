@@ -1,7 +1,9 @@
 package com.payu.discovery.register;
 
-import com.payu.discovery.Publish;
-import com.payu.discovery.proxy.monitoring.MonitoringInvocationHandler;
+import static com.payu.discovery.config.ServiceDiscoveryConfig.RATEL_PATH;
+
+import java.lang.reflect.Proxy;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -9,9 +11,8 @@ import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.remoting.caucho.HessianServiceExporter;
 
-import java.lang.reflect.Proxy;
-
-import static com.payu.discovery.register.config.DiscoveryServiceConfig.RATEL_PATH;
+import com.payu.discovery.Publish;
+import com.payu.discovery.proxy.monitoring.MonitoringInvocationHandler;
 
 public class ServiceRegisterPostProcessor implements BeanPostProcessor {
 

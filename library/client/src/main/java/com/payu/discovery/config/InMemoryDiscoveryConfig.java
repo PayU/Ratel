@@ -1,12 +1,7 @@
 package com.payu.discovery.config;
 
-import com.payu.discovery.client.ClientProxyDecorator;
-import com.payu.discovery.client.inmemory.DiscoveryClient;
-import com.payu.discovery.client.inmemory.RatelServerFetcher;
-import com.payu.discovery.client.inmemory.RatelServerProxyGenerator;
-import com.payu.discovery.proxy.monitoring.ServiceDiscoveryHealth;
-import com.payu.discovery.register.inmemory.RatelServerRegistry;
-import com.payu.discovery.register.inmemory.RemoteRestDiscoveryServer;
+import static com.payu.discovery.config.RatelContextInitializer.SERVICE_DISCOVERY_ADDRESS;
+
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
@@ -18,12 +13,18 @@ import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
-import static com.payu.discovery.config.RatelContextInitializer.SERVICE_DISCOVERY_ADDRESS;
+import com.payu.discovery.client.ClientProxyDecorator;
+import com.payu.discovery.client.inmemory.DiscoveryClient;
+import com.payu.discovery.client.inmemory.RatelServerFetcher;
+import com.payu.discovery.client.inmemory.RatelServerProxyGenerator;
+import com.payu.discovery.proxy.monitoring.ServiceDiscoveryHealth;
+import com.payu.discovery.register.inmemory.RatelServerRegistry;
+import com.payu.discovery.register.inmemory.RemoteRestDiscoveryServer;
 
 @Configuration
 @Profile(SERVICE_DISCOVERY_ADDRESS)
 @EnableScheduling
-public class ServerDiscoveryConfig implements BeanFactoryAware {
+public class InMemoryDiscoveryConfig implements BeanFactoryAware {
     private static final String DEFAULT_DISCOVERY_URL = "http://localhost:8090/server/discovery";
 
     private Environment env;

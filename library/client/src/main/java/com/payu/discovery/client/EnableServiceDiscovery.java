@@ -1,15 +1,16 @@
 package com.payu.discovery.client;
 
-import com.payu.discovery.client.config.ServiceDiscoveryClientConfig;
-import org.springframework.context.annotation.Import;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.springframework.context.annotation.Import;
+
+import com.payu.discovery.config.ServiceDiscoveryConfig;
+
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-@Import(ServiceDiscoveryClientConfig.class)
+@Import(ServiceDiscoveryConfig.class)
 public @interface EnableServiceDiscovery {
 }
