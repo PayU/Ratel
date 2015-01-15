@@ -18,5 +18,4 @@ public class ServiceConfiguration {
     public TestService testService() {
         return new TestServiceImpl();
     }
-
 }
