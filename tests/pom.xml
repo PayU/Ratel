@@ -48,14 +48,7 @@
 
         <dependency>
             <groupId>org.ratel</groupId>
-            <artifactId>ratel-api</artifactId>
-            <version>${project.version}</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.ratel</groupId>
-            <artifactId>ratel-client</artifactId>
+            <artifactId>ratel-core</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
