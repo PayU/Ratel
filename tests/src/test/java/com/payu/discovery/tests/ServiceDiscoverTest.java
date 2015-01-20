@@ -26,11 +26,14 @@ import com.payu.discovery.config.RatelContextInitializer;
 import com.payu.discovery.config.ServiceDiscoveryConfig;
 import com.payu.discovery.server.DiscoveryServerMain;
 import com.payu.discovery.server.InMemoryDiscoveryServer;
+import com.payu.discovery.tests.service.provider.ProviderConfiguration;
+import com.payu.discovery.tests.service.provider.RatelServiceDiscoveredByConstructor;
 import com.payu.discovery.tests.service.ServiceConfiguration;
 import com.payu.discovery.tests.service.TestService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = {ServiceDiscoveryConfig.class, DiscoveryServerMain.class},
+@SpringApplicationConfiguration(classes = {ServiceDiscoveryConfig.class, DiscoveryServerMain.class,
+        ProviderConfiguration.class},
         initializers = RatelContextInitializer.class)
 @IntegrationTest({
         "server.port:8061",
@@ -43,6 +46,9 @@ public class ServiceDiscoverTest {
 
     @Autowired
     private InMemoryDiscoveryServer server;
+
+    @Autowired
+    private RatelServiceDiscoveredByConstructor ratelServiceDiscoveredByConstructor;
 
     @Discover
     private TestService testService;
@@ -80,6 +86,27 @@ public class ServiceDiscoverTest {
 
         //then
         assertThat(result).isEqualTo(1);
+    }
+
+    @Test
+    public void shouldDiscoverServiceByConstructor() throws InterruptedException {
+        TestService testService1 = ratelServiceDiscoveredByConstructor.getTestService1();
+        await().atMost(10, TimeUnit.SECONDS).until(new Runnable() {
+
+            @Override
+            public void run() {
+                assertThat(server.fetchAllServices()).hasSize(1);
+            }
+
+        });
+
+        //when
+        final int result = testService1.incrementCounter();
+
+        //then
+        assertThat(result).isEqualTo(1);
+        assertThat(ratelServiceDiscoveredByConstructor.getEnvironment1()).isNotNull();
+        assertThat(ratelServiceDiscoveredByConstructor.getEnvironment2()).isNotNull();
     }
 
 }
