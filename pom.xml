@@ -8,8 +8,7 @@
     <artifactId>ratel-project</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <modules>
-        <module>api</module>
-        <module>library</module>
+        <module>core</module>
         <module>server</module>
         <module>tests</module>
     </modules>
