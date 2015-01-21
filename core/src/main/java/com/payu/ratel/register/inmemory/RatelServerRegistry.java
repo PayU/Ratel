@@ -1,11 +1,12 @@
 package com.payu.ratel.register.inmemory;
 
-import com.payu.ratel.model.ServiceDescriptionBuilder;
-import com.payu.ratel.model.ServiceDescriptor;
-import com.payu.ratel.register.RegisterStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.TaskScheduler;
+
+import com.payu.ratel.model.ServiceDescriptionBuilder;
+import com.payu.ratel.model.ServiceDescriptor;
+import com.payu.ratel.register.RegisterStrategy;
 
 public class RatelServerRegistry implements RegisterStrategy {
 
@@ -25,7 +26,7 @@ public class RatelServerRegistry implements RegisterStrategy {
     @Override
     public void registerService(String name, String address) {
         ServiceDescriptor serviceDescriptor = buildService(name, address);
-        LOGGER.info("Registering service {}", serviceDescriptor);
+        LOGGER.info("Registering service in ratel server {}", serviceDescriptor);
         applyHeartBeat(serviceDescriptor);
     }
 

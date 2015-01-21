@@ -1,4 +1,4 @@
-package com.payu.ratel.client;
+package com.payu.ratel.config;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -6,8 +6,6 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import org.springframework.context.annotation.Import;
-
-import com.payu.ratel.config.ServiceDiscoveryConfig;
 
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)

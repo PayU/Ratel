@@ -1,6 +1,7 @@
 package com.payu.ratel.register;
 
-import static com.payu.ratel.config.ServiceDiscoveryConfig.RATEL_PATH;
+
+import static com.payu.ratel.config.beans.ServiceRegisterPostProcessorFactory.RATEL_PATH;
 
 import java.lang.reflect.Proxy;
 

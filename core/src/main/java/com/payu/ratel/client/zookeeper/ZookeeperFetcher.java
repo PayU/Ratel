@@ -52,7 +52,7 @@ public class ZookeeperFetcher implements FetchStrategy {
     @Override
     public Collection<String> fetchServiceAddresses(String serviceName) throws Exception {
         final Collection<ServiceInstance> serviceInstances = serviceProviderHandler.getProvider(serviceName).getAllInstances();
-        LOGGER.info("Fetching addresses for {}", serviceName);
+        LOGGER.info("Fetching addresses from zkRegistry for {}", serviceName);
 
         return transform(serviceInstances, SERVICE_INSTANCE_STRING_FUNCTION);
     }

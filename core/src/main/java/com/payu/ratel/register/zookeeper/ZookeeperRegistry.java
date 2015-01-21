@@ -1,10 +1,11 @@
 package com.payu.ratel.register.zookeeper;
 
-import com.payu.ratel.register.RegisterStrategy;
 import org.apache.curator.x.discovery.ServiceDiscovery;
 import org.apache.curator.x.discovery.ServiceInstance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.payu.ratel.register.RegisterStrategy;
 
 public class ZookeeperRegistry implements RegisterStrategy {
 
@@ -24,6 +25,7 @@ public class ZookeeperRegistry implements RegisterStrategy {
                     .address(address)
                     .build();
             discovery.registerService(serviceInstance);
+            LOGGER.info("Registering service {} in zkRegistry", serviceInstance.getName());
         } catch (Exception e) {
             LOGGER.error("Zk registering failed", e);
         }
