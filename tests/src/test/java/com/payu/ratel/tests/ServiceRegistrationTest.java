@@ -23,7 +23,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import com.payu.ratel.config.ServiceDiscoveryConfig;
 import com.payu.ratel.server.DiscoveryServerMain;
 import com.payu.ratel.server.InMemoryDiscoveryServer;
-import com.payu.ratel.tests.service.ServiceConfiguration;
+import com.payu.ratel.tests.service.TestServiceConfiguration;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = {ServiceDiscoveryConfig.class, DiscoveryServerMain.class})
@@ -40,7 +40,7 @@ public class ServiceRegistrationTest {
 
     @Before
     public void before() throws InterruptedException {
-        remoteContext = SpringApplication.run(ServiceConfiguration.class,
+        remoteContext = SpringApplication.run(TestServiceConfiguration.class,
                 "--server.port=8031",
                 "--" + JBOSS_BIND_ADDRESS + "=localhost",
                 "--" + JBOSS_BIND_PORT + "=8031",

@@ -27,7 +27,7 @@ import com.payu.ratel.config.EnableServiceDiscovery;
 import com.payu.ratel.config.ServiceDiscoveryConfig;
 import com.payu.ratel.server.DiscoveryServerMain;
 import com.payu.ratel.server.InMemoryDiscoveryServer;
-import com.payu.ratel.tests.service.ServiceConfiguration;
+import com.payu.ratel.tests.service.TestServiceConfiguration;
 import com.payu.ratel.tests.service.TestService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -49,14 +49,14 @@ public class LoadBalancingTest {
 
     @Before
     public void before() throws InterruptedException {
-        remoteContexts.add(SpringApplication.run(ServiceConfiguration.class,
+        remoteContexts.add(SpringApplication.run(TestServiceConfiguration.class,
                 "--server.port=8031",
                 "--" + JBOSS_BIND_ADDRESS + "=localhost",
                 "--" + JBOSS_BIND_PORT + "=8031",
                 "--spring.jmx.enabled=false",
                 "--" + SERVICE_DISCOVERY_ADDRESS + "=http://localhost:8060/server/discovery"));
 
-        remoteContexts.add(SpringApplication.run(ServiceConfiguration.class,
+        remoteContexts.add(SpringApplication.run(TestServiceConfiguration.class,
                 "--server.port=8032",
                 "--" + JBOSS_BIND_ADDRESS + "=localhost",
                 "--" + JBOSS_BIND_PORT + "=8032",

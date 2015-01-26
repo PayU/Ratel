@@ -12,7 +12,7 @@ import com.payu.ratel.config.ServiceDiscoveryConfig;
 @EnableAutoConfiguration
 @Import(ServiceDiscoveryConfig.class)
 @WebAppConfiguration
-public class ServiceConfiguration {
+public class TestServiceConfiguration {
 
     @Bean
     public TestService testService() {

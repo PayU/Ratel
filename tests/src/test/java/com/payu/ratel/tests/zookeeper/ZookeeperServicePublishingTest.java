@@ -31,7 +31,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import com.payu.ratel.Discover;
 import com.payu.ratel.config.ServiceDiscoveryConfig;
 import com.payu.ratel.server.DiscoveryServerMain;
-import com.payu.ratel.tests.service.ServiceConfiguration;
+import com.payu.ratel.tests.service.TestServiceConfiguration;
 import com.payu.ratel.tests.service.TestService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -63,7 +63,7 @@ public class ZookeeperServicePublishingTest {
 
     @Before
     public void before() throws Exception {
-        remoteContext = SpringApplication.run(ServiceConfiguration.class,
+        remoteContext = SpringApplication.run(TestServiceConfiguration.class,
                 "--server.port=8035",
                 "--" + JBOSS_BIND_ADDRESS + "=localhost",
                 "--" + JBOSS_BIND_PORT + "=8035",
