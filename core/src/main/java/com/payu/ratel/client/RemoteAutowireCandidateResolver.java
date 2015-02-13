@@ -5,7 +5,6 @@ import java.lang.reflect.Proxy;
 import java.util.Arrays;
 import java.util.Collection;
 
-import javax.annotation.Nullable;
 
 import org.springframework.beans.factory.config.DependencyDescriptor;
 import org.springframework.beans.factory.support.AutowireCandidateResolver;
@@ -51,7 +50,6 @@ public class RemoteAutowireCandidateResolver extends
     private Collection<String> getAnnotationsType(DependencyDescriptor descriptor) {
         Function<Annotation, String> function = new Function<Annotation, String>() {
 
-            @Nullable
             @Override
             public String apply(Annotation annotation) {
                 return annotation.annotationType().getName();
@@ -86,7 +84,7 @@ public class RemoteAutowireCandidateResolver extends
     private Collection<Annotation> getAnnotationWithType(DependencyDescriptor descriptor, Class lookedClass) {
         return Collections2.filter(Arrays.asList(descriptor.getAnnotations()), new Predicate<Annotation>() {
             @Override
-            public boolean apply(@Nullable Annotation annotation) {
+            public boolean apply(Annotation annotation) {
                 return RetryPolicy.class.getName().equals(annotation.annotationType().getName());
             }
         });

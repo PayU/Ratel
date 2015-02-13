@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import javax.annotation.Nullable;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,7 +57,6 @@ public class RatelServerFetcher implements FetchStrategy {
                 });
 
         return Collections2.transform(serviceInstances, new Function<ServiceDescriptor, String>() {
-            @Nullable
             @Override
             public String apply(ServiceDescriptor serviceDescriptor) {
                 return serviceDescriptor.getAddress();

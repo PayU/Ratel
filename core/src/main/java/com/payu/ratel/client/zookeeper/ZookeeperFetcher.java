@@ -7,7 +7,6 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import javax.annotation.Nullable;
 
 import org.apache.curator.x.discovery.ProviderStrategy;
 import org.apache.curator.x.discovery.ServiceDiscovery;
@@ -26,7 +25,6 @@ public class ZookeeperFetcher implements FetchStrategy {
     private static Logger LOGGER = LoggerFactory.getLogger(ZookeeperFetcher.class);
 
     public static final Function<ServiceInstance, String> SERVICE_INSTANCE_STRING_FUNCTION = new Function<ServiceInstance, String>() {
-        @Nullable
         @Override
         public String apply(ServiceInstance serviceInstance) {
             return serviceInstance.getAddress();
