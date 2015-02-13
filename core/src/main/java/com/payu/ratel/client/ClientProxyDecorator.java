@@ -1,17 +1,18 @@
 package com.payu.ratel.client;
 
-import com.payu.ratel.proxy.monitoring.MonitoringInvocationHandler;
-import org.springframework.remoting.caucho.HessianProxyFactoryBean;
-
-import java.lang.reflect.Proxy;
-
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Strings.isNullOrEmpty;
 
+import java.lang.reflect.Proxy;
+
+import org.springframework.remoting.caucho.HessianProxyFactoryBean;
+
+import com.payu.ratel.proxy.monitoring.MonitoringInvocationHandler;
+
 public class ClientProxyDecorator {
 
-    public static final int CONNECT_READ_TIMEOUT = 5000;
+    public static final int CONNECT_READ_TIMEOUT = 30000;
 
     public Object decorateWithMonitoring(final Object object, final Class clazz) {
         return Proxy
