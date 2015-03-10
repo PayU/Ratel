@@ -22,6 +22,11 @@
     <groupId>com.payu.ratel</groupId>
     <artifactId>ratel-project</artifactId>
     <version>1.1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <name>Ratel</name>
+    <description>Service Discovery</description>
+    <url>https://github.com/PayU-Tech/Ratel</url>
 
     <organization>
         <name>PayU</name>
@@ -37,13 +42,28 @@
             <distribution>repo</distribution>
         </license>
     </licenses>
+
+    <issueManagement>
+        <url>https://github.com/PayU-Tech/Ratel/issues</url>
+        <system>github</system>
+    </issueManagement>
+
+    <developers>
+
+    </developers>
+
+    <scm>
+        <connection>scm:git:git@github.com:PayU-Tech/Ratel.git</connection>
+        <developerConnection>${project.scm.connection}</developerConnection>
+        <url>https://github.com/PayU-Tech/Ratel</url>
+        <tag>HEAD</tag>
+    </scm>
+
     <modules>
         <module>core</module>
         <module>server</module>
         <module>tests</module>
     </modules>
-
-    <packaging>pom</packaging>
 
     <properties>
         <java.version>1.7</java.version>
