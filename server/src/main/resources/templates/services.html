@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="description" content=""/>
+    <meta name="author" content="Simplicity Itself"/>
+
+    <title>Service Discovery :: Server Status</title>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href="http://cdn.jsdelivr.net/webjars/bootstrap/3.2.0/css/bootstrap.min.css"
+          th:href="@{/webjars/bootstrap/3.2.0/css/bootstrap.min.css}"
+          rel="stylesheet" media="screen" />
+    <link href="../static/css/core.css"
+          th:href="@{/css/core.css}"
+          rel="stylesheet" media="screen" />
+    <script src="http://cdn.jsdelivr.net/webjars/jquery/2.1.1/jquery.min.js"
+            th:src="@{/webjars/jquery/2.1.1/jquery.min.js}"></script>
+
+</head>
+<body>
+<!-- {!begin layout} -->
+<div th:include="layout :: head"></div>
+<!-- {!end layout} -->
+
+<div class="container-fluid">
+    <div th:include="layout :: left"></div>
+    <div class="hero-unit span9">
+        <h3>Server Status</h3>
+    </div>
+
+    <div class="row-fluid">
+        <div class="span9">
+
+            <div id="message" class="alert alert-info">
+                Currently service discovery server contains <em th:text="${services.size()}">SOME</em> registered
+                services.
+            </div>
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Address</th>
+                    <th>Statistics</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                <tr th:each="service : ${services}">
+                    <td th:text="${service.key.name}"></td>
+                    <td th:text="${service.key.address}"></td>
+                    <td>
+                        <table class="table table-striped">
+                            <thead>
+                                <th>Method</th>
+                                <th>Statistics</th>
+                            </thead>
+                            <tbody>
+                                <tr th:each="method : ${service.value}">
+                                    <td th:text="${method.key}"></td>
+                                    <td>
+                                        <table class="table table-striped">
+                                            <thead>
+                                            <tr>
+                                                <th>Statistic</th>
+                                                <th>Value [ms]</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr th:each="stat : ${method.value}">
+                                                    <td th:text="${stat.key}"></td>
+                                                    <td th:text="${stat.value}"></td>
+                                                </tr>
+                                            </tbody>
+                                         </table>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div th:include="layout :: foot"></div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
