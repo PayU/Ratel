@@ -6,6 +6,7 @@ import static com.payu.ratel.config.beans.ServiceRegisterPostProcessorFactory.JB
 import static com.payu.ratel.config.beans.ServiceRegisterPostProcessorFactory.JBOSS_BIND_PORT;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.TimeUnit;
 
 import org.junit.After;
@@ -25,7 +26,7 @@ import com.payu.ratel.config.EnableServiceDiscovery;
 import com.payu.ratel.config.ServiceDiscoveryConfig;
 import com.payu.ratel.server.DiscoveryServerMain;
 import com.payu.ratel.server.InMemoryDiscoveryServer;
-import com.payu.ratel.tests.service.MyException;
+import com.payu.ratel.tests.service.MyCheckedException;
 import com.payu.ratel.tests.service.TestService;
 import com.payu.ratel.tests.service.TestServiceConfiguration;
 
@@ -61,8 +62,8 @@ public class ExceptionTransportTest {
         remoteContext.close();
     }
 
-    @Test(expected=MyException.class)
-    public void shouldNotThrowException() throws InterruptedException {
+    @Test(expected=MyCheckedException.class)
+    public void shouldThrowCheckedExceptionFromRemoteService() throws Exception {
         await().atMost(10, TimeUnit.SECONDS).until(new Runnable() {
 
 			@Override
@@ -73,10 +74,28 @@ public class ExceptionTransportTest {
         });
 
         //when
-        testService.throwsException();
+        testService.alwaysThrowsCheckedException();
 
         //then
         //nothing
+    }
+    
+    @Test(expected=RuntimeException.class)
+    public void shouldThrowRuntimeExceptionFromRemoteService() throws Exception {
+    	await().atMost(10, TimeUnit.SECONDS).until(new Runnable() {
+    		
+    		@Override
+    		public void run() {
+    			assertThat(server.fetchAllServices()).hasSize(1);
+    		}
+    		
+    	});
+    	
+    	//when
+    	testService.alwaysThrowsRuntimeException();
+    	
+    	//then
+    	//nothing
     }
 
 }

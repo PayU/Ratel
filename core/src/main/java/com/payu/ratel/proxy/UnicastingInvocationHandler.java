@@ -17,11 +17,13 @@ package com.payu.ratel.proxy;
 
 import com.payu.ratel.client.ClientProxyGenerator;
 import com.payu.ratel.client.FetchStrategy;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
 import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 public class UnicastingInvocationHandler implements InvocationHandler {
@@ -52,6 +54,12 @@ public class UnicastingInvocationHandler implements InvocationHandler {
 
         LOGGER.debug("Calling {} on address {}", serviceApi.getName(), serviceAddress);
 
-        return method.invoke(clientProxy, args);
+		try {
+			return method.invoke(clientProxy, args);
+		} catch (InvocationTargetException e) {
+			// Invoked method threw a checked exception.
+			// We must rethrow it. The client won't see the interceptor.
+			throw e.getTargetException();
+		}
     }
 }
