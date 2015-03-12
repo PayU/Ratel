@@ -41,7 +41,7 @@ import com.payu.ratel.config.EnableServiceDiscovery;
 import com.payu.ratel.config.ServiceDiscoveryConfig;
 import com.payu.ratel.server.DiscoveryServerMain;
 import com.payu.ratel.server.InMemoryDiscoveryServer;
-import com.payu.ratel.tests.service.MyException;
+import com.payu.ratel.tests.service.MyCheckedException;
 import com.payu.ratel.tests.service.TestServiceConfiguration;
 import com.payu.ratel.tests.service.TestService;
 
@@ -60,7 +60,7 @@ public class RetryPolicyTest {
     private InMemoryDiscoveryServer server;
 
     @Discover
-    @RetryPolicy(exception = MyException.class)
+    @RetryPolicy(exception = MyCheckedException.class)
     private TestService testService;
 
     @Before
@@ -90,7 +90,7 @@ public class RetryPolicyTest {
         });
 
         //when
-        testService.throwsException();
+        testService.sometimesThrowsException();
 
         //then
         //nothing

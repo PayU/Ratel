@@ -15,6 +15,7 @@
  */
 package com.payu.ratel.tests.service;
 
+
 public interface TestService {
 
     String hello();
@@ -23,5 +24,9 @@ public interface TestService {
 
     int cached(String arg);
 
-    void throwsException() throws MyException;
+    void sometimesThrowsException() throws MyCheckedException;
+    
+    void alwaysThrowsCheckedException() throws MyCheckedException;
+    
+    void alwaysThrowsRuntimeException();
 }
