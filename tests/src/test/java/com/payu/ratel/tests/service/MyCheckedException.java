@@ -15,5 +15,5 @@
  */
 package com.payu.ratel.tests.service;
 
-public class MyCheckedException extends RuntimeException {
+public class MyCheckedException extends Exception {
 }
