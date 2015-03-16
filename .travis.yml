@@ -3,4 +3,20 @@ language: java
 jdk:
   - oraclejdk8
 
-script: mvn install
+install: true
+script:
+    - export IS_RELEASE=`git log -1 --pretty=%s | grep "[maven-release-plugin] prepare release"`
+    -
+        if [ -z "$TRAVIS_TAG" -a -z "$IS_RELEASE" ]; then
+            if [ "$TRAVIS_PULL_REQUEST" = "false" -a "$TRAVIS_BRANCH" = "master" ]; then
+                $_MVN deploy;
+            else
+                $_MVN install;
+            fi
+        fi
+
+env:
+    global:
+        - _MVN='mvn -B -V -e -s .travis.xml -Pnexus'
+        - secure: "Hok0wPhA88u7jeRNfJBVGSu5AHAUevTe874QU2OMzul+4wJrN6kOVQxW1UDpcQZ+FmVb2TN7bpyiEmuMMoFRrt3FQ1QHCezlk95wb4QSECAmftRjTjSE6hXXAFxPWau+zm8UCY18mmkPSHwITSQkK/sJkxNKmm6NbEK2auOlRHs="
+        - secure: "wotb1Z1xLpz8gwOEW+mN5zjwGjoWHb+eGcdJ6lu4K3HyvDAh41/VphXLz8i3bCE6mzxXpNNCZBVr1Ybjib6c/Q5IwqGEp3XpxipywIZ868f2T2ckjHadk/IohWOI4NMhX3uJ+0Y4Ms4TMWFNqgW6Ucktj96mNeK0Wxn89HAp5Dw="
