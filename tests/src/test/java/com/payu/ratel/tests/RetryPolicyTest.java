@@ -79,7 +79,7 @@ public class RetryPolicyTest {
     }
 
     @Test
-    public void shouldNotThrowException() throws InterruptedException {
+    public void shouldNotThrowException() throws InterruptedException, Exception {
         await().atMost(10, TimeUnit.SECONDS).until(new Runnable() {
 
 			@Override
