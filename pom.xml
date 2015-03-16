@@ -49,7 +49,12 @@
     </issueManagement>
 
     <developers>
-
+        <developer>
+            <id>lukaszPulawski</id>
+            <name>Łukasz Puławski</name>
+            <email>lukasz.pulawski@payu.pl</email>
+            <timezone>Europe/Warsaw</timezone>
+        </developer>
     </developers>
 
     <scm>
