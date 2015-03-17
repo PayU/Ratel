@@ -15,16 +15,12 @@
  */
 package com.payu.ratel.config;
 
-import java.util.Arrays;
-
-import org.springframework.boot.context.embedded.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import com.payu.ratel.config.beans.RatelContextApplier;
 import com.payu.ratel.config.beans.RegistryBeanProviderFactory;
 import com.payu.ratel.config.beans.ServiceRegisterPostProcessorFactory;
-import com.payu.ratel.filter.TracingFilter;
 
 @Configuration
 public class ServiceDiscoveryConfig {
@@ -33,15 +29,16 @@ public class ServiceDiscoveryConfig {
     public RatelContextApplier ratelContextApplier() {
         return new RatelContextApplier(new RegistryBeanProviderFactory(), new ServiceRegisterPostProcessorFactory());
     }
-    
-    @Bean
-    public FilterRegistrationBean tracingFilterBean() {
-    	FilterRegistrationBean registrationBean = new FilterRegistrationBean();
-    	TracingFilter securityFilter = new TracingFilter();
-    	registrationBean.setFilter(securityFilter);
-    	registrationBean.setUrlPatterns(Arrays.asList(ServiceRegisterPostProcessorFactory.RATEL_PATH +  "*"));
-    	registrationBean.setOrder(2);
-    	return registrationBean;
-    }
+
+// TODO create Servlet 2.x compatible implementation
+//    @Bean
+//    public FilterRegistrationBean tracingFilterBean() {
+//    	FilterRegistrationBean registrationBean = new FilterRegistrationBean();
+//    	TracingFilter securityFilter = new TracingFilter();
+//    	registrationBean.setFilter(securityFilter);
+//    	registrationBean.setUrlPatterns(Arrays.asList(ServiceRegisterPostProcessorFactory.RATEL_PATH +  "*"));
+//    	registrationBean.setOrder(2);
+//    	return registrationBean;
+//    }
 
 }
