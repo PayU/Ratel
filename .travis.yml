@@ -5,7 +5,7 @@ jdk:
 
 install: true
 script:
-    - export IS_RELEASE=`git log -1 --pretty=%s | grep "[maven-release-plugin] prepare release"`
+    - export IS_RELEASE=`git log -1 --pretty=%s | grep "\[maven-release-plugin\] prepare release"`
     -
         if [ -z "$TRAVIS_TAG" -a -z "$IS_RELEASE" ]; then
             if [ "$TRAVIS_PULL_REQUEST" = "false" -a "$TRAVIS_BRANCH" = "master" ]; then
