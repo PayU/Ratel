@@ -2,6 +2,8 @@ ratel - service discovery
 =================
 
 [![Build Status](https://travis-ci.org/PayU-Tech/Ratel.svg?branch=master)](https://travis-ci.org/PayU-Tech/Ratel)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.payu.ratel/ratel-project/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.payu.ratel/ratel-project)
+
 
 ![client->ratel->server](http://yuml.me/diagram/scruffy/class/[FooClient]discover-%3E[Ratel%20Server],%20[FooServer]publish-%3E[Ratel%20Server],%20[FooClient]-%3E[FooServer])
 
