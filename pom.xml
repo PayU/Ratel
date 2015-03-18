@@ -60,6 +60,13 @@
             <email>lukasz.pulawski@payu.pl</email>
             <timezone>Europe/Warsaw</timezone>
         </developer>
+
+        <developer>
+            <id>amasiakiewicz</id>
+            <name>Arkadiusz Masiakiewicz</name>
+            <email>helioss1@wp.pl</email>
+            <timezone>Europe/Warsaw</timezone>
+        </developer>
     </developers>
 
     <scm>
