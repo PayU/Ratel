@@ -26,7 +26,7 @@
 
     <groupId>com.payu.ratel</groupId>
     <artifactId>ratel-project</artifactId>
-    <version>1.2.2-SNAPSHOT</version>
+    <version>1.2.2</version>
     <packaging>pom</packaging>
 
     <name>Ratel</name>
@@ -73,7 +73,7 @@
         <connection>scm:git:git@github.com:PayU-Tech/Ratel.git</connection>
         <developerConnection>${project.scm.connection}</developerConnection>
         <url>https://github.com/PayU-Tech/Ratel</url>
-        <tag>HEAD</tag>
+        <tag>ratel-project-1.2.2</tag>
     </scm>
 
     <modules>
