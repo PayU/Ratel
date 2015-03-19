@@ -27,7 +27,6 @@ import com.payu.ratel.client.FetchStrategy;
 import com.payu.ratel.client.inmemory.DiscoveryClient;
 import com.payu.ratel.client.inmemory.RatelServerFetcher;
 import com.payu.ratel.client.inmemory.RatelServerProxyGenerator;
-import com.payu.ratel.proxy.monitoring.ServiceDiscoveryHealth;
 import com.payu.ratel.register.RegisterStrategy;
 import com.payu.ratel.register.inmemory.RatelServerRegistry;
 import com.payu.ratel.register.inmemory.RemoteRestDiscoveryServer;
@@ -53,9 +52,6 @@ public class InMemoryRegistryBeanProviderFactory implements RegistryBeanProvider
                 RegistryBeanProviderFactory.SERVICE_DISCOVERY_ADDRESS, DEFAULT_DISCOVERY_URL);
 
         final DiscoveryClient discoveryClient = new DiscoveryClient(inMemoryServerAddress);
-
-        final ServiceDiscoveryHealth serviceDiscoveryHealth = new ServiceDiscoveryHealth(discoveryClient);
-        beanFactory.registerSingleton(serviceDiscoveryHealth.getClass().getName(), serviceDiscoveryHealth);
 
         TaskScheduler taskScheduler = new ThreadPoolTaskScheduler();
         final String schedulerBeanName = taskScheduler.getClass().getName();
