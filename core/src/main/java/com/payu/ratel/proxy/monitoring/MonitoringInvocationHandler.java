@@ -15,22 +15,16 @@
  */
 package com.payu.ratel.proxy.monitoring;
 
-import com.codahale.metrics.ConsoleReporter;
-import com.codahale.metrics.MetricRegistry;
-import com.codahale.metrics.Timer;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-public class MonitoringInvocationHandler implements java.lang.reflect.InvocationHandler {
+import com.codahale.metrics.MetricRegistry;
+import com.codahale.metrics.Timer;
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(MonitoringInvocationHandler.class);
+public class MonitoringInvocationHandler implements java.lang.reflect.InvocationHandler {
 
 	private Object object;
 
@@ -40,12 +34,8 @@ public class MonitoringInvocationHandler implements java.lang.reflect.Invocation
 
 	final Map<String, Map<String, String>> statistics = new HashMap<>();
 
-	ConsoleReporter reporter = ConsoleReporter.forRegistry(metrics).convertRatesTo(TimeUnit.SECONDS)
-			.convertDurationsTo(TimeUnit.MILLISECONDS).build();
-
 	public MonitoringInvocationHandler(Object object) {
 		this.object = object;
-		reporter.start(30, TimeUnit.SECONDS);
 	}
 
 	@Override
