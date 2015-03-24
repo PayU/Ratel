@@ -22,12 +22,19 @@ import com.payu.ratel.config.beans.RatelContextApplier;
 import com.payu.ratel.config.beans.RegistryBeanProviderFactory;
 import com.payu.ratel.config.beans.ServiceRegisterPostProcessorFactory;
 
+import javax.servlet.Filter;
+
 @Configuration
 public class ServiceDiscoveryConfig {
 
     @Bean
     public RatelContextApplier ratelContextApplier() {
         return new RatelContextApplier(new RegistryBeanProviderFactory(), new ServiceRegisterPostProcessorFactory());
+    }
+
+    @Bean
+    public Filter hessianRequestFilter() {
+    	return new HessianRequestFilter();
     }
 
 // TODO create Servlet 2.x compatible implementation

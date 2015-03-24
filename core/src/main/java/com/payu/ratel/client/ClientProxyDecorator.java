@@ -20,6 +20,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Strings.isNullOrEmpty;
 
 import java.lang.reflect.Proxy;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.remoting.caucho.HessianProxyFactoryBean;
 
@@ -36,6 +38,11 @@ public class ClientProxyDecorator {
     }
 
     public <T> T createServiceClientProxy(Class<T> clazz, String serviceUrl) {
+        return createServiceClientProxy(clazz, serviceUrl, new HashMap<String, String>());
+    }
+
+    public <T> T createServiceClientProxy(Class<T> clazz, String serviceUrl, Map<String, String> requestHeaders) {
+        checkNotNull(requestHeaders, "Request headers cannot be null");
         checkNotNull(clazz, "Given service class cannot be null");
         checkArgument(!isNullOrEmpty(serviceUrl), "Given serviceUrl class cannot be blank");
 
@@ -45,8 +52,7 @@ public class ClientProxyDecorator {
         proxyFactory.afterPropertiesSet();
         proxyFactory.setConnectTimeout(CONNECT_READ_TIMEOUT);
         proxyFactory.setReadTimeout(CONNECT_READ_TIMEOUT);
+        proxyFactory.setProxyFactory(new RatelHessianProxyFactory(requestHeaders));
         return (T) proxyFactory.getObject();
-
     }
-
 }

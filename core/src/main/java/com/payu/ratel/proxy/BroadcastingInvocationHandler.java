@@ -17,6 +17,7 @@ package com.payu.ratel.proxy;
 
 import com.payu.ratel.client.ClientProxyGenerator;
 import com.payu.ratel.client.FetchStrategy;
+import com.payu.ratel.client.RequestContext;
 import com.payu.ratel.event.EventReceiver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +35,6 @@ public class BroadcastingInvocationHandler implements java.lang.reflect.Invocati
     private final FetchStrategy fetchStrategy;
     private final ClientProxyGenerator clientProxyGenerator;
 
-
     private static final Method RECEIVE_METHOD_HANDLER = getReceiveEventHandler();
 
     private static Method getReceiveEventHandler() {
@@ -44,7 +44,6 @@ public class BroadcastingInvocationHandler implements java.lang.reflect.Invocati
             throw new AssertionError(e);
         }
     }
-
 
     public BroadcastingInvocationHandler(FetchStrategy fetchStrategy, ClientProxyGenerator clientProxyGenerator) {
         this.fetchStrategy = fetchStrategy;
@@ -60,13 +59,11 @@ public class BroadcastingInvocationHandler implements java.lang.reflect.Invocati
             return null;
         }
 
-
         for (String serviceAddress : serviceAddresses) {
-            final Object clientProxy = clientProxyGenerator.generate(eventReceiverClazz, serviceAddress);
+            final Object clientProxy = clientProxyGenerator.generate(eventReceiverClazz, serviceAddress, RequestContext.getInstance().getRequestHeaders());
             RECEIVE_METHOD_HANDLER.invoke(clientProxy, args);
         }
 
         return null;
     }
-
 }

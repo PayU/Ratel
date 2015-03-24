@@ -18,6 +18,9 @@ package com.payu.ratel.client.inmemory;
 import com.payu.ratel.client.ClientProxyDecorator;
 import com.payu.ratel.client.ClientProxyGenerator;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class RatelServerProxyGenerator implements ClientProxyGenerator {
     private final ClientProxyDecorator clientProxyDecorator;
 
@@ -27,7 +30,12 @@ public class RatelServerProxyGenerator implements ClientProxyGenerator {
 
     @Override
     public Object generate(Class<?> serviceClazz, String serviceAddress) {
-        return clientProxyDecorator.decorateWithMonitoring(clientProxyDecorator.createServiceClientProxy(serviceClazz, serviceAddress),
-                serviceClazz);
+        return generate(serviceClazz, serviceAddress, new HashMap<String, String>());
+    }
+
+    @Override
+    public Object generate(Class<?> serviceClazz, String serviceAddress, Map<String, String> requestHeaders) {
+        return clientProxyDecorator.decorateWithMonitoring(clientProxyDecorator.createServiceClientProxy(serviceClazz, serviceAddress, requestHeaders),
+                                                           serviceClazz);
     }
 }

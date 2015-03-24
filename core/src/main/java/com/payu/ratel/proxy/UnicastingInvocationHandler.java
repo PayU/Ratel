@@ -18,6 +18,7 @@ package com.payu.ratel.proxy;
 import com.payu.ratel.client.ClientProxyGenerator;
 import com.payu.ratel.client.FetchStrategy;
 
+import com.payu.ratel.client.RequestContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
@@ -50,7 +51,7 @@ public class UnicastingInvocationHandler implements InvocationHandler {
             return null;
         }
 
-        final Object clientProxy = clientProxyGenerator.generate(serviceApi, serviceAddress);
+        final Object clientProxy = clientProxyGenerator.generate(serviceApi, serviceAddress, RequestContext.getInstance().getRequestHeaders());
 
         LOGGER.debug("Calling {} on address {}", serviceApi.getName(), serviceAddress);
 

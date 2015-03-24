@@ -18,6 +18,9 @@ package com.payu.ratel.client.zookeeper;
 import com.payu.ratel.client.ClientProxyDecorator;
 import com.payu.ratel.client.ClientProxyGenerator;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class ZookeeperProxyGenerator implements ClientProxyGenerator {
     private final ClientProxyDecorator clientProxyDecorator;
 
@@ -27,6 +30,11 @@ public class ZookeeperProxyGenerator implements ClientProxyGenerator {
 
     @Override
     public Object generate(Class<?> serviceClazz, String serviceAddress) {
-        return clientProxyDecorator.createServiceClientProxy(serviceClazz, serviceAddress);
+        return generate(serviceClazz, serviceAddress, new HashMap<String, String>());
+    }
+
+    @Override
+    public Object generate(Class<?> serviceClazz, String serviceAddress, Map<String, String> requestHeaders) {
+        return clientProxyDecorator.createServiceClientProxy(serviceClazz, serviceAddress, requestHeaders);
     }
 }
