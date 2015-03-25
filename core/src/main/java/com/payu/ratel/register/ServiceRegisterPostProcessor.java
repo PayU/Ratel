@@ -25,7 +25,6 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.MergedBeanDefinitionPostProcessor;
 import org.springframework.beans.factory.support.RootBeanDefinition;
@@ -34,7 +33,7 @@ import org.springframework.remoting.caucho.HessianServiceExporter;
 import com.payu.ratel.Publish;
 import com.payu.ratel.proxy.monitoring.MonitoringInvocationHandler;
 
-public class ServiceRegisterPostProcessor implements BeanPostProcessor, MergedBeanDefinitionPostProcessor{
+public class ServiceRegisterPostProcessor implements MergedBeanDefinitionPostProcessor {
 
     private static Logger LOGGER = LoggerFactory.getLogger(ServiceRegisterPostProcessor.class);
 
