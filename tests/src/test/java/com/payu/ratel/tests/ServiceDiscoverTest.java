@@ -24,7 +24,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.concurrent.TimeUnit;
 
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +43,8 @@ import com.payu.ratel.server.DiscoveryServerMain;
 import com.payu.ratel.server.InMemoryDiscoveryServer;
 import com.payu.ratel.tests.service.TestServiceConfiguration;
 import com.payu.ratel.tests.service.TestService;
+import com.payu.ratel.tests.service.TransactionTestServiceConfiguration;
+import com.payu.ratel.tests.service.ProxableService;
 import com.payu.ratel.tests.service.provider.ProviderConfiguration;
 import com.payu.ratel.tests.service.provider.RatelServiceDiscoveredByConstructor;
 
@@ -63,15 +67,20 @@ public class ServiceDiscoverTest {
 
     @Discover
     private TestService testService;
-
+    
+    @Discover
+    private ProxableService transactionalService;
+    
+    
     @Before
     public void before() throws InterruptedException {
-        remoteContext = SpringApplication.run(TestServiceConfiguration.class,
+        remoteContext = SpringApplication.run(new Object[]{TestServiceConfiguration.class, TransactionTestServiceConfiguration.class},
+        		new String[] {
                 "--server.port=8031",
                 "--" + JBOSS_BIND_ADDRESS + "=localhost",
                 "--" + JBOSS_BIND_PORT + "=8031",
                 "--spring.jmx.enabled=false",
-                "--" + SERVICE_DISCOVERY_ADDRESS + "=http://localhost:8061/server/discovery");
+                "--" + SERVICE_DISCOVERY_ADDRESS + "=http://localhost:8061/server/discovery"});
     }
 
     @After
@@ -85,7 +94,7 @@ public class ServiceDiscoverTest {
 
             @Override
             public void run() {
-                assertThat(server.fetchAllServices()).hasSize(1);
+                assertThat(server.fetchAllServices()).hasSize(2);
             }
 
         });
@@ -104,7 +113,7 @@ public class ServiceDiscoverTest {
 
             @Override
             public void run() {
-                assertThat(server.fetchAllServices()).hasSize(1);
+                assertThat(server.fetchAllServices()).hasSize(2);
             }
 
         });
@@ -116,6 +125,21 @@ public class ServiceDiscoverTest {
         assertThat(result).isEqualTo(1);
         assertThat(ratelServiceDiscoveredByConstructor.getEnvironment1()).isNotNull();
         assertThat(ratelServiceDiscoveredByConstructor.getEnvironment2()).isNotNull();
+    }
+    
+    
+    @Test
+    public void shouldDiscoverServiceWithProxy() throws InterruptedException {
+    	await().atMost(10, TimeUnit.SECONDS).until(new Runnable() {
+    		
+    		@Override
+    		public void run() {
+    			assertThat(server.fetchAllServices()).hasSize(2);
+    		}
+    	});
+    	
+    	transactionalService.doInTransaction();
+    	
     }
 
 }
