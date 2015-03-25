@@ -25,12 +25,10 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.MergedBeanDefinitionPostProcessor;
 import org.springframework.beans.factory.support.RootBeanDefinition;
-import org.springframework.core.Ordered;
 import org.springframework.remoting.caucho.HessianServiceExporter;
 
 import com.payu.ratel.Publish;
@@ -100,21 +98,21 @@ public class ServiceRegisterPostProcessor implements BeanPostProcessor, MergedBe
 
     private boolean isService(Object o, String beanName) {
         Class<? extends Object> realBeanClazz = o.getClass();
-        
+
         //check original class of this bean, just in case it is already proxied 
         Class rootBeanClazz = beanTypes.get(beanName);
-		if (rootBeanClazz != null) {
-			realBeanClazz = rootBeanClazz;
-		}
-		
-		return !realBeanClazz.isInterface()
-                && realBeanClazz.isAnnotationPresent(Publish.class);
+        if (rootBeanClazz != null) {
+            realBeanClazz = rootBeanClazz;
+        }
+
+        return !realBeanClazz.isInterface()
+            && realBeanClazz.isAnnotationPresent(Publish.class);
     }
 
-	@Override
-	public void postProcessMergedBeanDefinition(RootBeanDefinition beanDefinition, Class<?> beanType, String beanName) {
-		//remember original bean class, in case some proxies will hide it
-		beanTypes.put(beanName, beanType);
-	}
+    @Override
+    public void postProcessMergedBeanDefinition(RootBeanDefinition beanDefinition, Class<?> beanType, String beanName) {
+        //remember original bean class, in case some proxies will hide it
+        beanTypes.put(beanName, beanType);
+    }
 
 }
