@@ -43,7 +43,7 @@ import com.payu.ratel.server.DiscoveryServerMain;
 import com.payu.ratel.server.InMemoryDiscoveryServer;
 import com.payu.ratel.tests.service.TestServiceConfiguration;
 import com.payu.ratel.tests.service.TestService;
-import com.payu.ratel.tests.service.TransactionTestServiceConfiguration;
+import com.payu.ratel.tests.service.ProxableServiceConfiguration;
 import com.payu.ratel.tests.service.ProxableService;
 import com.payu.ratel.tests.service.provider.ProviderConfiguration;
 import com.payu.ratel.tests.service.provider.RatelServiceDiscoveredByConstructor;
@@ -69,12 +69,12 @@ public class ServiceDiscoverTest {
     private TestService testService;
     
     @Discover
-    private ProxableService transactionalService;
+    private ProxableService proxiedService;
     
     
     @Before
     public void before() throws InterruptedException {
-        remoteContext = SpringApplication.run(new Object[]{TestServiceConfiguration.class, TransactionTestServiceConfiguration.class},
+        remoteContext = SpringApplication.run(new Object[]{TestServiceConfiguration.class, ProxableServiceConfiguration.class},
         		new String[] {
                 "--server.port=8031",
                 "--" + JBOSS_BIND_ADDRESS + "=localhost",
@@ -138,7 +138,7 @@ public class ServiceDiscoverTest {
     		}
     	});
     	
-    	transactionalService.doInTransaction();
+    	proxiedService.doInTransaction();
     	
     }
 

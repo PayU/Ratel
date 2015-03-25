@@ -28,10 +28,10 @@ import com.payu.ratel.config.ServiceDiscoveryConfig;
 @EnableAutoConfiguration
 @Import(ServiceDiscoveryConfig.class)
 @WebAppConfiguration
-public class TransactionTestServiceConfiguration {
+public class ProxableServiceConfiguration {
 
     @Bean
-    public ProxableService transactionalService() {
+    public ProxableService serviceToBeProxied() {
     	return new ProxableServiceImpl();
     }
     
