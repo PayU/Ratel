@@ -15,6 +15,9 @@
  */
 package com.payu.ratel.client;
 
+import java.util.Map;
+
 public interface ClientProxyGenerator {
     Object generate(Class<?> serviceClazz, String serviceAddress);
+    Object generate(Class<?> serviceClazz, String serviceAddress, Map<String, String> requestHeaders);
 }
