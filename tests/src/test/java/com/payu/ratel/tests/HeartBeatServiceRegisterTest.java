@@ -80,7 +80,7 @@ public class HeartBeatServiceRegisterTest {
 
     @Test
     public void shouldRegisterService() throws InterruptedException {
-        await().atMost(5, SECONDS).until(new Runnable() {
+        await().atMost(10, SECONDS).until(new Runnable() {
 
             @Override
             public void run() {

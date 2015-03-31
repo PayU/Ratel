@@ -23,6 +23,7 @@ import java.lang.reflect.Proxy;
 
 import org.springframework.remoting.caucho.HessianProxyFactoryBean;
 
+import com.caucho.hessian.client.HessianProxyFactory;
 import com.payu.ratel.proxy.monitoring.MonitoringInvocationHandler;
 
 public class ClientProxyDecorator {
@@ -42,6 +43,7 @@ public class ClientProxyDecorator {
         HessianProxyFactoryBean proxyFactory = new RatelHessianProxyFactoryBean();
         proxyFactory.setServiceUrl(serviceUrl);
         proxyFactory.setServiceInterface(clazz);
+        proxyFactory.setProxyFactory(new RalelHessianProxyFactory());
         proxyFactory.afterPropertiesSet();
         proxyFactory.setConnectTimeout(CONNECT_READ_TIMEOUT);
         proxyFactory.setReadTimeout(CONNECT_READ_TIMEOUT);
