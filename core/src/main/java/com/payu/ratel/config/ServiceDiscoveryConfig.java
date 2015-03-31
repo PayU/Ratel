@@ -35,9 +35,4 @@ public class ServiceDiscoveryConfig {
         return new RatelContextApplier(new RegistryBeanProviderFactory(), new ServiceRegisterPostProcessorFactory());
     }
 
-    @Bean
-    public Filter tracingFilterBean() {
-    	return new TracingFilter();
-    }
-
 }
