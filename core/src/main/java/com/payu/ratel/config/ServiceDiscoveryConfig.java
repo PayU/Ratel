@@ -25,7 +25,6 @@ import org.springframework.context.annotation.Configuration;
 import com.payu.ratel.config.beans.RatelContextApplier;
 import com.payu.ratel.config.beans.RegistryBeanProviderFactory;
 import com.payu.ratel.config.beans.ServiceRegisterPostProcessorFactory;
-import com.payu.ratel.filter.TracingFilter;
 
 @Configuration
 public class ServiceDiscoveryConfig {

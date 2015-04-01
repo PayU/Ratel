@@ -58,6 +58,18 @@ public class ProcessTracingTest {
                 "--" + JBOSS_BIND_PORT + "=8031",
                 "--spring.jmx.enabled=false",
                 "--" + SERVICE_DISCOVERY_ADDRESS + "=http://localhost:8069/server/discovery");
+        waitForServicesRegistration(2);        
+    }
+
+    private void waitForServicesRegistration(final int numberOfServices) {
+      await().atMost(10, TimeUnit.SECONDS).until(new Runnable() {
+        
+        @Override
+        public void run() {
+          assertThat(server.fetchAllServices()).hasSize(numberOfServices);
+        }
+        
+      });
     }
 
     @After
@@ -67,16 +79,7 @@ public class ProcessTracingTest {
 
     
     @Test
-    public void shouldGenerateProcessId() throws Exception {
-    	await().atMost(10, TimeUnit.SECONDS).until(new Runnable() {
-    		
-    		@Override
-    		public void run() {
-    			assertThat(server.fetchAllServices()).hasSize(2);
-    		}
-    		
-    	});
-    	
+    public void shouldGenerateProcessIdWhenNotSetInThread() throws Exception {
     	//given
     	assertThat((targetService.getProcessId())).isNull();
     	
@@ -87,16 +90,28 @@ public class ProcessTracingTest {
     	assertThat((targetService.getProcessId())).isNotNull();
     }
     
-    public void shouldPassProcessId() throws Exception {
-    	await().atMost(10, TimeUnit.SECONDS).until(new Runnable() {
-    		
-    		@Override
-    		public void run() {
-    			assertThat(server.fetchAllServices()).hasSize(2);
-    		}
-    		
-    	});
-    	
+    @Test
+    public void shouldGenerateNewProcessIdWithEveryCall() throws Exception {
+      //given
+      assertThat((targetService.getProcessId())).isNull();
+      ProcessContext.getInstance().clearProcessIdentifier();
+      
+      //when
+      passingService.passProcessId();
+      String processId1 = targetService.getProcessId();
+      ProcessContext.getInstance().clearProcessIdentifier();
+      
+      passingService.passProcessId();
+      String processId2 = targetService.getProcessId();
+      
+      //then
+      assertThat(processId1).isNotEqualTo(processId2);
+    }    
+    
+    
+    @Test
+    public void shouldPassProcessIdThroughNetworkCall() throws Exception {
+      
     	//given
     	assertThat((targetService.getProcessId())).isNull();
     	
