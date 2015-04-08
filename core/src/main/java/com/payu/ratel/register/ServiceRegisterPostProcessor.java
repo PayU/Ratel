@@ -74,7 +74,7 @@ public class ServiceRegisterPostProcessor implements MergedBeanDefinitionPostPro
     }
 
     private HessianServiceExporter createHessianExporterService(Object bean) {
-        HessianServiceExporter hessianServiceExporter = new HessianServiceExporter();
+        HessianServiceExporter hessianServiceExporter = new RatelHessianServiceExporter();
         hessianServiceExporter.setService(decorateWithMonitoring(bean, getFirstInterface(bean)));
         hessianServiceExporter.setServiceInterface(getFirstInterface(bean));
         hessianServiceExporter.prepare();
