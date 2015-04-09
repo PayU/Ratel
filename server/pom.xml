@@ -25,6 +25,11 @@
     <packaging>jar</packaging>
 
     <artifactId>ratel-server</artifactId>
+    
+    <properties>
+    	<!-- The main class to start by executing java -jar -->
+    	<start-class>com.payu.ratel.server.DiscoveryServerMain</start-class>
+	</properties>
 
     <dependencyManagement>
         <dependencies>
@@ -115,6 +120,17 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                 <configuration>
+        			<mainClass>${start-class}</mainClass>
+        			<layout>ZIP</layout>
+      			</configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
