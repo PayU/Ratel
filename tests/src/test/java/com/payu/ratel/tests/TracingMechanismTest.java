@@ -30,5 +30,6 @@ public class TracingMechanismTest {
 
         //then
         assertThat(testCallerResult).isEqualTo("success");
+        
     }
 }

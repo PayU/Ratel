@@ -31,6 +31,9 @@ public class RatelTestContext {
 
   private List<ConfigurableApplicationContext> myContexts = new LinkedList<>();
 
+  
+  static int SERVICE_DISCOVERY_PORT = 18099;//hardcoded, in the future we can find free tcp port 
+
   @SuppressWarnings("rawtypes")
   public void startService(Class springJavaConfigClasses) {
     startNewApplication(firstFreePort, springJavaConfigClasses);
@@ -41,26 +44,27 @@ public class RatelTestContext {
     for (ConfigurableApplicationContext ctx : myContexts) {
       ctx.close();
     }
+    firstFreePort = FREE_PORTS_START;
+    SERVICE_DISCOVERY_PORT++;
   }
 
   @SuppressWarnings("rawtypes")
   private void startNewApplication(int servicePort, Class springJavaConfigClasses) {
-    ConfigurableApplicationContext ctx = createNewContext(servicePort, springJavaConfigClasses);
+    ConfigurableApplicationContext ctx = createNewContext(servicePort, springJavaConfigClasses, SERVICE_DISCOVERY_PORT);
 
     myContexts.add(ctx);
-    firstFreePort = FREE_PORTS_START;
   }
 
   @SuppressWarnings("rawtypes")
-  private ConfigurableApplicationContext createNewContext(int servicePort, Class springJavaConfigClass) {
+  private ConfigurableApplicationContext createNewContext(int servicePort, Class springJavaConfigClass, int discoveryPort) {
     ConfigurableApplicationContext ctx = SpringApplication.run(springJavaConfigClass, "--server.port=" + servicePort,
         "--" + JBOSS_BIND_ADDRESS + "=localhost", "--" + JBOSS_BIND_PORT + "=" + servicePort,
-        "--spring.jmx.enabled=false", "--" + SERVICE_DISCOVERY_ADDRESS + "=http://localhost:8090/server/discovery");
+        "--spring.jmx.enabled=false", "--" + SERVICE_DISCOVERY_ADDRESS + "=http://localhost:" + discoveryPort + "/server/discovery");
     return ctx;
   }
 
   public void waitForServicesRegistration(final int numberOfServices) {
-    await().atMost(20, TimeUnit.SECONDS).until(new Runnable() {
+    await().atMost(90, TimeUnit.SECONDS).until(new Runnable() {
 
       @Override
       public void run() {
