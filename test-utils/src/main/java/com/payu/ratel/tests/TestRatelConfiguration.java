@@ -12,8 +12,8 @@ import com.payu.ratel.server.DiscoveryServerMain;
 public class TestRatelConfiguration {
 	
 	@Bean
-	public TestContext testContext() {
-		return new TestContext();
+	public RatelTestContext testContext() {
+		return new RatelTestContext();
 	}
 
 }
