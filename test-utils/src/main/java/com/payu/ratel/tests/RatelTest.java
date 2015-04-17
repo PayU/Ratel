@@ -26,9 +26,6 @@ import com.payu.ratel.config.EnableServiceDiscovery;
     TransactionalTestExecutionListener.class, 
     SqlScriptsTestExecutionListener.class})
 @SpringApplicationConfiguration(classes={TestRatelConfiguration.class})
-//@IntegrationTest({
-//  "server.port:18069",
-//  SERVICE_DISCOVERY_ADDRESS + ":http://localhost:18069/server/discovery"})
 public @interface RatelTest {
   
   /**

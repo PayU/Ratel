@@ -18,24 +18,8 @@ import static com.payu.ratel.config.beans.RegistryBeanProviderFactory.SERVICE_DI
 
 public class RatelIntegrationTestExecutionListener implements TestExecutionListener, Ordered{
   
-  private static TestExecutionListener[] listeners = {};
-
-//  static {
-//    //We inherit standard listeners form IntegrationTest
-//    Class<? extends TestExecutionListener>[] tleClasses = (IntegrationTest.class.getDeclaredAnnotation(TestExecutionListeners.class)).listeners();
-//    listeners = new TestExecutionListener[tleClasses.length];
-//    int i = 0;
-//    for (Class<? extends TestExecutionListener> tleClass : tleClasses) {
-////      listeners[i++] = BeanUtils.instantiate(tleClass);
-//    }
-//  }
-
-
   @Override
   public void beforeTestClass(TestContext testContext) throws Exception {
-    for (TestExecutionListener listener : listeners) {
-      listener.beforeTestClass(testContext);
-    }
     
   }
 
@@ -45,7 +29,7 @@ public class RatelIntegrationTestExecutionListener implements TestExecutionListe
     applyPropertiesFromAnnotation(testContext, IntegrationTest.class.getName());
     applyPropertiesFromAnnotation(testContext, RatelTest.class.getName());
     
-    int servicePort = 8090;//hardcoded, can be changed ot 
+    int servicePort = RatelTestContext.SERVICE_DISCOVERY_PORT;//hardcoded, can be changed to finding free tcp port 
     applyServiceRegistryProperties(testContext, servicePort);
   }
 
@@ -98,7 +82,7 @@ public class RatelIntegrationTestExecutionListener implements TestExecutionListe
   public void beforeTestMethod(TestContext testContext) throws Exception {
 
     RatelTest ratelIntTestAnn = testContext.getTestClass().getAnnotation(RatelTest.class);
-    RatelTestContext ratelTestCtx = getOrCreateRatelTestContext(testContext);
+    RatelTestContext ratelTestCtx = getRatelTestContext(testContext);
     if (ratelIntTestAnn != null) {
       Class[] contextsToStart = ratelIntTestAnn.registerServices();
       
@@ -109,26 +93,20 @@ public class RatelIntegrationTestExecutionListener implements TestExecutionListe
     ratelTestCtx.waitForServicesRegistration();
   }
 
-  private RatelTestContext getOrCreateRatelTestContext(TestContext testContext) {
+  private RatelTestContext getRatelTestContext(TestContext testContext) {
     RatelTestContext rtc = testContext.getApplicationContext().getBean(RatelTestContext.class);
     return rtc;
   }
 
   @Override
   public void afterTestMethod(TestContext testContext) throws Exception {
-    for (TestExecutionListener listener : listeners) {
-      listener.afterTestMethod(testContext);
-    }
-     RatelTestContext rtc = getOrCreateRatelTestContext(testContext);
+     RatelTestContext rtc = getRatelTestContext(testContext);
      rtc.close();
      
   }
 
   @Override
   public void afterTestClass(TestContext testContext) throws Exception {
-    for (TestExecutionListener listener : listeners) {
-      listener.afterTestClass(testContext);
-    }
   }
 
   @Override
