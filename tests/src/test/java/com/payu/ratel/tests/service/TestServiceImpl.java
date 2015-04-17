@@ -15,8 +15,6 @@
  */
 package com.payu.ratel.tests.service;
 
-import java.lang.reflect.InvocationTargetException;
-
 import com.payu.ratel.Publish;
 
 @Publish

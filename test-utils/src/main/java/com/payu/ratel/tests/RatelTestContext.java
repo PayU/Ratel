@@ -6,26 +6,21 @@ import static com.payu.ratel.config.beans.ServiceRegisterPostProcessorFactory.JB
 import static com.payu.ratel.config.beans.ServiceRegisterPostProcessorFactory.JBOSS_BIND_PORT;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Consumer;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.test.AssertThrows;
 
 import com.google.common.collect.Sets;
-import com.payu.ratel.Discover;
 import com.payu.ratel.Publish;
-import com.payu.ratel.model.ServiceDescriptor;
 import com.payu.ratel.server.InMemoryDiscoveryServer;
 
-public class TestContext {
+public class RatelTestContext {
 
   private static final int FREE_PORTS_START = 8021;
 
@@ -60,7 +55,7 @@ public class TestContext {
   private ConfigurableApplicationContext createNewContext(int servicePort, Class springJavaConfigClass) {
     ConfigurableApplicationContext ctx = SpringApplication.run(springJavaConfigClass, "--server.port=" + servicePort,
         "--" + JBOSS_BIND_ADDRESS + "=localhost", "--" + JBOSS_BIND_PORT + "=" + servicePort,
-        "--spring.jmx.enabled=false", "--" + SERVICE_DISCOVERY_ADDRESS + "=http://localhost:8069/server/discovery");
+        "--spring.jmx.enabled=false", "--" + SERVICE_DISCOVERY_ADDRESS + "=http://localhost:8090/server/discovery");
     return ctx;
   }
 
