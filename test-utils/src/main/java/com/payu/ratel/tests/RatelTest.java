@@ -1,7 +1,5 @@
 package com.payu.ratel.tests;
 
-import static com.payu.ratel.config.beans.RegistryBeanProviderFactory.SERVICE_DISCOVERY_ADDRESS;
-
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
@@ -21,11 +19,18 @@ import com.payu.ratel.config.EnableServiceDiscovery;
 @WebAppConfiguration
 @EnableServiceDiscovery
 @TestExecutionListeners(listeners={RatelIntegrationTestExecutionListener.class, 
+    /*Default listeners from IntegrationTest 
+     * This dirty hack works with older versions of spring, where TestExecutionListeners#mergeMode is not supported
+     * Consequently, this ANNOTATION MUST BE USED BEFORE the @IntegrationTest annotation below
+     */
     DependencyInjectionTestExecutionListener.class,
     DirtiesContextTestExecutionListener.class,
     TransactionalTestExecutionListener.class, 
-    SqlScriptsTestExecutionListener.class})
+    SqlScriptsTestExecutionListener.class
+    
+})
 @SpringApplicationConfiguration(classes={TestRatelConfiguration.class})
+@IntegrationTest
 public @interface RatelTest {
   
   /**
