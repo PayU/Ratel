@@ -16,7 +16,7 @@ import com.payu.ratel.tests.service.TestServiceConfiguration;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @RatelTest(registerServices={TestServiceConfiguration.class, TestServiceCallerConfiguration.class})
-@IntegrationTest
+//@IntegrationTest
 public class TracingMechanismTest {
 
     
