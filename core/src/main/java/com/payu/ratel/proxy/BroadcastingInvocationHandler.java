@@ -51,6 +51,8 @@ public class BroadcastingInvocationHandler implements java.lang.reflect.Invocati
         this.clientProxyGenerator = clientProxyGenerator;
     }
 
+    // TODO - remove PMD suppress
+    @SuppressWarnings("PMD.AvoidSynchronizedAtMethodLevel")
     @Override
     public synchronized Object invoke(Object o, Method method, Object[] args) throws Throwable {
         Collection<String> serviceAddresses = fetchStrategy.fetchServiceAddresses(eventReceiverClazz.getName());

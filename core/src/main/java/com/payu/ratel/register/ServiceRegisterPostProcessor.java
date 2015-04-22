@@ -102,6 +102,8 @@ public class ServiceRegisterPostProcessor implements MergedBeanDefinitionPostPro
                         new Class[]{clazz}, new MonitoringInvocationHandler(object));
     }
 
+    // TODO - remove PMD suppress
+    @SuppressWarnings("PMD.AvoidBranchingStatementAsLastInLoop")
     private Class<?> getFirstInterface(Object bean) {
         Class<?>[] interfaces = bean.getClass().getInterfaces();
         for (Class<?> clazz : interfaces) {

@@ -26,7 +26,7 @@ import com.codahale.metrics.Timer;
 
 public class MonitoringInvocationHandler implements java.lang.reflect.InvocationHandler {
 
-    private Object object;
+    private final Object object;
 
     private final MetricRegistry metrics = new MetricRegistry();
 
@@ -50,10 +50,10 @@ public class MonitoringInvocationHandler implements java.lang.reflect.Invocation
             // Invoked method threw a checked exception.
             // We must rethrow it. The client won't see the interceptor.
             throw e.getTargetException();
+        } finally {
+            context.stop();
+            collectStatistics(method, timer);
         }
-        context.stop();
-
-        collectStatistics(method, timer);
         return returned;
     }
 

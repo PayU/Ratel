@@ -25,12 +25,14 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class SimpleEventListener implements EventListener {
 
-    private Map<Class<? extends Serializable>, Collection<Object>> listeners =
+    private final Map<Class<? extends Serializable>, Collection<Object>> listeners =
             new ConcurrentHashMap<>();
 
-    private Map<Object, Collection<Method>> subscribedMethods =
+    private final Map<Object, Collection<Method>> subscribedMethods =
             new ConcurrentHashMap<>();
 
+    // TODO - remove PMD suppress
+    @SuppressWarnings("PMD.AvoidSynchronizedAtMethodLevel")
     @Override
     public synchronized void registerSubscriber(Object listener) {
         for (Method method : listener.getClass().getMethods()) {
@@ -42,6 +44,8 @@ public class SimpleEventListener implements EventListener {
         }
     }
 
+    // TODO - remove PMD suppress
+    @SuppressWarnings("PMD.AvoidThrowingRawExceptionTypes")
     private void validateParameters(Class<?>[] parameters) {
         if (parameters == null || parameters.length > 1) {
             throw new RuntimeException("Subscriber method should declare only one argument");
@@ -68,6 +72,8 @@ public class SimpleEventListener implements EventListener {
         methods.add(method);
     }
 
+    // TODO - remove PMD suppress
+    @SuppressWarnings("PMD.AvoidThrowingRawExceptionTypes")
     @Override
     public void listen(Serializable event) {
         final Collection<Object> eventListeners = listeners.get(event.getClass());

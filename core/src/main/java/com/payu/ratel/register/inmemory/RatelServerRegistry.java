@@ -29,9 +29,9 @@ public class RatelServerRegistry implements RegisterStrategy {
 
     public static final int SECONDS_20 = 20000;
 
-    private RemoteRestDiscoveryServer server;
+    private final RemoteRestDiscoveryServer server;
 
-    private TaskScheduler taskScheduler;
+    private final TaskScheduler taskScheduler;
 
     public RatelServerRegistry(RemoteRestDiscoveryServer server, TaskScheduler taskScheduler) {
         this.server = server;

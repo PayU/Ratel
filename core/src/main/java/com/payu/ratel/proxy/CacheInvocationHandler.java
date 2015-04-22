@@ -28,9 +28,9 @@ public class CacheInvocationHandler implements java.lang.reflect.InvocationHandl
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CacheInvocationHandler.class);
 
-    private Object object;
+    private final Object object;
 
-    private Cache<MethodWithArguments, Object> cache = CacheBuilder.newBuilder()
+    private final Cache<MethodWithArguments, Object> cache = CacheBuilder.newBuilder()
             .maximumSize(1000)
             .expireAfterWrite(10, TimeUnit.MINUTES)
             .build();
@@ -39,6 +39,8 @@ public class CacheInvocationHandler implements java.lang.reflect.InvocationHandl
         this.object = object;
     }
 
+    // TODO - remove PMD suppress
+    @SuppressWarnings("PMD.AccessorClassGeneration")
     @Override
     public Object invoke(Object o, Method method, Object[] args) throws Throwable {
         final MethodWithArguments methodWithArguments = new MethodWithArguments(method, args);
@@ -57,9 +59,10 @@ public class CacheInvocationHandler implements java.lang.reflect.InvocationHandl
     }
 
     private final class MethodWithArguments {
-        private Method method;
-        private Object[] args;
+        private final Method method;
+        private final Object[] args;
 
+        @SuppressWarnings("PMD.ArrayIsStoredDirectly")
         private MethodWithArguments(Method method, Object[] args) {
             this.method = method;
             this.args = args;

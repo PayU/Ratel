@@ -26,12 +26,14 @@ public class ZookeeperRegistry implements RegisterStrategy {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ZookeeperRegistry.class);
 
-    private ServiceDiscovery discovery;
+    private final ServiceDiscovery discovery;
 
     public ZookeeperRegistry(ServiceDiscovery discovery) {
         this.discovery = discovery;
     }
 
+    // TODO - remove PMD suppress
+    @SuppressWarnings("PMD.AvoidCatchingGenericException")
     @Override
     public void registerService(String name, String address) {
         try {

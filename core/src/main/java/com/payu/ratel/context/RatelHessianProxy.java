@@ -44,7 +44,7 @@ public class RatelHessianProxy extends HessianProxy {
         super.addRequestHeaders(connection);
         String processId = ProcessContext.getInstance().getProcessIdentifier();
         if (processId != null) {
-          connection.addHeader(TracingFilter.RATEL_HEADER_PROCESS_ID, processId.toString());
+          connection.addHeader(TracingFilter.RATEL_HEADER_PROCESS_ID, processId);
         }
     }
 }

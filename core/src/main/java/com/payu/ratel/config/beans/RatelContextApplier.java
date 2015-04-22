@@ -32,8 +32,8 @@ public class RatelContextApplier implements BeanFactoryPostProcessor {
 
     public static final String SERVICE_DISCOVERY_ENABLED = "serviceDiscovery.enabled";
 
-    private RegistryBeanProviderFactory registryBeanProviderFactory;
-    private ServiceRegisterPostProcessorFactory serviceRegisterPostProcessorFactory;
+    private final RegistryBeanProviderFactory registryBeanProviderFactory;
+    private final ServiceRegisterPostProcessorFactory serviceRegisterPostProcessorFactory;
 
     public RatelContextApplier(RegistryBeanProviderFactory registryBeanProviderFactory,
                                ServiceRegisterPostProcessorFactory serviceRegisterPostProcessorFactory) {

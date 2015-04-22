@@ -58,7 +58,7 @@ public class RemoteRestDiscoveryServer {
             api.collectStatistics(URLEncoder.encode(serviceDescriptor.getAddress(), "UTF-8"),
                     StatisticsHolder.getStatistics(serviceDescriptor.getName()));
         } catch (UnsupportedEncodingException e) {
-            throw new AssertionError("UTF-8 must be supported");
+            throw new AssertionError("UTF-8 must be supported", e);
         } catch (RetrofitError e) {
             LOGGER.warn("Retrofit error was thrown while collecting statistics. Try again.");
         }

@@ -55,6 +55,8 @@ public class ZookeeperFetcher implements FetchStrategy {
         this.serviceDiscovery = serviceDiscovery;
     }
 
+    // TODO - remove PMD suppress
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @Override
     public String fetchServiceAddress(String serviceName) throws Exception {
         final ServiceInstance serviceInstance = serviceProviderHandler.getProvider(serviceName).getInstance();
@@ -62,6 +64,8 @@ public class ZookeeperFetcher implements FetchStrategy {
         return serviceInstance == null ? "" : serviceInstance.getAddress();
     }
 
+    // TODO - remove PMD suppress
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @Override
     public Collection<String> fetchServiceAddresses(String serviceName) throws Exception {
         final Collection<ServiceInstance> serviceInstances = serviceProviderHandler.getProvider(serviceName).getAllInstances();
@@ -77,6 +81,8 @@ public class ZookeeperFetcher implements FetchStrategy {
     private class ServiceProviderHandler {
         private final Map<String, ServiceProvider> providers = new ConcurrentHashMap<>();
 
+        // TODO - remove PMD suppress
+        @SuppressWarnings("PMD.SignatureDeclareThrowsException")
         public ServiceProvider getProvider(String serviceName) throws Exception {
             if (StringUtils.isEmpty(serviceName)) {
                 return null;

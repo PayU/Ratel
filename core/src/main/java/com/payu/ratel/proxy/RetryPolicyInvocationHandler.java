@@ -31,7 +31,7 @@ public class RetryPolicyInvocationHandler implements java.lang.reflect.Invocatio
 
     private final Class exception;
 
-    private Object object;
+    private final Object object;
 
     public RetryPolicyInvocationHandler(Object object, Class exception) {
         this.object = object;
@@ -50,7 +50,7 @@ public class RetryPolicyInvocationHandler implements java.lang.reflect.Invocatio
             LOGGER.info("Service thrown exception");
             if (isInStacktrace(thrownException, exception) && count < RETRY_COUNT) {
                 Thread.sleep(RETRY_TIME);
-                return invokeWithRetry(method, args, count++);
+                return invokeWithRetry(method, args, count + 1);
             }
 
             throw thrownException;
@@ -58,12 +58,13 @@ public class RetryPolicyInvocationHandler implements java.lang.reflect.Invocatio
     }
 
     private boolean isInStacktrace(Throwable stackTrace, Class target) {
-        while (stackTrace != null) {
-            if (stackTrace.getClass().equals(target)) {
+        Throwable t = stackTrace;
+        while (t != null) {
+            if (t.getClass().equals(target)) {
                 return true;
             }
 
-            stackTrace = stackTrace.getCause();
+            t = t.getCause();
         }
 
         return false;

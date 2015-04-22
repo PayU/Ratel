@@ -37,7 +37,7 @@ public class RatelServerFetcher implements FetchStrategy {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RatelServerFetcher.class);
 
-    private DiscoveryClient discoveryClient;
+    private final DiscoveryClient discoveryClient;
     private final AtomicInteger index = new AtomicInteger(0);
 
     public RatelServerFetcher(DiscoveryClient discoveryClient) {

@@ -101,10 +101,12 @@ public class InMemoryDiscoveryServer implements DiscoveryServer {
         try {
             statisticsHolder.putStatistics(URLDecoder.decode(address, "UTF-8"), statistics);
         } catch (UnsupportedEncodingException e) {
-            throw new AssertionError("UTF-8 must be supported");
+            throw new AssertionError("UTF-8 must be supported", e);
         }
     }
 
+    // TODO - remove PMD suppress
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     @Scheduled(fixedRate = MINUTE)
     public void checkActiveServices() {
         for (final Map.Entry<ServiceDescriptor, Long> entry : pingedServers.entrySet()) {
