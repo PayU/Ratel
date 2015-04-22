@@ -90,6 +90,7 @@ public class RatelIntegrationTestExecutionListener implements TestExecutionListe
           ratelTestCtx.startService(class1);
       }
     }
+    ratelTestCtx.addObservedContext(testContext.getApplicationContext());
     ratelTestCtx.waitForServicesRegistration();
   }
 

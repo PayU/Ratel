@@ -41,8 +41,8 @@ import com.payu.ratel.config.EnableServiceDiscovery;
 import com.payu.ratel.config.ServiceDiscoveryConfig;
 import com.payu.ratel.server.DiscoveryServerMain;
 import com.payu.ratel.server.InMemoryDiscoveryServer;
-import com.payu.ratel.tests.service.TestServiceConfiguration;
 import com.payu.ratel.tests.service.TestService;
+import com.payu.ratel.tests.service.TestServiceConfiguration;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = {ServiceDiscoveryConfig.class, DiscoveryServerMain.class})

@@ -19,8 +19,10 @@ package com.payu.ratel.register;
 import static com.payu.ratel.config.beans.ServiceRegisterPostProcessorFactory.RATEL_PATH;
 
 import java.lang.reflect.Proxy;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,6 +45,8 @@ public class ServiceRegisterPostProcessor implements MergedBeanDefinitionPostPro
     
     private final Map<String, Class> beanTypes = new HashMap<>();
 
+    private HashMap<Object, Object> registeredServices  = new HashMap<>();
+
 
     public ServiceRegisterPostProcessor(ConfigurableListableBeanFactory configurableListableBeanFactory,
                                         RegisterStrategy registerStrategy, String address) {
@@ -62,9 +66,14 @@ public class ServiceRegisterPostProcessor implements MergedBeanDefinitionPostPro
             final String serviceName = getFirstInterface(bean).getSimpleName();
             final HessianServiceExporter hessianServiceExporter = exportService(bean, serviceName);
             registerStrategy.registerService(hessianServiceExporter.getServiceInterface().getCanonicalName(), address + serviceName);
+            registeredServices.put(beanName, bean);
             LOGGER.info("Bean {} published as a service: {}", bean, bean.toString());
         }
         return bean;
+    }
+
+    public Map<Object, Object> getRegisteredServices() {
+      return Collections.unmodifiableMap(registeredServices);
     }
 
     private HessianServiceExporter exportService(Object bean, String beanName) {

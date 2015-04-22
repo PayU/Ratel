@@ -1,8 +1,5 @@
 package com.payu.ratel.tests.service.tracing;
 
-import java.util.UUID;
-
-import com.payu.ratel.Discover;
 import com.payu.ratel.Publish;
 import com.payu.ratel.context.ProcessContext;
 

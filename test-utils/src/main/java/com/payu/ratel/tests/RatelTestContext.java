@@ -14,13 +14,17 @@ import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 
 import com.google.common.collect.Sets;
 import com.payu.ratel.Publish;
+import com.payu.ratel.register.ServiceRegisterPostProcessor;
 import com.payu.ratel.server.InMemoryDiscoveryServer;
 
 public class RatelTestContext {
+
+  private static final int REGISTRATION_TIMEOUT = 20;
 
   private static final int FREE_PORTS_START = 8021;
 
@@ -30,14 +34,17 @@ public class RatelTestContext {
   private int firstFreePort = FREE_PORTS_START;
 
   private List<ConfigurableApplicationContext> myContexts = new LinkedList<>();
+  
+  private List<ApplicationContext> observedContexts = new LinkedList<>();
 
   
   static int SERVICE_DISCOVERY_PORT = 18099;//hardcoded, in the future we can find free tcp port 
 
   @SuppressWarnings("rawtypes")
-  public void startService(Class springJavaConfigClasses) {
-    startNewApplication(firstFreePort, springJavaConfigClasses);
+  public ConfigurableApplicationContext startService(Class springJavaConfigClasses) {
+    ConfigurableApplicationContext newAppCtx = startNewApplication(firstFreePort, springJavaConfigClasses);
     firstFreePort++;
+    return newAppCtx;
   }
 
   public void close() {
@@ -46,13 +53,16 @@ public class RatelTestContext {
     }
     firstFreePort = FREE_PORTS_START;
     SERVICE_DISCOVERY_PORT++;
+    myContexts.clear();
+    observedContexts.clear();
   }
 
   @SuppressWarnings("rawtypes")
-  private void startNewApplication(int servicePort, Class springJavaConfigClasses) {
+  private ConfigurableApplicationContext startNewApplication(int servicePort, Class springJavaConfigClasses) {
     ConfigurableApplicationContext ctx = createNewContext(servicePort, springJavaConfigClasses, SERVICE_DISCOVERY_PORT);
 
     myContexts.add(ctx);
+    return ctx;
   }
 
   @SuppressWarnings("rawtypes")
@@ -64,7 +74,7 @@ public class RatelTestContext {
   }
 
   public void waitForServicesRegistration(final int numberOfServices) {
-    await().atMost(90, TimeUnit.SECONDS).until(new Runnable() {
+    waitForRegistrationCondition(new Runnable() {
 
       @Override
       public void run() {
@@ -73,11 +83,12 @@ public class RatelTestContext {
 
     });
   }
+  
 
   public void waitForServiceRegistration(Class<?>... serviceInterfaces) {
     final HashSet<Class<?>> notYetRegisteredServices = Sets.newHashSet(serviceInterfaces);
 
-    await().atMost(20, TimeUnit.SECONDS).until(new Runnable() {
+    waitForRegistrationCondition(new Runnable() {
 
       @Override
       public void run() {
@@ -94,16 +105,36 @@ public class RatelTestContext {
 
   }
 
+  private void waitForRegistrationCondition(Runnable supplier) {
+    await().atMost(REGISTRATION_TIMEOUT, TimeUnit.SECONDS).until(supplier);
+  }
+
   public void waitForServicesRegistration() {
     int expectedServices = 0;
-    for (ConfigurableApplicationContext ctx : myContexts) {
+    for (ApplicationContext ctx : myContexts) {
+      expectedServices += getNumberOfRatelServicesInContext(ctx);
+    }
+    for (ApplicationContext ctx : observedContexts) {
       expectedServices += getNumberOfRatelServicesInContext(ctx);
     }
     waitForServicesRegistration(expectedServices);
   }
 
-  private int getNumberOfRatelServicesInContext(ConfigurableApplicationContext ctx) {
-    return ctx.getBeanNamesForAnnotation(Publish.class).length;
+  private int getNumberOfRatelServicesInContext(ApplicationContext ctx) {
+    ServiceRegisterPostProcessor ratelRegiseringPostProcessor = ctx.getBean(ServiceRegisterPostProcessor.class);
+    if (ratelRegiseringPostProcessor == null) {
+      return 0;
+    }
+    return ratelRegiseringPostProcessor.getRegisteredServices().size();
+  }
+
+  public boolean hasService(Class<?> serviceClass) {
+    return server.hasService(serviceClass.getCanonicalName());
+  }
+
+  public void addObservedContext(ApplicationContext applicationContext) {
+    observedContexts.add(applicationContext);
+    
   }
 
 }
