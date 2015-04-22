@@ -25,13 +25,13 @@ import com.payu.ratel.register.RegisterStrategy;
 
 public class RatelServerRegistry implements RegisterStrategy {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(RatelServerRegistry.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(RatelServerRegistry.class);
 
     public static final int SECONDS_20 = 20000;
 
     private RemoteRestDiscoveryServer server;
 
-    TaskScheduler taskScheduler;
+    private TaskScheduler taskScheduler;
 
     public RatelServerRegistry(RemoteRestDiscoveryServer server, TaskScheduler taskScheduler) {
         this.server = server;

@@ -36,12 +36,12 @@ import com.payu.ratel.proxy.monitoring.MonitoringInvocationHandler;
 
 public class ServiceRegisterPostProcessor implements MergedBeanDefinitionPostProcessor {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(ServiceRegisterPostProcessor.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ServiceRegisterPostProcessor.class);
 
     private final ConfigurableListableBeanFactory configurableListableBeanFactory;
     private final RegisterStrategy registerStrategy;
     private final String address;
-    
+
     private final Map<String, Class> beanTypes = new HashMap<>();
 
     private HashMap<String, Object> registeredServices  = new HashMap<>();
@@ -113,14 +113,14 @@ public class ServiceRegisterPostProcessor implements MergedBeanDefinitionPostPro
     private boolean isService(Object o, String beanName) {
         Class<? extends Object> realBeanClazz = o.getClass();
 
-        //check original class of this bean, just in case it is already proxied 
+        //check original class of this bean, just in case it is already proxied
         Class rootBeanClazz = beanTypes.get(beanName);
         if (rootBeanClazz != null) {
             realBeanClazz = rootBeanClazz;
         }
 
         return !realBeanClazz.isInterface()
-            && realBeanClazz.isAnnotationPresent(Publish.class);
+                && realBeanClazz.isAnnotationPresent(Publish.class);
     }
 
     @Override

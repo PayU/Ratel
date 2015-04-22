@@ -35,7 +35,8 @@ public class RatelContextApplier implements BeanFactoryPostProcessor {
     private RegistryBeanProviderFactory registryBeanProviderFactory;
     private ServiceRegisterPostProcessorFactory serviceRegisterPostProcessorFactory;
 
-    public RatelContextApplier(RegistryBeanProviderFactory registryBeanProviderFactory, ServiceRegisterPostProcessorFactory serviceRegisterPostProcessorFactory) {
+    public RatelContextApplier(RegistryBeanProviderFactory registryBeanProviderFactory,
+                               ServiceRegisterPostProcessorFactory serviceRegisterPostProcessorFactory) {
         this.registryBeanProviderFactory = registryBeanProviderFactory;
         this.serviceRegisterPostProcessorFactory = serviceRegisterPostProcessorFactory;
     }
@@ -67,5 +68,4 @@ public class RatelContextApplier implements BeanFactoryPostProcessor {
         ((DefaultListableBeanFactory) beanFactory).setAutowireCandidateResolver(autowireCandidateResolver);
 
     }
-
 }

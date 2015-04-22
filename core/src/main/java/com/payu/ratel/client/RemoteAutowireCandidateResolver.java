@@ -87,8 +87,7 @@ public class RemoteAutowireCandidateResolver extends
         }
 
         if (getAnnotationsType(descriptor).contains(RetryPolicy.class.getName())) {
-            final RetryPolicy annotation = (RetryPolicy) (getAnnotationWithType(descriptor, RetryPolicy.class).toArray
-                    ())[0];
+            final RetryPolicy annotation = (RetryPolicy) (getAnnotationWithType(descriptor, RetryPolicy.class).toArray())[0];
             client = decorateWithRetryPolicy(client,
                     descriptor.getDependencyType(),
                     annotation.exception());

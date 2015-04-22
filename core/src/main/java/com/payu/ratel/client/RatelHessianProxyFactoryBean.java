@@ -28,10 +28,11 @@ public class RatelHessianProxyFactoryBean extends HessianProxyFactoryBean {
         } catch (RemoteConnectFailureException e) {
             throw e;
         } catch (RemoteAccessException e) {
-            if (e.getRootCause() != null)
+            if (e.getRootCause() != null) {
                 throw e.getRootCause();
-            else
+            } else {
                 throw e;
+            }
         }
     }
 }

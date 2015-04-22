@@ -24,7 +24,7 @@ import com.payu.ratel.register.RegisterStrategy;
 
 public class ZookeeperRegistry implements RegisterStrategy {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(ZookeeperRegistry.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ZookeeperRegistry.class);
 
     private ServiceDiscovery discovery;
 

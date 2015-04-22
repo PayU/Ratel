@@ -37,7 +37,7 @@ import com.payu.ratel.client.FetchStrategy;
 
 public class ZookeeperFetcher implements FetchStrategy {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(ZookeeperFetcher.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ZookeeperFetcher.class);
 
     public static final Function<ServiceInstance, String> SERVICE_INSTANCE_STRING_FUNCTION = new Function<ServiceInstance, String>() {
         @Override

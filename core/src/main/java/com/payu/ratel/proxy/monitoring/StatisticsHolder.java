@@ -19,7 +19,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class StatisticsHolder {
+public final class StatisticsHolder {
+
+    private StatisticsHolder() {
+    }
 
     //TODO - refactor this bin for statically typed structure...
     // Pair of static - value for methods of services

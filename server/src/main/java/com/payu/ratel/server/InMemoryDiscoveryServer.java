@@ -86,11 +86,11 @@ public class InMemoryDiscoveryServer implements DiscoveryServer {
         return services;
     }
 
-	@Override
-	@DELETE
-	public void deleteAllServices() {
-		services.clear();
-	}
+    @Override
+    @DELETE
+    public void deleteAllServices() {
+        services.clear();
+    }
 
     @Override
     @PUT
@@ -107,8 +107,8 @@ public class InMemoryDiscoveryServer implements DiscoveryServer {
 
     @Scheduled(fixedRate = MINUTE)
     public void checkActiveServices() {
-        for(final Map.Entry<ServiceDescriptor, Long> entry:pingedServers.entrySet()){
-            if(isActive(entry.getValue())){
+        for (final Map.Entry<ServiceDescriptor, Long> entry : pingedServers.entrySet()) {
+            if (isActive(entry.getValue())) {
 
                 LOGGER.info("Removing services with address {}", entry.getKey());
                 Iterables.removeIf(services, new Predicate<ServiceDescriptor>() {
