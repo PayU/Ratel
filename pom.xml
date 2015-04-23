@@ -80,6 +80,7 @@
         <module>core</module>
         <module>server</module>
         <module>tests</module>
+        <module>test-utils</module>
     </modules>
 
     <properties>
@@ -115,41 +116,17 @@
                 </exclusions>
             </dependency>
 
-
-
+     		<dependency>
+	            <groupId>org.assertj</groupId>
+	            <artifactId>assertj-core</artifactId>
+	            <version>1.7.0</version>
+			</dependency>
+			
             <dependency>
                 <groupId>javax</groupId>
                 <artifactId>javaee-api</artifactId>
                 <version>7.0</version>
             </dependency>
-
-
-            <!--tests-->
-            <dependency>
-                <groupId>org.apache.curator</groupId>
-                <artifactId>curator-test</artifactId>
-                <version>${curator.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.assertj</groupId>
-                <artifactId>assertj-core</artifactId>
-                <version>1.7.0</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>com.jayway.awaitility</groupId>
-                <artifactId>awaitility</artifactId>
-                <version>1.6.1</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>com.jayway.jsonpath</groupId>
-                <artifactId>json-path</artifactId>
-                <version>1.1.0</version>
-                <scope>test</scope>
-            </dependency>
-
 
         </dependencies>
     </dependencyManagement>

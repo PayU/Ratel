@@ -19,6 +19,7 @@ package com.payu.ratel.register;
 import static com.payu.ratel.config.beans.ServiceRegisterPostProcessorFactory.RATEL_PATH;
 
 import java.lang.reflect.Proxy;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,6 +44,8 @@ public class ServiceRegisterPostProcessor implements MergedBeanDefinitionPostPro
     
     private final Map<String, Class> beanTypes = new HashMap<>();
 
+    private HashMap<String, Object> registeredServices  = new HashMap<>();
+
 
     public ServiceRegisterPostProcessor(ConfigurableListableBeanFactory configurableListableBeanFactory,
                                         RegisterStrategy registerStrategy, String address) {
@@ -62,9 +65,21 @@ public class ServiceRegisterPostProcessor implements MergedBeanDefinitionPostPro
             final String serviceName = getFirstInterface(bean).getSimpleName();
             final HessianServiceExporter hessianServiceExporter = exportService(bean, serviceName);
             registerStrategy.registerService(hessianServiceExporter.getServiceInterface().getCanonicalName(), address + serviceName);
+            registeredServices.put(beanName, bean);
             LOGGER.info("Bean {} published as a service: {}", bean, bean.toString());
         }
         return bean;
+    }
+
+    /**
+     * Get a map of Ratel services exported by this post processor.
+     * 
+     * @return the unmodifiable map with entries in form: [bean name] -&gt; [bean].
+     *         The beans of this map are the providers of the implementation of
+     *         the service business interface.
+     */
+    public Map<String, Object> getRegisteredServices() {
+      return Collections.unmodifiableMap(registeredServices);
     }
 
     private HessianServiceExporter exportService(Object bean, String beanName) {

@@ -6,7 +6,6 @@ import java.lang.reflect.Proxy;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
-import org.springframework.core.Ordered;
 
 /**
  * Just adds a proxy before and after initialization of all beans of type 

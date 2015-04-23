@@ -24,12 +24,20 @@
 
     <packaging>jar</packaging>
 
-    <artifactId>ratel-tests</artifactId>
+    <artifactId>ratel-test-utils</artifactId>
+    
+    <properties>
+    	<awaitility.version>1.6.1</awaitility.version>
+    </properties>
 
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+		<dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -38,7 +46,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>
@@ -46,38 +53,23 @@
             <version>18.0</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.assertj</groupId>
-            <artifactId>assertj-core</artifactId>
-            <scope>test</scope>
-        </dependency>
 
         <dependency>
             <groupId>com.payu.ratel</groupId>
             <artifactId>ratel-server</artifactId>
             <version>${project.version}</version>
-            <scope>test</scope>
-        </dependency>
-		<dependency>
-            <groupId>com.payu.ratel</groupId>
-            <artifactId>ratel-test-utils</artifactId>
-            <version>${project.version}</version>
-            <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>com.payu.ratel</groupId>
             <artifactId>ratel-core</artifactId>
             <version>${project.version}</version>
-            <scope>test</scope>
         </dependency>
 
-<!--  TODO: remove -->
         <dependency>
             <groupId>com.jayway.awaitility</groupId>
             <artifactId>awaitility</artifactId>
-            <version>1.6.1</version>
-            <scope>test</scope>
+            <version>${awaitility.version}</version>
         </dependency>
 
         <dependency>
@@ -92,13 +84,23 @@
             <artifactId>curator-test</artifactId>
             <version>${curator.version}</version>
             <scope>test</scope>
-
         </dependency>
         <dependency>
             <groupId>org.apache.curator</groupId>
             <artifactId>curator-framework</artifactId>
             <scope>test</scope>
         </dependency>
+        
+
+            <dependency>
+                <groupId>org.assertj</groupId>
+                <artifactId>assertj-core</artifactId>
+            </dependency>
+            <dependency>
+            	<groupId>net.sourceforge.plantuml</groupId>
+            	<artifactId>plantuml</artifactId>
+            	<version>8021</version>
+            </dependency>
 
     </dependencies>
 
