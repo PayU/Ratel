@@ -26,7 +26,7 @@ import com.payu.ratel.tests.service.TestService;
 import com.payu.ratel.tests.service.TestServiceConfiguration;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@RatelTest(registerServices=TestServiceConfiguration.class)
+@RatelTest(registerServices = TestServiceConfiguration.class)
 public class ServiceRegistrationTest {
 
     @Autowired
@@ -35,9 +35,9 @@ public class ServiceRegistrationTest {
 
     @Test
     public void shouldRegisterServices() throws InterruptedException {
-        
+
         assertThat(ratelTestContext.hasService(TestService.class));
-                
+
     }
 
 }

@@ -20,8 +20,8 @@ import com.payu.ratel.Publish;
 @Publish
 public class ProxableServiceImpl implements ProxableService {
 
-	@Override
-	public int doInTransaction() {
-		return 4;
-	}
+    @Override
+    public int doInTransaction() {
+        return 4;
+    }
 }

@@ -23,11 +23,11 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import com.payu.ratel.tests.service.TestServiceConfiguration;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@RatelTest(registerServices=TestServiceConfiguration.class)
+@RatelTest(registerServices = TestServiceConfiguration.class)
 public class HeartBeatServiceRegisterTest {
 
 
-    @Autowired  
+    @Autowired
     private RatelTestContext ratelTestContext;
 
     @Test
@@ -37,7 +37,7 @@ public class HeartBeatServiceRegisterTest {
 
         //when
         ratelTestContext.startService(TestServiceConfiguration.class);
-        
+
         //then
         ratelTestContext.waitForServicesRegistration(2);
     }

@@ -14,10 +14,10 @@ import com.payu.ratel.tests.service.TestServiceConfiguration;
 //
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@RatelTest(registerServices={TestServiceConfiguration.class, TestServiceCallerConfiguration.class})
+@RatelTest(registerServices = {TestServiceConfiguration.class, TestServiceCallerConfiguration.class})
 public class TracingMechanismTest {
 
-    
+
     @Discover
     private TestServiceCallerService testServiceCaller;
 
@@ -28,6 +28,6 @@ public class TracingMechanismTest {
 
         //then
         assertThat(testCallerResult).isEqualTo("success");
-        
+
     }
 }

@@ -10,33 +10,32 @@ import com.payu.ratel.tests.service.TestService;
 import com.payu.ratel.tests.service.TestServiceConfiguration;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@RatelTest(registerServices=TestServiceConfiguration.class)
+@RatelTest(registerServices = TestServiceConfiguration.class)
 public class ExceptionTransportTest {
-
 
 
     @Discover
     private TestService testService;
 
 
-    @Test(expected=MyCheckedException.class)
+    @Test(expected = MyCheckedException.class)
     public void shouldThrowCheckedExceptionFromRemoteService() throws Exception {
 
-      //when
-      testService.alwaysThrowsCheckedException();
+        //when
+        testService.alwaysThrowsCheckedException();
 
-      //then
-      //nothing
+        //then
+        //nothing
     }
-    
-    @Test(expected=RuntimeException.class)
+
+    @Test(expected = RuntimeException.class)
     public void shouldThrowRuntimeExceptionFromRemoteService() throws Exception {
 
-      //when
-    	testService.alwaysThrowsRuntimeException();
-    	
-    	//then
-    	//nothing
+        //when
+        testService.alwaysThrowsRuntimeException();
+
+        //then
+        //nothing
     }
 
 }

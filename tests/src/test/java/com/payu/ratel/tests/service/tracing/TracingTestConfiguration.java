@@ -13,15 +13,15 @@ import com.payu.ratel.config.ServiceDiscoveryConfig;
 @Import(ServiceDiscoveryConfig.class)
 @WebAppConfiguration
 public class TracingTestConfiguration {
-	
-	@Bean
-	ProcessIdTargetService targetService(){
-		return new ProcessIdTargetServiceImpl();
-	}
-	
-	@Bean
-	ProcessIdPassingService PassingService(){
-		return new ProcessIdPassingServiceImpl();
-	}
+
+    @Bean
+    ProcessIdTargetService targetService() {
+        return new ProcessIdTargetServiceImpl();
+    }
+
+    @Bean
+    ProcessIdPassingService passingService() {
+        return new ProcessIdPassingServiceImpl();
+    }
 
 }
