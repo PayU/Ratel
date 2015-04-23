@@ -18,7 +18,6 @@ package com.payu.ratel.tests;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.payu.ratel.tests.service.TestServiceConfiguration;
@@ -27,14 +26,12 @@ import com.payu.ratel.tests.service.TestServiceConfiguration;
 @RatelTest(registerServices=TestServiceConfiguration.class)
 public class HeartBeatServiceRegisterTest {
 
-    private ConfigurableApplicationContext remoteContext;
-    private ConfigurableApplicationContext secondRemoteContext;
 
     @Autowired  
     private RatelTestContext ratelTestContext;
 
     @Test
-    public void shouldRegisterService() throws InterruptedException {
+    public void shouldRegisterServiceAfterFirstHeartBeat() throws InterruptedException {
         //given
         ratelTestContext.waitForServicesRegistration(1);
 

@@ -22,7 +22,6 @@ import java.lang.reflect.Proxy;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,7 +44,7 @@ public class ServiceRegisterPostProcessor implements MergedBeanDefinitionPostPro
     
     private final Map<String, Class> beanTypes = new HashMap<>();
 
-    private HashMap<Object, Object> registeredServices  = new HashMap<>();
+    private HashMap<String, Object> registeredServices  = new HashMap<>();
 
 
     public ServiceRegisterPostProcessor(ConfigurableListableBeanFactory configurableListableBeanFactory,
@@ -72,7 +71,14 @@ public class ServiceRegisterPostProcessor implements MergedBeanDefinitionPostPro
         return bean;
     }
 
-    public Map<Object, Object> getRegisteredServices() {
+    /**
+     * Get a map of Ratel services exported by this post processor.
+     * 
+     * @return the unmodifiable map with entries in form: [bean name] -> [bean].
+     *         The beans of this map are the providers of the implementation of
+     *         the service business interface.
+     */
+    public Map<String, Object> getRegisteredServices() {
       return Collections.unmodifiableMap(registeredServices);
     }
 

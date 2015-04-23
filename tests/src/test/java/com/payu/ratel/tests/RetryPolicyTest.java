@@ -37,7 +37,7 @@ public class RetryPolicyTest {
 
 
     @Test
-    public void shouldNotThrowException() throws InterruptedException, Exception {
+    public void shouldRetryServiceCallAfterException() throws InterruptedException, Exception {
 
       //when
         testService.sometimesThrowsException();
