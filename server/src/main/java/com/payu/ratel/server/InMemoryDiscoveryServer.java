@@ -125,8 +125,8 @@ public class InMemoryDiscoveryServer implements DiscoveryServer {
         gaugeService.submit("registered.services.count", services.size());
         gaugeService.submit("registered.servers.count", pingedServers.size());
     }
-    
-    
+
+
     public boolean hasService(final String serviceName) {
       return !getServiceInstances(serviceName).isEmpty();
     }

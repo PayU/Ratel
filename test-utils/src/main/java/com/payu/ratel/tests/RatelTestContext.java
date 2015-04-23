@@ -25,9 +25,10 @@ import com.payu.ratel.server.InMemoryDiscoveryServer;
  * A context that is bound to a test with ratel-testing capabilities. It enables
  * you to control the process of registering/unregistering the services during
  * test execution.
- * 
+ *
  * @see RatelTest
  */
+@SuppressWarnings("PMD.TooManyMethods")
 public class RatelTestContext {
 
   private static final int REGISTRATION_TIMEOUT = 78;
@@ -39,12 +40,17 @@ public class RatelTestContext {
 
   private int firstFreePort = FREE_PORTS_START;
 
-  private List<ConfigurableApplicationContext> myContexts = new LinkedList<>();
+  private final List<ConfigurableApplicationContext> myContexts = new LinkedList<>();
 
-  private List<ApplicationContext> observedContexts = new LinkedList<>();
+  private final List<ApplicationContext> observedContexts = new LinkedList<>();
 
-  static int SERVICE_DISCOVERY_PORT = 18099;// hardcoded, in the future we can
-                                            // find free tcp port
+
+  private static int serviceDiscoveryPort = 18099; // hardcoded, in the future we can
+                                                   // find free tcp port
+
+  public static int getServiceDiscoveryPort() {
+    return serviceDiscoveryPort;
+  }
 
   /**
    * Starts a new, separate spring context with a given configuration. The
@@ -52,7 +58,7 @@ public class RatelTestContext {
    * in-memory test registry server. If you start multiple services this way,
    * they will act as a separate applications, but will be registered in a
    * single registry service.
-   * 
+   *
    * @param springJavaConfigClass
    *          the configuration to start. If you want to start multiple
    *          configurations in a single context, group them together in a
@@ -68,21 +74,21 @@ public class RatelTestContext {
   }
 
   /**
-   * Closes all spring contexts that were created in
+   * Closes all spring contexts that were created in.
    */
   public void close() {
     for (ConfigurableApplicationContext ctx : myContexts) {
       ctx.close();
     }
     firstFreePort = FREE_PORTS_START;
-    SERVICE_DISCOVERY_PORT++;
+    serviceDiscoveryPort++;
     myContexts.clear();
     observedContexts.clear();
   }
 
   @SuppressWarnings("rawtypes")
   private ConfigurableApplicationContext startNewApplication(int servicePort, Class springJavaConfigClasses) {
-    ConfigurableApplicationContext ctx = createNewContext(servicePort, springJavaConfigClasses, SERVICE_DISCOVERY_PORT);
+    ConfigurableApplicationContext ctx = createNewContext(servicePort, springJavaConfigClasses, serviceDiscoveryPort);
 
     myContexts.add(ctx);
     return ctx;
@@ -101,7 +107,7 @@ public class RatelTestContext {
   /**
    * Wait until a test registry server bound to this context registers a given
    * number of active service instances.
-   * 
+   *
    * @param numberOfServices
    *          the expected number of services
    * @throws AssertionError
@@ -122,7 +128,7 @@ public class RatelTestContext {
    * Wait until a test registry server bound to this context registers services
    * of all specified interfaces. When this method returns successfully, it is
    * guaranteed that all given services are up and running.
-   * 
+   *
    * @param serviceInterfaces
    *          - array of expected service interfaces.
    * @throws AssertionError
@@ -161,7 +167,7 @@ public class RatelTestContext {
    * service producers. Therefore this method will not finalize until all
    * services published by the above contexts are available in the test registry
    * server.
-   * 
+   *
    * @throws AssertionError
    *           if at least one of the services provided by relevant application
    *           contexts is not available in the service registry within the
@@ -190,7 +196,7 @@ public class RatelTestContext {
   /**
    * Verifies if a test registry server bound to this context has registered at
    * least one instance of a service with a given contract.
-   * 
+   *
    * @param serviceClass
    *          the service interface to check.
    * @return <code>true</code> iff the service is available
@@ -205,7 +211,7 @@ public class RatelTestContext {
    * {@link RatelTestContext#waitForServicesRegistration()}, the services from
    * this context will also be considered and the method will not finalize until
    * all services punlished by it are up and running.
-   * 
+   *
    * @param applicationContext
    *          the context to add
    */

@@ -34,7 +34,7 @@ public class RemoteRestDiscoveryServer {
 
     private final ServiceDiscoveryApi api;
 
-    private String serverApiUrl;
+    private final String serverApiUrl;
 
     public RemoteRestDiscoveryServer(String apiUrl) {
         this.serverApiUrl = apiUrl;

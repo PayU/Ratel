@@ -14,7 +14,8 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <groupId>com.payu.ratel</groupId>
         <artifactId>ratel-project</artifactId>
@@ -43,7 +44,6 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>18.0</version>
         </dependency>
 
         <dependency>
@@ -58,7 +58,7 @@
             <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
-		<dependency>
+        <dependency>
             <groupId>com.payu.ratel</groupId>
             <artifactId>ratel-test-utils</artifactId>
             <version>${project.version}</version>
@@ -72,11 +72,10 @@
             <scope>test</scope>
         </dependency>
 
-<!--  TODO: remove -->
+        <!--  TODO: remove -->
         <dependency>
             <groupId>com.jayway.awaitility</groupId>
             <artifactId>awaitility</artifactId>
-            <version>1.6.1</version>
             <scope>test</scope>
         </dependency>
 

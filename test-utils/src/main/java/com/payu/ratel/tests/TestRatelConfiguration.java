@@ -12,6 +12,7 @@ import com.payu.ratel.server.DiscoveryServerMain;
 public class TestRatelConfiguration {
 
   @Bean
+  @SuppressWarnings("PMD.JUnit4TestShouldUseTestAnnotation")
   public RatelTestContext testContext() {
     return new RatelTestContext();
   }

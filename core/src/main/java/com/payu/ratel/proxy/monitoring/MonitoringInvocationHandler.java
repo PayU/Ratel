@@ -83,7 +83,7 @@ public class MonitoringInvocationHandler implements java.lang.reflect.Invocation
     }
 
     private Timer fetchTimer(Method method) {
-        if (!meters.containsKey(method)) {
+        if (!meters.containsKey(method.toGenericString())) {
             meters.put(method.toGenericString(), metrics.timer(method.toGenericString()));
         }
 

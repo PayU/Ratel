@@ -44,7 +44,7 @@ public class ServiceRegisterPostProcessor implements MergedBeanDefinitionPostPro
 
     private final Map<String, Class> beanTypes = new HashMap<>();
 
-    private HashMap<String, Object> registeredServices  = new HashMap<>();
+    private final Map<String, Object> registeredServices  = new HashMap<>();
 
 
     public ServiceRegisterPostProcessor(ConfigurableListableBeanFactory configurableListableBeanFactory,
@@ -73,7 +73,7 @@ public class ServiceRegisterPostProcessor implements MergedBeanDefinitionPostPro
 
     /**
      * Get a map of Ratel services exported by this post processor.
-     * 
+     *
      * @return the unmodifiable map with entries in form: [bean name] -&gt; [bean].
      *         The beans of this map are the providers of the implementation of
      *         the service business interface.
