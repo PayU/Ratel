@@ -74,7 +74,7 @@ public class ServiceRegisterPostProcessor implements MergedBeanDefinitionPostPro
     /**
      * Get a map of Ratel services exported by this post processor.
      * 
-     * @return the unmodifiable map with entries in form: [bean name] -> [bean].
+     * @return the unmodifiable map with entries in form: [bean name] -&gt; [bean].
      *         The beans of this map are the providers of the implementation of
      *         the service business interface.
      */

@@ -26,7 +26,7 @@ import com.payu.ratel.server.InMemoryDiscoveryServer;
  * you to control the process of registering/unregistering the services during
  * test execution.
  * 
- * @see {@link RatelTest}
+ * @see RatelTest
  */
 public class RatelTestContext {
 
@@ -211,7 +211,6 @@ public class RatelTestContext {
    */
   public void addObservedContext(ApplicationContext applicationContext) {
     observedContexts.add(applicationContext);
-
   }
 
 }

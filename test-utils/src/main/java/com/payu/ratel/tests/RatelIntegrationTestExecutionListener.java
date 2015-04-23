@@ -99,9 +99,10 @@ public class RatelIntegrationTestExecutionListener extends AbstractTestExecution
    * @param testContext
    *          the TestContext of a test.
    * 
-   * @see {@link RatelTestContext#addObservedContext(org.springframework.context.ApplicationContext)}
-   *      {@link RatelTestContext#startService(Class)}
-   *      {@link RatelTestContext#waitForServicesRegistration()}
+   * 
+   * @see RatelTestContext#addObservedContext(org.springframework.context.ApplicationContext)
+   *      @see RatelTestContext#startService(Class)
+   *      @see RatelTestContext#waitForServicesRegistration()
    */
   @Override
   public void beforeTestMethod(TestContext testContext) throws Exception {
@@ -131,10 +132,10 @@ public class RatelIntegrationTestExecutionListener extends AbstractTestExecution
    * @param testContext
    *          the TestContext of a test.
    * 
-   * @see {@link RatelTestContext#addObservedContext(org.springframework.context.ApplicationContext)}
-   *      {@link RatelTestContext#startService(Class)}
-   *      {@link RatelTestContext#close()}
-   *      {@link RatelIntegrationTestExecutionListener#beforeTestMethod(TestContext)}
+   * @see RatelTestContext#addObservedContext(org.springframework.context.ApplicationContext)
+   * @see RatelTestContext#startService(Class)
+   * @see RatelTestContext#close()
+   * @see RatelIntegrationTestExecutionListener#beforeTestMethod(TestContext)
    */
   @Override
   public void afterTestMethod(TestContext testContext) throws Exception {
@@ -142,4 +143,5 @@ public class RatelIntegrationTestExecutionListener extends AbstractTestExecution
     rtc.close();
 
   }
+
 }

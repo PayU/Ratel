@@ -21,7 +21,8 @@ import com.payu.ratel.config.EnableServiceDiscovery;
  * capabilities, so that you can control services registration/ unregistration
  * during the test execution.
  *
- * @see {@link RatelTestContext} {@link RatelIntegrationTestExecutionListener}
+ * @see RatelTestContext 
+ * @see RatelIntegrationTestExecutionListener
  */
 
 @Retention(RetentionPolicy.RUNTIME)
