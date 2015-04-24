@@ -1,7 +1,6 @@
 package com.payu.ratel.context;
 
 import java.util.UUID;
-import java.util.function.Supplier;
 
 /**
  * A context of a process that is always available via {@link ProcessContext#getInstance()}. 
@@ -9,14 +8,10 @@ import java.util.function.Supplier;
  */
 public class ProcessContext {
 
-	private static final ThreadLocal<ProcessContext> instance = ThreadLocal.withInitial(new Supplier<ProcessContext>() {
-
-		@Override
-		public ProcessContext get() {
-			return new ProcessContext();
-		}
-		
-	});
+	private static final ThreadLocal<ProcessContext> instance = new ThreadLocal<ProcessContext>() {
+	  
+	  protected ProcessContext initialValue() {return new ProcessContext();}
+	};
 
 	private String processIdentifier;
 
