@@ -29,8 +29,6 @@ import com.payu.ratel.context.RatelHessianProxy;
  */
 public class RatelHessianProxyFactory extends HessianProxyFactory {
 
-    // TODO - remove PMD suppress
-    @SuppressWarnings("PMD.AvoidThrowingNullPointerException")
     public Object create(Class<?> api, URL url, ClassLoader loader) {
         if (api == null) {
             throw new NullPointerException("api must not be null for HessianProxyFactory.create()");

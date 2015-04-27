@@ -39,8 +39,6 @@ public class CacheInvocationHandler implements java.lang.reflect.InvocationHandl
         this.object = object;
     }
 
-    // TODO - remove PMD suppress
-    @SuppressWarnings("PMD.AccessorClassGeneration")
     @Override
     public Object invoke(Object o, Method method, Object[] args) throws Throwable {
         final MethodWithArguments methodWithArguments = new MethodWithArguments(method, args);

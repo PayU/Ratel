@@ -28,7 +28,6 @@ import com.payu.ratel.server.InMemoryDiscoveryServer;
  *
  * @see RatelTest
  */
-@SuppressWarnings("PMD.TooManyMethods")
 public class RatelTestContext {
 
   private static final int REGISTRATION_TIMEOUT = 78;

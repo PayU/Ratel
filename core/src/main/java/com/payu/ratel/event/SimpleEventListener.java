@@ -31,8 +31,6 @@ public class SimpleEventListener implements EventListener {
     private final Map<Object, Collection<Method>> subscribedMethods =
             new ConcurrentHashMap<>();
 
-    // TODO - remove PMD suppress
-    @SuppressWarnings("PMD.AvoidSynchronizedAtMethodLevel")
     @Override
     public synchronized void registerSubscriber(Object listener) {
         for (Method method : listener.getClass().getMethods()) {

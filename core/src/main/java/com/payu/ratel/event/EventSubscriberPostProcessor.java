@@ -45,8 +45,6 @@ public class EventSubscriberPostProcessor implements BeanPostProcessor {
         return bean;
     }
 
-    // TODO - remove PMD suppress
-    @SuppressWarnings("PMD.AvoidBranchingStatementAsLastInLoop")
     private boolean isSubscriber(Object o) {
         for (Method method : o.getClass().getMethods()) {
             return method.isAnnotationPresent(Subscribe.class);
