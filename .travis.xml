@@ -33,6 +33,12 @@
                     <url>https://oss.sonatype.org/content/groups/staging</url>
                 </repository>
             </repositories>
+            <pluginRepositories>
+                <pluginRepository>
+                    <id>oss</id>
+                    <url>https://oss.sonatype.org/content/groups/staging</url>
+                </pluginRepository>
+            </pluginRepositories>
         </profile>
     </profiles>
 
