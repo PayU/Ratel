@@ -10,7 +10,7 @@ import com.payu.ratel.config.EnableServiceDiscovery;
 @Configuration
 @EnableAutoConfiguration
 @EnableServiceDiscovery
-@ComponentScan(basePackages={"com.payu.ratel.examples.calculator"})
+@ComponentScan(basePackageClasses={CalculatorServiceImpl.class})
 public class Calculator {
   
   public static void main(String[] args) {
