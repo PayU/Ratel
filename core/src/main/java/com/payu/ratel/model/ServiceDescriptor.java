@@ -60,22 +60,30 @@ public class ServiceDescriptor {
 
     @Override
     public String toString() {
-        return "Service{" +
-                "name='" + name + '\'' +
-                ", address='" + address + '\'' +
-                ", path='" + path + '\'' +
-                '}';
+        return "Service{"
+                + "name='" + name + '\''
+                + ", address='" + address + '\''
+                + ", path='" + path + '\''
+                + '}';
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         ServiceDescriptor that = (ServiceDescriptor) o;
 
-        if (!address.equals(that.address)) return false;
-        if (!name.equals(that.name)) return false;
+        if (!address.equals(that.address)) {
+            return false;
+        }
+        if (!name.equals(that.name)) {
+            return false;
+        }
 
         return true;
     }
@@ -121,10 +129,10 @@ public class ServiceDescriptor {
 
         @Override
         public String toString() {
-            return "Method{" +
-                    "name='" + name + '\'' +
-                    ", path='" + path + '\'' +
-                    '}';
+            return "Method{"
+                    + "name='" + name + '\''
+                    + ", path='" + path + '\''
+                    + '}';
         }
     }
 }

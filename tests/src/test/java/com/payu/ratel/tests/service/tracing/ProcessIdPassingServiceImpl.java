@@ -6,22 +6,22 @@ import com.payu.ratel.context.ProcessContext;
 
 @Publish
 public class ProcessIdPassingServiceImpl implements ProcessIdPassingService {
-	
-	@Discover
-	private ProcessIdTargetService targetService;
-	
-	
-	private String processId;
 
-	@Override
-	public void passProcessId() {
-		this.processId = ProcessContext.getInstance().getProcessIdentifier();
-		this.targetService.storeProcessId();
-	}
+    @Discover
+    private ProcessIdTargetService targetService;
 
-	@Override
-	public String getProcessId() {
-		return processId;
-	}
+
+    private String processId;
+
+    @Override
+    public void passProcessId() {
+        this.processId = ProcessContext.getInstance().getProcessIdentifier();
+        this.targetService.storeProcessId();
+    }
+
+    @Override
+    public String getProcessId() {
+        return processId;
+    }
 
 }

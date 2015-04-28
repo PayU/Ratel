@@ -25,7 +25,7 @@ public interface DiscoveryServer {
     void registerService(ServiceDescriptor serviceDescriptor);
 
     Collection<ServiceDescriptor> fetchAllServices();
-    
+
     void deleteAllServices();
 
     void collectStatistics(String service, Map<String, Map<String, String>> statistics);

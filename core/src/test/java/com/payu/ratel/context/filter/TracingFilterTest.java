@@ -36,7 +36,8 @@ public class TracingFilterTest {
 
   private FilterChain chainMock;
 
-  String processIdInsideFilter;
+  private String processIdInsideFilter;
+
   private FilterChain chainStub = new FilterChain() {
 
     @Override
@@ -100,22 +101,22 @@ public class TracingFilterTest {
     assertThat(processIdInsideFilter).isNotNull();
 
   }
-  
+
   @Test
   public void shouldClearProcessIdAfterExceptionInFilter() throws Exception {
-    
+
     // given
     assertThat(ProcessContext.getInstance().getProcessIdentifier()).isNull();
     Mockito.doThrow(NumberFormatException.class).when(chainMock).doFilter(any(ServletRequest.class), any(ServletResponse.class));
-    
+
     try {
       // when
       filter.doFilter(httpRequest, httpResponse, chainMock);
     } catch (NumberFormatException e) {
     }
-    
+
     // then
     assertThat(ProcessContext.getInstance().getProcessIdentifier()).isNull();
-    
+
   }
 }

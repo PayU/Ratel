@@ -25,8 +25,8 @@ public interface TestService {
     int cached(String arg);
 
     void sometimesThrowsException() throws MyCheckedException;
-    
+
     void alwaysThrowsCheckedException() throws MyCheckedException;
-    
+
     void alwaysThrowsRuntimeException();
 }

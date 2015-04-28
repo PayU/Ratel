@@ -19,6 +19,7 @@ package com.payu.ratel.register;
 import static com.payu.ratel.config.beans.ServiceRegisterPostProcessorFactory.RATEL_PATH;
 
 import java.lang.reflect.Proxy;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,13 +36,15 @@ import com.payu.ratel.proxy.monitoring.MonitoringInvocationHandler;
 
 public class ServiceRegisterPostProcessor implements MergedBeanDefinitionPostProcessor {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(ServiceRegisterPostProcessor.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ServiceRegisterPostProcessor.class);
 
     private final ConfigurableListableBeanFactory configurableListableBeanFactory;
     private final RegisterStrategy registerStrategy;
     private final String address;
-    
+
     private final Map<String, Class> beanTypes = new HashMap<>();
+
+    private final Map<String, Object> registeredServices  = new HashMap<>();
 
 
     public ServiceRegisterPostProcessor(ConfigurableListableBeanFactory configurableListableBeanFactory,
@@ -62,9 +65,21 @@ public class ServiceRegisterPostProcessor implements MergedBeanDefinitionPostPro
             final String serviceName = getFirstInterface(bean).getSimpleName();
             final HessianServiceExporter hessianServiceExporter = exportService(bean, serviceName);
             registerStrategy.registerService(hessianServiceExporter.getServiceInterface().getCanonicalName(), address + serviceName);
+            registeredServices.put(beanName, bean);
             LOGGER.info("Bean {} published as a service: {}", bean, bean.toString());
         }
         return bean;
+    }
+
+    /**
+     * Get a map of Ratel services exported by this post processor.
+     *
+     * @return the unmodifiable map with entries in form: [bean name] -&gt; [bean].
+     *         The beans of this map are the providers of the implementation of
+     *         the service business interface.
+     */
+    public Map<String, Object> getRegisteredServices() {
+      return Collections.unmodifiableMap(registeredServices);
     }
 
     private HessianServiceExporter exportService(Object bean, String beanName) {
@@ -98,14 +113,14 @@ public class ServiceRegisterPostProcessor implements MergedBeanDefinitionPostPro
     private boolean isService(Object o, String beanName) {
         Class<? extends Object> realBeanClazz = o.getClass();
 
-        //check original class of this bean, just in case it is already proxied 
+        //check original class of this bean, just in case it is already proxied
         Class rootBeanClazz = beanTypes.get(beanName);
         if (rootBeanClazz != null) {
             realBeanClazz = rootBeanClazz;
         }
 
         return !realBeanClazz.isInterface()
-            && realBeanClazz.isAnnotationPresent(Publish.class);
+                && realBeanClazz.isAnnotationPresent(Publish.class);
     }
 
     @Override

@@ -3,48 +3,51 @@ package com.payu.ratel.context;
 import java.util.UUID;
 
 /**
- * A context of a process that is always available via {@link ProcessContext#getInstance()}. 
- * It is automatically transported over ratel remote service calls. 
+ * A context of a process that is always available via {@link ProcessContext#getInstance()}.
+ * It is automatically transported over ratel remote service calls.
  */
 public class ProcessContext {
 
-	private static final ThreadLocal<ProcessContext> instance = new ThreadLocal<ProcessContext>() {
-	  
-	  protected ProcessContext initialValue() {return new ProcessContext();}
-	};
+    private static final ThreadLocal<ProcessContext> INSTANCE = new ThreadLocal<ProcessContext>() {
 
-	private String processIdentifier;
+    protected ProcessContext initialValue() {
+        return new ProcessContext();
+        }
+    };
 
-	public static ProcessContext getInstance() {
-		return instance.get();
-	}
+    private String processIdentifier;
 
-	/**
-	 * Get unique identifier of this process.  
-	 */
-	public String getProcessIdentifier() {
-		return processIdentifier;
-	}
+    public static ProcessContext getInstance() {
+        return INSTANCE.get();
+    }
 
-	
-	public void setProcessIdentifier(String processId) {
-		this.processIdentifier = processId;
-	}
+    /**
+     * Get unique identifier of this process.
+     */
+    public String getProcessIdentifier() {
+        return processIdentifier;
+    }
 
-	/**
-	 * Generate new random process identifier, given that it is not presently set. 
-	 * @throws IllegalStateException when currently set process id is not null.
-	 */
-	public void generateProcessIdentifier() {
-		if (getProcessIdentifier() != null) {
-			throw new IllegalStateException("Cannot generate new process identifier when present is not cleared");
-		}
-		setProcessIdentifier(UUID.randomUUID().toString());
-	}
 
-	public void clearProcessIdentifier() {
-		setProcessIdentifier(null);
-	}
-	
+    public void setProcessIdentifier(String processId) {
+        this.processIdentifier = processId;
+    }
+
+    /**
+     * Generate new random process identifier, given that it is not presently set.
+     *
+     * @throws IllegalStateException when currently set process id is not null.
+     */
+    public void generateProcessIdentifier() {
+        if (getProcessIdentifier() != null) {
+            throw new IllegalStateException("Cannot generate new process identifier when present is not cleared");
+        }
+        setProcessIdentifier(UUID.randomUUID().toString());
+    }
+
+    public void clearProcessIdentifier() {
+        setProcessIdentifier(null);
+    }
+
 
 }
