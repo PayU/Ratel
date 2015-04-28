@@ -9,17 +9,17 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.remoting.caucho.HessianExporter;
+
 import org.springframework.remoting.caucho.HessianServiceExporter;
 
 import com.payu.ratel.context.filter.TracingFilter;
 
 
 /**
- * This implementation of {@link HessianExporter} just adds an invocation of
+ * This implementation of {@link org.springframework.remoting.caucho.HessianExporter} just adds an invocation of
  * {@link TracingFilter} around default request handler. This trick is used to
  * use the filter in older servlet containers without need to statically
- * confgure it in web.xml
+ * configure it in web.xml
  *
  */
 public class RatelHessianServiceExporter extends HessianServiceExporter {

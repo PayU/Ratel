@@ -30,6 +30,8 @@ public class ServiceRegisterPostProcessorFactory {
     public static final String JBOSS_BIND_PORT = "jboss.bind.port";
     public static final String RATEL_PATH = "/ratelServices/";
 
+    // TODO - remove PMD suppress
+    @SuppressWarnings("PMD.EmptyCatchBlock")
     public ServiceRegisterPostProcessor create(ConfigurableListableBeanFactory beanFactory, RegisterStrategy registerStrategy) {
 
         final Environment environment = beanFactory.getBean(Environment.class);

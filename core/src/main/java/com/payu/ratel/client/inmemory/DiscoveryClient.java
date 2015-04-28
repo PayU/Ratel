@@ -23,7 +23,7 @@ import java.util.Collection;
 
 public class DiscoveryClient {
 
-    final ServiceDiscoveryApi api;
+    private final ServiceDiscoveryApi api;
 
     public DiscoveryClient(String urlApi) {
         RestAdapter restAdapter = new RestAdapter.Builder()
@@ -35,9 +35,9 @@ public class DiscoveryClient {
     public Collection<ServiceDescriptor> fetchAllServices() {
         return api.fetchAllServices();
     }
-    
+
     public void deleteAllServices() {
-    	api.deleteAllServices();
+        api.deleteAllServices();
     }
 
 }

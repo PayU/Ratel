@@ -35,7 +35,7 @@ public interface ServiceDiscoveryApi {
 
     @GET("/")
     Collection<ServiceDescriptor> fetchAllServices();
-    
+
     @DELETE("/")
     Response deleteAllServices();
 

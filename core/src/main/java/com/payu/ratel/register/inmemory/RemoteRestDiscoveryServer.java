@@ -18,8 +18,10 @@ package com.payu.ratel.register.inmemory;
 import com.payu.ratel.ServiceDiscoveryApi;
 import com.payu.ratel.model.ServiceDescriptor;
 import com.payu.ratel.proxy.monitoring.StatisticsHolder;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 
@@ -32,7 +34,10 @@ public class RemoteRestDiscoveryServer {
 
     private final ServiceDiscoveryApi api;
 
+    private final String serverApiUrl;
+
     public RemoteRestDiscoveryServer(String apiUrl) {
+        this.serverApiUrl = apiUrl;
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint(apiUrl)
                 .build();
@@ -42,8 +47,9 @@ public class RemoteRestDiscoveryServer {
     public void registerService(ServiceDescriptor serviceDescriptor) {
         try {
             api.registerService(serviceDescriptor);
+            LOGGER.info("Service {} registered  in server {}. Try again.", serviceDescriptor, serverApiUrl);
         } catch (RetrofitError e) {
-            LOGGER.warn("Retrofit error was thrown while registering service. Try again.");
+            LOGGER.warn("Retrofit error was thrown while registering service at {}. Try again.", serverApiUrl);
         }
     }
 
@@ -52,7 +58,7 @@ public class RemoteRestDiscoveryServer {
             api.collectStatistics(URLEncoder.encode(serviceDescriptor.getAddress(), "UTF-8"),
                     StatisticsHolder.getStatistics(serviceDescriptor.getName()));
         } catch (UnsupportedEncodingException e) {
-            throw new AssertionError("UTF-8 must be supported");
+            throw new AssertionError("UTF-8 must be supported", e);
         } catch (RetrofitError e) {
             LOGGER.warn("Retrofit error was thrown while collecting statistics. Try again.");
         }

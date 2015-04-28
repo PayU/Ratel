@@ -15,8 +15,6 @@
  */
 package com.payu.ratel.tests.service;
 
-import java.lang.reflect.InvocationTargetException;
-
 import com.payu.ratel.Publish;
 
 @Publish
@@ -39,20 +37,21 @@ public class TestServiceImpl implements TestService {
         return counter;
     }
 
-	@Override
-	public void alwaysThrowsCheckedException() throws MyCheckedException {
-		throw new MyCheckedException();
-	}
-    
+    @Override
+    public void alwaysThrowsCheckedException() throws MyCheckedException {
+        throw new MyCheckedException();
+    }
+
     @Override
     public void sometimesThrowsException() throws MyCheckedException {
         incrementCounter();
-        if(counter % 3 != 0)
+        if (counter % 3 != 0) {
             throw new MyCheckedException();
+        }
     }
 
-	@Override
-	public void alwaysThrowsRuntimeException() {
-		throw new RuntimeException();
-	}
+    @Override
+    public void alwaysThrowsRuntimeException() {
+        throw new RuntimeException();
+    }
 }

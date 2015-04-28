@@ -35,6 +35,8 @@ import javax.servlet.ServletException;
 @EnableScheduling
 public class DiscoveryServerMain {
 
+    // TODO - remove PMD suppress
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public static void main(String[] args) throws Exception {
         SpringApplication.run(DiscoveryServerMain.class, args);
     }

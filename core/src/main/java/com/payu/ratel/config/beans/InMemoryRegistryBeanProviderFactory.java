@@ -44,6 +44,8 @@ public class InMemoryRegistryBeanProviderFactory implements RegistryBeanProvider
         this.beanFactory = beanFactory;
     }
 
+    // TODO - remove PMD suppress
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @Override
     public void afterPropertiesSet() throws Exception {
         final Environment environment = beanFactory.getBean(Environment.class);

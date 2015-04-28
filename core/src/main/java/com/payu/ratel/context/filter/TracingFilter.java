@@ -11,16 +11,15 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
 import com.payu.ratel.context.ProcessContext;
-import com.payu.ratel.register.RatelHessianServiceExporter;
 
 /**
  * A filter applied on all requests sent to ratel requests. It is responsible
  * for copying {@link ProcessContext} data from http headers to
  * {@link ProcessContext#getInstance()} If the processId is not present in the
  * request headers, a new one will be picked at random.
- * 
+ *
  * This filter should be mapped on all ratel services. Please see also
- * {@link RatelHessianServiceExporter}.
+ * {@link com.payu.ratel.register.RatelHessianServiceExporter}.
  * */
 public class TracingFilter implements Filter {
 
