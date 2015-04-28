@@ -40,8 +40,8 @@ public class RemoteAutowireCandidateResolver extends
         ContextAnnotationAutowireCandidateResolver implements
         AutowireCandidateResolver {
 
-    private FetchStrategy fetchStrategy;
-    private ClientProxyGenerator clientProxyGenerator;
+    private final FetchStrategy fetchStrategy;
+    private final ClientProxyGenerator clientProxyGenerator;
 
     public RemoteAutowireCandidateResolver(FetchStrategy fetchStrategy, ClientProxyGenerator clientProxyGenerator) {
         this.fetchStrategy = fetchStrategy;
@@ -87,8 +87,7 @@ public class RemoteAutowireCandidateResolver extends
         }
 
         if (getAnnotationsType(descriptor).contains(RetryPolicy.class.getName())) {
-            final RetryPolicy annotation = (RetryPolicy) (getAnnotationWithType(descriptor, RetryPolicy.class).toArray
-                    ())[0];
+            final RetryPolicy annotation = (RetryPolicy) (getAnnotationWithType(descriptor).toArray())[0];
             client = decorateWithRetryPolicy(client,
                     descriptor.getDependencyType(),
                     annotation.exception());
@@ -96,7 +95,7 @@ public class RemoteAutowireCandidateResolver extends
         return client;
     }
 
-    private Collection<Annotation> getAnnotationWithType(DependencyDescriptor descriptor, Class lookedClass) {
+    private Collection<Annotation> getAnnotationWithType(DependencyDescriptor descriptor) {
         return Collections2.filter(Arrays.asList(descriptor.getAnnotations()), new Predicate<Annotation>() {
             @Override
             public boolean apply(Annotation annotation) {

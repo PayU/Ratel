@@ -53,15 +53,17 @@ class ContextAnnotationAutowireCandidateResolver extends QualifierAnnotationAuto
             }
         }
         MethodParameter methodParam = descriptor.getMethodParameter();
-        if (methodParam != null) {
-            Method method = methodParam.getMethod();
-            if (method == null || void.class.equals(method.getReturnType())) {
-                Lazy lazy = AnnotationUtils.getAnnotation(methodParam.getAnnotatedElement(), Lazy.class);
-                if (lazy != null && lazy.value()) {
-                    return true;
-                }
+        if (methodParam == null) {
+            return false;
+        }
+        Method method = methodParam.getMethod();
+        if (method == null || void.class.equals(method.getReturnType())) {
+            Lazy lazy = AnnotationUtils.getAnnotation(methodParam.getAnnotatedElement(), Lazy.class);
+            if (lazy != null && lazy.value()) {
+                return true;
             }
         }
+
         return false;
     }
 
@@ -74,14 +76,17 @@ class ContextAnnotationAutowireCandidateResolver extends QualifierAnnotationAuto
             public Class<?> getTargetClass() {
                 return descriptor.getDependencyType();
             }
+
             @Override
             public boolean isStatic() {
                 return false;
             }
+
             @Override
             public Object getTarget() {
                 return beanFactory.doResolveDependency(descriptor, beanName, null, null);
             }
+
             @Override
             public void releaseTarget(Object target) {
             }

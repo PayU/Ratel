@@ -14,22 +14,23 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>ratel-project</artifactId>
         <groupId>com.payu.ratel</groupId>
-        <version>1.2.3-SNAPSHOT</version>
+        <version>1.2.4-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <packaging>jar</packaging>
 
     <artifactId>ratel-server</artifactId>
-    
+
     <properties>
-    	<!-- The main class to start by executing java -jar -->
-    	<start-class>com.payu.ratel.server.DiscoveryServerMain</start-class>
-	</properties>
+        <!-- The main class to start by executing java -jar -->
+        <start-class>com.payu.ratel.server.DiscoveryServerMain</start-class>
+    </properties>
 
     <dependencyManagement>
         <dependencies>
@@ -120,10 +121,10 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                 <configuration>
-        			<mainClass>${start-class}</mainClass>
-        			<layout>ZIP</layout>
-      			</configuration>
+                <configuration>
+                    <mainClass>${start-class}</mainClass>
+                    <layout>ZIP</layout>
+                </configuration>
                 <executions>
                     <execution>
                         <goals>

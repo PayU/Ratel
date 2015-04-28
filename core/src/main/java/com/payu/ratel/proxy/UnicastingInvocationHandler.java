@@ -54,12 +54,12 @@ public class UnicastingInvocationHandler implements InvocationHandler {
 
         LOGGER.debug("Calling {} on address {}", serviceApi.getName(), serviceAddress);
 
-		try {
-			return method.invoke(clientProxy, args);
-		} catch (InvocationTargetException e) {
-			// Invoked method threw a checked exception.
-			// We must rethrow it. The client won't see the interceptor.
-			throw e.getTargetException();
-		}
+        try {
+            return method.invoke(clientProxy, args);
+        } catch (InvocationTargetException e) {
+            // Invoked method threw a checked exception.
+            // We must rethrow it. The client won't see the interceptor.
+            throw e.getTargetException();
+        }
     }
 }

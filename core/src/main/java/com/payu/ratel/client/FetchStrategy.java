@@ -17,6 +17,8 @@ package com.payu.ratel.client;
 
 import java.util.Collection;
 
+// TODO - remove PMD suppress
+@SuppressWarnings("PMD.SignatureDeclareThrowsException")
 public interface FetchStrategy {
     String fetchServiceAddress(String serviceName) throws Exception;
 

@@ -46,6 +46,8 @@ public class ZookeeperRegistryBeanProvider implements RegistryBeanProvider, Init
         this.beanFactory = beanFactory;
     }
 
+    // TODO - remove PMD suppress
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @Override
     public void afterPropertiesSet() throws Exception {
         final Environment environment = beanFactory.getBean(Environment.class);
@@ -70,6 +72,8 @@ public class ZookeeperRegistryBeanProvider implements RegistryBeanProvider, Init
         zookeeperProxyGenerator = new ZookeeperProxyGenerator(new ClientProxyDecorator());
     }
 
+    // TODO - remove PMD suppress
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @Override
     public void destroy() throws Exception {
         serviceDiscovery.close();

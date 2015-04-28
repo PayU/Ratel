@@ -4,3 +4,8 @@ target
 tests/server
 
 /bin/
+/.settings/
+/server/
+/tests/
+/test-utils/
+/.project
