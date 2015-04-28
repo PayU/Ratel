@@ -45,18 +45,19 @@ public class TracingFilter implements Filter {
   private void doFilterHttp(HttpServletRequest request, ServletResponse response, FilterChain chain)
       throws IOException, ServletException {
     String processIdHeader = request.getHeader(TracingFilter.RATEL_HEADER_PROCESS_ID);
+
     if (processIdHeader != null) {
-      filterWithProcessTracing(request, response, chain, processIdHeader);
+      assert ProcessContext.getInstance().getProcessIdentifier() == null;
+      ProcessContext.getInstance().setProcessIdentifier(processIdHeader);
     } else {
       ProcessContext.getInstance().generateProcessIdentifier();
-      chain.doFilter(request, response);
     }
+
+    filterAndResetProcessIdentifier(request, response, chain);
   }
 
-  private void filterWithProcessTracing(ServletRequest request, ServletResponse response, FilterChain chain,
-      String processIdHeader) throws IOException, ServletException {
-    assert ProcessContext.getInstance().getProcessIdentifier() == null;
-    ProcessContext.getInstance().setProcessIdentifier(processIdHeader);
+  private void filterAndResetProcessIdentifier(HttpServletRequest request, ServletResponse response, FilterChain chain)
+      throws IOException, ServletException {
     try {
       chain.doFilter(request, response);
     } finally {

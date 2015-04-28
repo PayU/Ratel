@@ -91,6 +91,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jackson.version>2.4.4</jackson.version>
         <curator.version>2.6.0</curator.version>
+        <powermock.version>1.6.2</powermock.version>
     </properties>
 
     <dependencyManagement>
