@@ -15,6 +15,8 @@
  */
 package com.payu.ratel.config.beans;
 
+import static com.payu.ratel.config.beans.RegistryBeanProviderFactory.SERVICE_DISCOVERY;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -30,13 +32,13 @@ public class RatelContextApplier implements BeanFactoryPostProcessor {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RatelContextApplier.class);
 
-    public static final String SERVICE_DISCOVERY_ENABLED = "serviceDiscovery.enabled";
+    public static final String SERVICE_DISCOVERY_ENABLED = SERVICE_DISCOVERY + ".enabled";
 
     private final RegistryBeanProviderFactory registryBeanProviderFactory;
     private final ServiceRegisterPostProcessorFactory serviceRegisterPostProcessorFactory;
 
     public RatelContextApplier(RegistryBeanProviderFactory registryBeanProviderFactory,
-                               ServiceRegisterPostProcessorFactory serviceRegisterPostProcessorFactory) {
+            ServiceRegisterPostProcessorFactory serviceRegisterPostProcessorFactory) {
         this.registryBeanProviderFactory = registryBeanProviderFactory;
         this.serviceRegisterPostProcessorFactory = serviceRegisterPostProcessorFactory;
     }
@@ -57,11 +59,9 @@ public class RatelContextApplier implements BeanFactoryPostProcessor {
         beanFactory.registerSingleton(registryBeanName, registryBeanProvider);
         beanFactory.initializeBean(registryBeanProvider, registryBeanName);
 
-
         final ServiceRegisterPostProcessor serviceRegisterPostProcessor = serviceRegisterPostProcessorFactory.create(beanFactory,
                 registryBeanProvider.getRegisterStrategy());
         beanFactory.registerSingleton(serviceRegisterPostProcessor.getClass().getName(), serviceRegisterPostProcessor);
-
 
         final RemoteAutowireCandidateResolver autowireCandidateResolver = new RemoteAutowireCandidateResolver(
                 registryBeanProvider.getFetchStrategy(), registryBeanProvider.getClientProxyGenerator());

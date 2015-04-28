@@ -15,11 +15,21 @@
  */
 package com.payu.ratel.config;
 
-import com.payu.ratel.config.beans.RatelContextApplier;
-import com.payu.ratel.config.beans.RegistryBeanProviderFactory;
-import com.payu.ratel.config.beans.ServiceRegisterPostProcessorFactory;
+import java.util.List;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
+
+import com.google.common.collect.Lists;
+import com.payu.ratel.config.beans.JbossPropertySelfAddressProvider;
+import com.payu.ratel.config.beans.LocalhostSelfAddressProvider;
+import com.payu.ratel.config.beans.RatelContextApplier;
+import com.payu.ratel.config.beans.RatelPropertySelfAddressProvider;
+import com.payu.ratel.config.beans.RegistryBeanProviderFactory;
+import com.payu.ratel.config.beans.SelfAddressProvider;
+import com.payu.ratel.config.beans.SelfAddressProviderChain;
+import com.payu.ratel.config.beans.ServiceRegisterPostProcessorFactory;
 
 @Configuration
 public class ServiceDiscoveryConfig {
@@ -29,15 +39,30 @@ public class ServiceDiscoveryConfig {
         return new RatelContextApplier(new RegistryBeanProviderFactory(), new ServiceRegisterPostProcessorFactory());
     }
 
-// TODO create Servlet 2.x compatible implementation
-//    @Bean
-//    public FilterRegistrationBean tracingFilterBean() {
-//      FilterRegistrationBean registrationBean = new FilterRegistrationBean();
-//      TracingFilter securityFilter = new TracingFilter();
-//      registrationBean.setFilter(securityFilter);
-//      registrationBean.setUrlPatterns(Arrays.asList(ServiceRegisterPostProcessorFactory.RATEL_PATH +  "*"));
-//      registrationBean.setOrder(2);
-//      return registrationBean;
-//    }
+    List<SelfAddressProvider> selfAddressProviders(Environment environment) {
+        return Lists.newArrayList(
+                new RatelPropertySelfAddressProvider(environment),
+                new JbossPropertySelfAddressProvider(environment),
+                new LocalhostSelfAddressProvider()
+        );
+    }
+
+    @Bean
+    public SelfAddressProviderChain selfAddressProviderChain(Environment environment) {
+        SelfAddressProviderChain selfAddressProviderChain = new SelfAddressProviderChain(selfAddressProviders(environment));
+        selfAddressProviderChain.selectProvider();
+        return selfAddressProviderChain;
+    }
+
+    // TODO create Servlet 2.x compatible implementation
+    //    @Bean
+    //    public FilterRegistrationBean tracingFilterBean() {
+    //      FilterRegistrationBean registrationBean = new FilterRegistrationBean();
+    //      TracingFilter securityFilter = new TracingFilter();
+    //      registrationBean.setFilter(securityFilter);
+    //      registrationBean.setUrlPatterns(Arrays.asList(ServiceRegisterPostProcessorFactory.RATEL_PATH +  "*"));
+    //      registrationBean.setOrder(2);
+    //      return registrationBean;
+    //    }
 
 }
