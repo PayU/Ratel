@@ -7,7 +7,6 @@ import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
@@ -17,11 +16,11 @@ import com.payu.ratel.config.EnableServiceDiscovery;
 
 /**
  * This annotation, placed over a test run by the
- * {@link SpringJUnit4ClassRunner} decorates it with Ratel Ratel testing
+ * {@link org.springframework.test.context.junit4.SpringJUnit4ClassRunner} decorates it with Ratel Ratel testing
  * capabilities, so that you can control services registration/ unregistration
  * during the test execution.
  *
- * @see RatelTestContext 
+ * @see RatelTestContext
  * @see RatelIntegrationTestExecutionListener
  */
 
@@ -44,15 +43,15 @@ DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListe
 public @interface RatelTest {
 
   /**
-   * 
+   *
    * @return the java configs that should be started before each test and
    *         stopped after each test
    */
-  public Class[] registerServices() default {};
+  Class[] registerServices() default {};
 
   /**
-   * Equivalent of {@link IntegrationTest#value()}
+   * Equivalent of {@link IntegrationTest#value()}.
    */
-  public String[] value() default {};
+  String[] value() default {};
 
 }

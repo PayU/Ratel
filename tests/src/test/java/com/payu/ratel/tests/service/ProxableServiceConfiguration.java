@@ -32,11 +32,11 @@ public class ProxableServiceConfiguration {
 
     @Bean
     public ProxableService serviceToBeProxied() {
-    	return new ProxableServiceImpl();
+        return new ProxableServiceImpl();
     }
-    
+
     @Bean
     public static BeanPostProcessor proxyingPostProcessor() {
-    	return new ProxyingPostProcessor();
+        return new ProxyingPostProcessor();
     }
 }

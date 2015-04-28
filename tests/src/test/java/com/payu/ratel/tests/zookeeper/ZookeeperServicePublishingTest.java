@@ -67,7 +67,7 @@ public class ZookeeperServicePublishingTest {
     private static TestingServer zkServer;
 
     @Autowired
-    ServiceDiscovery<TestService> serviceDiscovery;
+    private ServiceDiscovery<TestService> serviceDiscovery;
 
     private ServiceProvider<TestService> serviceProvider;
 

@@ -3,8 +3,8 @@ package com.payu.ratel.tests.service.tracing;
 
 public interface ProcessIdTargetService {
 
-	void storeProcessId();
+    void storeProcessId();
 
-	String getProcessId();
+    String getProcessId();
 
 }

@@ -15,7 +15,7 @@
  */
 package com.payu.ratel.model;
 
-public class ServiceDescriptionBuilder {
+public final class ServiceDescriptionBuilder {
     private String name;
     private String address;
     private String path;

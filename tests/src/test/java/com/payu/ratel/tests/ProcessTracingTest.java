@@ -13,62 +13,61 @@ import com.payu.ratel.tests.service.tracing.ProcessIdTargetService;
 import com.payu.ratel.tests.service.tracing.TracingTestConfiguration;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@RatelTest(registerServices=TracingTestConfiguration.class)
+@RatelTest(registerServices = TracingTestConfiguration.class)
 public class ProcessTracingTest {
 
 
+    @Discover
+    private ProcessIdPassingService passingService;
 
     @Discover
-    private ProcessIdPassingService	passingService;
+    private ProcessIdTargetService targetService;
 
-    @Discover
-    private ProcessIdTargetService	targetService;
-    
 
     @Test
     public void shouldGenerateProcessIdWhenNotSetInThread() throws Exception {
-    	//given
-    	assertThat((targetService.getProcessId())).isNull();
-    	
-    	//when
-    	passingService.passProcessId();
-    	
-    	//then
-    	assertThat((targetService.getProcessId())).isNotNull();
+        //given
+        assertThat((targetService.getProcessId())).isNull();
+
+        //when
+        passingService.passProcessId();
+
+        //then
+        assertThat((targetService.getProcessId())).isNotNull();
     }
-    
+
     @Test
     public void shouldGenerateNewProcessIdWithEveryCall() throws Exception {
-      //given
-      assertThat((targetService.getProcessId())).isNull();
-      ProcessContext.getInstance().clearProcessIdentifier();
-      
-      //when
-      passingService.passProcessId();
-      String processId1 = targetService.getProcessId();
-      ProcessContext.getInstance().clearProcessIdentifier();
-      
-      passingService.passProcessId();
-      String processId2 = targetService.getProcessId();
-      
-      //then
-      assertThat(processId1).isNotEqualTo(processId2);
-    }    
-    
-    
+        //given
+        assertThat((targetService.getProcessId())).isNull();
+        ProcessContext.getInstance().clearProcessIdentifier();
+
+        //when
+        passingService.passProcessId();
+        String processId1 = targetService.getProcessId();
+        ProcessContext.getInstance().clearProcessIdentifier();
+
+        passingService.passProcessId();
+        String processId2 = targetService.getProcessId();
+
+        //then
+        assertThat(processId1).isNotEqualTo(processId2);
+    }
+
+
     @Test
     public void shouldPassProcessIdThroughNetworkCall() throws Exception {
-      
-    	//given
-    	assertThat((targetService.getProcessId())).isNull();
-    	
-    	//when
-    	ProcessContext.getInstance().setProcessIdentifier("123");
-    	passingService.passProcessId();
-    	
-    	//then
-    	assertThat((targetService.getProcessId())).isEqualTo("123");
-    	assertThat((passingService.getProcessId())).isEqualTo(targetService.getProcessId());
+
+        //given
+        assertThat((targetService.getProcessId())).isNull();
+
+        //when
+        ProcessContext.getInstance().setProcessIdentifier("123");
+        passingService.passProcessId();
+
+        //then
+        assertThat((targetService.getProcessId())).isEqualTo("123");
+        assertThat((passingService.getProcessId())).isEqualTo(targetService.getProcessId());
     }
 
 }

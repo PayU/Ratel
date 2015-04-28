@@ -26,7 +26,7 @@ import com.payu.ratel.tests.service.TestService;
 import com.payu.ratel.tests.service.TestServiceConfiguration;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@RatelTest(registerServices={TestServiceConfiguration.class,TestServiceConfiguration.class,})
+@RatelTest(registerServices = {TestServiceConfiguration.class, TestServiceConfiguration.class})
 public class LoadBalancingTest {
 
 

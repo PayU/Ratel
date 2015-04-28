@@ -29,6 +29,7 @@ import org.springframework.test.util.ReflectionTestUtils;
  * </ul>
  *
  */
+@SuppressWarnings("PMD.SignatureDeclareThrowsException")
 public class RatelIntegrationTestExecutionListener extends AbstractTestExecutionListener {
 
   /**
@@ -36,7 +37,7 @@ public class RatelIntegrationTestExecutionListener extends AbstractTestExecution
    * new unique port, and all provided application contexts are configured to
    * use it. It also copies properites provided in {@link RatelTest#value()} and
    * {@link IntegrationTest#value()} annotations.
-   * 
+   *
    * @param testContext
    *          the TestContext of a test
    */
@@ -46,15 +47,15 @@ public class RatelIntegrationTestExecutionListener extends AbstractTestExecution
     applyPropertiesFromAnnotation(testContext, IntegrationTest.class.getName());
     applyPropertiesFromAnnotation(testContext, RatelTest.class.getName());
 
-    int servicePort = RatelTestContext.SERVICE_DISCOVERY_PORT;// hardcoded, can
-                                                              // be changed to
-                                                              // finding free
-                                                              // tcp port
+    int servicePort = RatelTestContext.getServiceDiscoveryPort(); // hardcoded, can
+                                                               // be changed to
+                                                               // finding free
+                                                               // tcp port
     applyServiceRegistryProperties(testContext, servicePort);
   }
 
   private void applyServiceRegistryProperties(TestContext testContext, int servicePort) {
-    String[] properties = { "server.port:" + servicePort,
+    String[] properties = {"server.port:" + servicePort,
         SERVICE_DISCOVERY_ADDRESS + ":http://localhost:" + servicePort + "/server/discovery" };
     addPropertySourceProperties(testContext, properties);
   }
@@ -68,24 +69,17 @@ public class RatelIntegrationTestExecutionListener extends AbstractTestExecution
     }
   }
 
-  private void addPropertySourcePropertiesUsingReflection(TestContext testContext, String[] properties)
-      throws Exception {
+  private void addPropertySourcePropertiesUsingReflection(TestContext testContext, String[] properties) {
     MergedContextConfiguration configuration = (MergedContextConfiguration) ReflectionTestUtils.getField(testContext,
         "mergedContextConfiguration");
-    Set<String> merged = new LinkedHashSet<String>((Arrays.asList(configuration.getPropertySourceProperties())));
+    Set<String> merged = new LinkedHashSet<String>(Arrays.asList(configuration.getPropertySourceProperties()));
     merged.addAll(Arrays.asList(properties));
     addIntegrationTestProperty(merged);
     ReflectionTestUtils.setField(configuration, "propertySourceProperties", merged.toArray(new String[merged.size()]));
   }
 
   private void addPropertySourceProperties(TestContext testContext, String[] properties) {
-    try {
       addPropertySourcePropertiesUsingReflection(testContext, properties);
-    } catch (RuntimeException ex) {
-      throw ex;
-    } catch (Exception ex) {
-      throw new IllegalStateException(ex);
-    }
   }
 
   private void addIntegrationTestProperty(Collection<String> propertySourceProperties) {
@@ -95,11 +89,11 @@ public class RatelIntegrationTestExecutionListener extends AbstractTestExecution
   /**
    * Starts all services given in {@link RatelTest#registerServices()} and waits
    * until they are successfully registered in the test registry server.
-   * 
+   *
    * @param testContext
    *          the TestContext of a test.
-   * 
-   * 
+   *
+   *
    * @see RatelTestContext#addObservedContext(org.springframework.context.ApplicationContext)
    *      @see RatelTestContext#startService(Class)
    *      @see RatelTestContext#waitForServicesRegistration()
@@ -121,17 +115,16 @@ public class RatelIntegrationTestExecutionListener extends AbstractTestExecution
   }
 
   private RatelTestContext getRatelTestContext(TestContext testContext) {
-    RatelTestContext rtc = testContext.getApplicationContext().getBean(RatelTestContext.class);
-    return rtc;
+    return testContext.getApplicationContext().getBean(RatelTestContext.class);
   }
 
   /**
    * Closes all contexts registered in the {@link RatelTestContext} during test
    * method execution.
-   * 
+   *
    * @param testContext
    *          the TestContext of a test.
-   * 
+   *
    * @see RatelTestContext#addObservedContext(org.springframework.context.ApplicationContext)
    * @see RatelTestContext#startService(Class)
    * @see RatelTestContext#close()

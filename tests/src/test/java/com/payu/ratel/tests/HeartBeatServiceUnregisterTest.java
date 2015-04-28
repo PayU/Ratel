@@ -26,14 +26,14 @@ import com.payu.ratel.tests.service.TestService;
 import com.payu.ratel.tests.service.TestServiceConfiguration;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@RatelTest(registerServices={TestServiceConfiguration.class})
+@RatelTest(registerServices = {TestServiceConfiguration.class})
 public class HeartBeatServiceUnregisterTest {
 
 
     @Discover
     private TestService testService;
 
-    @Autowired  
+    @Autowired
     private RatelTestContext ratelTestContext;
 
     @Test
@@ -43,18 +43,17 @@ public class HeartBeatServiceUnregisterTest {
 
         //when
         ConfigurableApplicationContext secondCtx = ratelTestContext.startService(TestServiceConfiguration.class);
-        
+
         //then
         ratelTestContext.waitForServicesRegistration(2);
-        
-        //when 
+
+        //when
         secondCtx.close();
-        
+
         //then
         ratelTestContext.waitForServicesRegistration(2);
-        
-        
-        
+
+
     }
 
 }

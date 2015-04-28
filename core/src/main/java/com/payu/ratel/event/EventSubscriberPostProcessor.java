@@ -25,10 +25,10 @@ import java.lang.reflect.Method;
 
 public class EventSubscriberPostProcessor implements BeanPostProcessor {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(EventSubscriberPostProcessor.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(EventSubscriberPostProcessor.class);
 
     @Autowired
-    EventListener eventListener;
+    private EventListener eventListener;
 
 
     @Override
@@ -38,7 +38,7 @@ public class EventSubscriberPostProcessor implements BeanPostProcessor {
 
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
-        if(isSubscriber(bean)) {
+        if (isSubscriber(bean)) {
             LOGGER.info("Registering event subscriber {}", beanName);
             eventListener.registerSubscriber(bean);
         }
@@ -46,7 +46,7 @@ public class EventSubscriberPostProcessor implements BeanPostProcessor {
     }
 
     private boolean isSubscriber(Object o) {
-        for(Method method : o.getClass().getMethods()) {
+        for (Method method : o.getClass().getMethods()) {
             return method.isAnnotationPresent(Subscribe.class);
         }
 
