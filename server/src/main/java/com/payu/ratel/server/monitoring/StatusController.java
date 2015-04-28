@@ -51,7 +51,7 @@ public class StatusController {
 
         Collection<ServiceDescriptor> serviceDescriptors = discoveryServer
                 .fetchAllServices();
-        for(ServiceDescriptor serviceDescriptor:serviceDescriptors){
+        for (ServiceDescriptor serviceDescriptor : serviceDescriptors) {
             services.put(serviceDescriptor, statisticsHolder.getStatistics(serviceDescriptor.getAddress()));
         }
 

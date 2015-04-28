@@ -30,9 +30,8 @@ public class ClientProxyDecorator {
     public static final int CONNECT_READ_TIMEOUT = 30000;
 
     public Object decorateWithMonitoring(final Object object, final Class clazz) {
-        return Proxy
-                .newProxyInstance(Thread.currentThread().getContextClassLoader(),
-                        new Class[]{clazz}, new MonitoringInvocationHandler(object));
+        return Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class[]{clazz},
+                new MonitoringInvocationHandler(object));
     }
 
     public <T> T createServiceClientProxy(Class<T> clazz, String serviceUrl) {
@@ -42,6 +41,7 @@ public class ClientProxyDecorator {
         HessianProxyFactoryBean proxyFactory = new RatelHessianProxyFactoryBean();
         proxyFactory.setServiceUrl(serviceUrl);
         proxyFactory.setServiceInterface(clazz);
+        proxyFactory.setProxyFactory(new RatelHessianProxyFactory());
         proxyFactory.afterPropertiesSet();
         proxyFactory.setConnectTimeout(CONNECT_READ_TIMEOUT);
         proxyFactory.setReadTimeout(CONNECT_READ_TIMEOUT);

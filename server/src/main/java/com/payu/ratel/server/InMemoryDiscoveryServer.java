@@ -86,11 +86,11 @@ public class InMemoryDiscoveryServer implements DiscoveryServer {
         return services;
     }
 
-	@Override
-	@DELETE
-	public void deleteAllServices() {
-		services.clear();
-	}
+    @Override
+    @DELETE
+    public void deleteAllServices() {
+        services.clear();
+    }
 
     @Override
     @PUT
@@ -101,14 +101,16 @@ public class InMemoryDiscoveryServer implements DiscoveryServer {
         try {
             statisticsHolder.putStatistics(URLDecoder.decode(address, "UTF-8"), statistics);
         } catch (UnsupportedEncodingException e) {
-            throw new AssertionError("UTF-8 must be supported");
+            throw new AssertionError("UTF-8 must be supported", e);
         }
     }
 
+    // TODO - remove PMD suppress
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     @Scheduled(fixedRate = MINUTE)
     public void checkActiveServices() {
-        for(final Map.Entry<ServiceDescriptor, Long> entry:pingedServers.entrySet()){
-            if(isActive(entry.getValue())){
+        for (final Map.Entry<ServiceDescriptor, Long> entry : pingedServers.entrySet()) {
+            if (isActive(entry.getValue())) {
 
                 LOGGER.info("Removing services with address {}", entry.getKey());
                 Iterables.removeIf(services, new Predicate<ServiceDescriptor>() {
@@ -122,6 +124,20 @@ public class InMemoryDiscoveryServer implements DiscoveryServer {
         }
         gaugeService.submit("registered.services.count", services.size());
         gaugeService.submit("registered.servers.count", pingedServers.size());
+    }
+
+
+    public boolean hasService(final String serviceName) {
+      return !getServiceInstances(serviceName).isEmpty();
+    }
+
+    public Set<ServiceDescriptor> getServiceInstances(final String serviceName) {
+      return Sets.filter(services, new Predicate<ServiceDescriptor>() {
+        @Override
+        public boolean apply(ServiceDescriptor desc) {
+          return desc.getName().equals(serviceName);
+        }
+      });
     }
 
     private boolean isActive(Long time) {
