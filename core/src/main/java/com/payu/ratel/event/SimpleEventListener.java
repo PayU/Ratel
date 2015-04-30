@@ -42,15 +42,13 @@ public class SimpleEventListener implements EventListener {
         }
     }
 
-    // TODO - remove PMD suppress
-    @SuppressWarnings("PMD.AvoidThrowingRawExceptionTypes")
     private void validateParameters(Class<?>[] parameters) {
         if (parameters == null || parameters.length > 1) {
-            throw new RuntimeException("Subscriber method should declare only one argument");
+            throw new IllegalArgumentException("Subscriber method should declare only one argument");
         }
 
         if (!Serializable.class.isAssignableFrom(parameters[0])) {
-            throw new RuntimeException("Event type should be serializable");
+            throw new IllegalArgumentException("Event type should be serializable");
         }
     }
 

@@ -20,7 +20,6 @@ import java.lang.reflect.Proxy;
 import java.util.Arrays;
 import java.util.Collection;
 
-
 import org.springframework.beans.factory.config.DependencyDescriptor;
 import org.springframework.beans.factory.support.AutowireCandidateResolver;
 
@@ -34,18 +33,17 @@ import com.payu.ratel.event.EventCannon;
 import com.payu.ratel.proxy.BroadcastingInvocationHandler;
 import com.payu.ratel.proxy.CacheInvocationHandler;
 import com.payu.ratel.proxy.RetryPolicyInvocationHandler;
-import com.payu.ratel.proxy.UnicastingInvocationHandler;
 
 public class RemoteAutowireCandidateResolver extends
         ContextAnnotationAutowireCandidateResolver implements
         AutowireCandidateResolver {
 
-    private final FetchStrategy fetchStrategy;
-    private final ClientProxyGenerator clientProxyGenerator;
+    final RatelClientProducer ratelClientProducer;
+    
+    
 
-    public RemoteAutowireCandidateResolver(FetchStrategy fetchStrategy, ClientProxyGenerator clientProxyGenerator) {
-        this.fetchStrategy = fetchStrategy;
-        this.clientProxyGenerator = clientProxyGenerator;
+    public RemoteAutowireCandidateResolver(RatelClientProducer ratelClientProducer) {
+      this.ratelClientProducer = ratelClientProducer;
     }
 
     @Override
@@ -55,14 +53,23 @@ public class RemoteAutowireCandidateResolver extends
             if (descriptor.getDependencyType().equals(EventCannon.class)) {
                 return produceEventCannonProxy();
             } else {
-                return produceServiceProxy(descriptor);
+              Class retryOnException = null;
+              if (getAnnotationsType(descriptor).contains(RetryPolicy.class.getName())) {
+                final RetryPolicy annotation = (RetryPolicy) (getAnnotationWithType(descriptor)
+                    .toArray())[0];
+                retryOnException = annotation.exception();
+              }
+              boolean useCache = getAnnotationsType(descriptor)
+                  .contains(Cachable.class.getName());
+              
+                return ratelClientProducer.produceServiceProxy(this,descriptor.getDependencyType(), useCache, retryOnException);
             }
         }
 
         return super.buildLazyResolutionProxy(descriptor, beanName);
     }
 
-    private Collection<String> getAnnotationsType(DependencyDescriptor descriptor) {
+    Collection<String> getAnnotationsType(DependencyDescriptor descriptor) {
         Function<Annotation, String> function = new Function<Annotation, String>() {
 
             @Override
@@ -79,23 +86,7 @@ public class RemoteAutowireCandidateResolver extends
         return produceBroadcaster();
     }
 
-    private Object produceServiceProxy(DependencyDescriptor descriptor) {
-        Object client = produceUnicaster(descriptor.getDependencyType());
-
-        if (getAnnotationsType(descriptor).contains(Cachable.class.getName())) {
-            client = decorateWithCaching(client, descriptor.getDependencyType());
-        }
-
-        if (getAnnotationsType(descriptor).contains(RetryPolicy.class.getName())) {
-            final RetryPolicy annotation = (RetryPolicy) (getAnnotationWithType(descriptor).toArray())[0];
-            client = decorateWithRetryPolicy(client,
-                    descriptor.getDependencyType(),
-                    annotation.exception());
-        }
-        return client;
-    }
-
-    private Collection<Annotation> getAnnotationWithType(DependencyDescriptor descriptor) {
+    Collection<Annotation> getAnnotationWithType(DependencyDescriptor descriptor) {
         return Collections2.filter(Arrays.asList(descriptor.getAnnotations()), new Predicate<Annotation>() {
             @Override
             public boolean apply(Annotation annotation) {
@@ -105,30 +96,11 @@ public class RemoteAutowireCandidateResolver extends
     }
 
 
-    public Object decorateWithCaching(final Object object, final Class clazz) {
-        return Proxy
-                .newProxyInstance(Thread.currentThread().getContextClassLoader(),
-                        new Class[]{clazz}, new CacheInvocationHandler(object));
-    }
-
-    public Object decorateWithRetryPolicy(final Object object, final Class clazz, final Class exception) {
-        return Proxy
-                .newProxyInstance(Thread.currentThread().getContextClassLoader(),
-                        new Class[]{clazz}, new RetryPolicyInvocationHandler(object, exception));
-    }
-
-    public Object produceUnicaster(Class<?> clazz) {
-        return Proxy
-                .newProxyInstance(Thread.currentThread().getContextClassLoader(),
-                        new Class[]{clazz},
-                        new UnicastingInvocationHandler(fetchStrategy, clazz, clientProxyGenerator));
-    }
-
-    public Object produceBroadcaster() {
+    private Object produceBroadcaster() {
         return Proxy
                 .newProxyInstance(Thread.currentThread().getContextClassLoader(),
                         new Class[]{EventCannon.class},
-                        new BroadcastingInvocationHandler(fetchStrategy, clientProxyGenerator));
+                        new BroadcastingInvocationHandler(ratelClientProducer.getFetchStrategy(), ratelClientProducer.getClientProxyGenerator()));
     }
 
 }

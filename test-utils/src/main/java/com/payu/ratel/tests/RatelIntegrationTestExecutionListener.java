@@ -29,7 +29,6 @@ import org.springframework.test.util.ReflectionTestUtils;
  * </ul>
  *
  */
-@SuppressWarnings("PMD.SignatureDeclareThrowsException")
 public class RatelIntegrationTestExecutionListener extends AbstractTestExecutionListener {
 
   /**
@@ -42,7 +41,7 @@ public class RatelIntegrationTestExecutionListener extends AbstractTestExecution
    *          the TestContext of a test
    */
   @Override
-  public void prepareTestInstance(TestContext testContext) throws Exception {
+  public void prepareTestInstance(TestContext testContext) {
 
     applyPropertiesFromAnnotation(testContext, IntegrationTest.class.getName());
     applyPropertiesFromAnnotation(testContext, RatelTest.class.getName());
@@ -99,7 +98,7 @@ public class RatelIntegrationTestExecutionListener extends AbstractTestExecution
    *      @see RatelTestContext#waitForServicesRegistration()
    */
   @Override
-  public void beforeTestMethod(TestContext testContext) throws Exception {
+  public void beforeTestMethod(TestContext testContext) {
 
     RatelTest ratelIntTestAnn = testContext.getTestClass().getAnnotation(RatelTest.class);
     RatelTestContext ratelTestCtx = getRatelTestContext(testContext);
@@ -131,7 +130,7 @@ public class RatelIntegrationTestExecutionListener extends AbstractTestExecution
    * @see RatelIntegrationTestExecutionListener#beforeTestMethod(TestContext)
    */
   @Override
-  public void afterTestMethod(TestContext testContext) throws Exception {
+  public void afterTestMethod(TestContext testContext){
     RatelTestContext rtc = getRatelTestContext(testContext);
     rtc.close();
 
