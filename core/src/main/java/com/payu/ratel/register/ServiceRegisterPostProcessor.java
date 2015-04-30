@@ -62,9 +62,9 @@ public class ServiceRegisterPostProcessor implements MergedBeanDefinitionPostPro
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
         if (isService(bean, beanName)) {
-            final String serviceName = getFirstInterface(bean).getSimpleName();
-            final HessianServiceExporter hessianServiceExporter = exportService(bean, serviceName);
-            registerStrategy.registerService(hessianServiceExporter.getServiceInterface().getCanonicalName(), address + serviceName);
+            final String relativeServiceAddress = getFirstInterface(bean).getCanonicalName();
+            final HessianServiceExporter hessianServiceExporter = exportService(bean, relativeServiceAddress);
+            registerStrategy.registerService(hessianServiceExporter.getServiceInterface().getCanonicalName(), address + relativeServiceAddress);
             registeredServices.put(beanName, bean);
             LOGGER.info("Bean {} published as a service: {}", bean, bean.toString());
         }
