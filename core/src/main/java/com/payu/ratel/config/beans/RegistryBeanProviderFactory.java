@@ -20,8 +20,9 @@ import org.springframework.core.env.Environment;
 
 public class RegistryBeanProviderFactory {
 
-    public static final String SERVICE_DISCOVERY_ADDRESS = "serviceDiscovery.address";
-    public static final String SERVICE_DISCOVERY_ZK_HOST = "serviceDiscovery.zkHost";
+    public static final String SERVICE_DISCOVERY = "serviceDiscovery";
+    public static final String SERVICE_DISCOVERY_ADDRESS = SERVICE_DISCOVERY + ".ratelServerAddress";
+    public static final String SERVICE_DISCOVERY_ZK_HOST = SERVICE_DISCOVERY + ".zkHost";
 
     public RegistryBeanProvider create(ConfigurableListableBeanFactory beanFactory) {
         final Environment environment = beanFactory.getBean(Environment.class);

@@ -17,8 +17,8 @@ package com.payu.ratel.tests.zookeeper;
 
 import static com.jayway.awaitility.Awaitility.await;
 import static com.payu.ratel.config.beans.RegistryBeanProviderFactory.SERVICE_DISCOVERY_ZK_HOST;
-import static com.payu.ratel.config.beans.ServiceRegisterPostProcessorFactory.JBOSS_BIND_ADDRESS;
-import static com.payu.ratel.config.beans.ServiceRegisterPostProcessorFactory.JBOSS_BIND_PORT;
+import static com.payu.ratel.config.beans.JbossPropertySelfAddressProvider.JBOSS_BIND_ADDRESS;
+import static com.payu.ratel.config.beans.JbossPropertySelfAddressProvider.JBOSS_BIND_PORT;
 import static org.assertj.core.api.BDDAssertions.then;
 
 import java.io.IOException;

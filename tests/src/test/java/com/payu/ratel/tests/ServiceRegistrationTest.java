@@ -32,7 +32,6 @@ public class ServiceRegistrationTest {
     @Autowired
     private RatelTestContext ratelTestContext;
 
-
     @Test
     public void shouldRegisterServices() throws InterruptedException {
 
