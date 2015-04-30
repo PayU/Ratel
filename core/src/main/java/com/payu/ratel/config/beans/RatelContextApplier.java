@@ -25,7 +25,9 @@ import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.core.env.Environment;
 
+import com.payu.ratel.client.RatelClientProducer;
 import com.payu.ratel.client.RemoteAutowireCandidateResolver;
+import com.payu.ratel.client.standalone.RatelStandaloneFactory;
 import com.payu.ratel.register.ServiceRegisterPostProcessor;
 
 public class RatelContextApplier implements BeanFactoryPostProcessor {
@@ -63,8 +65,12 @@ public class RatelContextApplier implements BeanFactoryPostProcessor {
                 registryBeanProvider.getRegisterStrategy());
         beanFactory.registerSingleton(serviceRegisterPostProcessor.getClass().getName(), serviceRegisterPostProcessor);
 
+        RatelClientProducer ratelClientProducer = new RatelClientProducer(registryBeanProvider.getFetchStrategy(),
+                registryBeanProvider.getClientProxyGenerator());
         final RemoteAutowireCandidateResolver autowireCandidateResolver = new RemoteAutowireCandidateResolver(
-                registryBeanProvider.getFetchStrategy(), registryBeanProvider.getClientProxyGenerator());
+                ratelClientProducer);
+        ((DefaultListableBeanFactory) beanFactory).setAutowireCandidateResolver(autowireCandidateResolver);
+
         ((DefaultListableBeanFactory) beanFactory).setAutowireCandidateResolver(autowireCandidateResolver);
 
     }
