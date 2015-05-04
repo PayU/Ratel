@@ -27,7 +27,6 @@ import org.springframework.core.env.Environment;
 
 import com.payu.ratel.client.RatelClientProducer;
 import com.payu.ratel.client.RemoteAutowireCandidateResolver;
-import com.payu.ratel.client.standalone.RatelStandaloneFactory;
 import com.payu.ratel.register.ServiceRegisterPostProcessor;
 
 public class RatelContextApplier implements BeanFactoryPostProcessor {
@@ -56,7 +55,7 @@ public class RatelContextApplier implements BeanFactoryPostProcessor {
 
         LOGGER.info("Ratel is enabled");
 
-        final RegistryBeanProvider registryBeanProvider = registryBeanProviderFactory.create(beanFactory);
+        final RegistryStrategiesProvider registryBeanProvider = registryBeanProviderFactory.create(beanFactory);
         final String registryBeanName = registryBeanProvider.getClass().getName();
         beanFactory.registerSingleton(registryBeanName, registryBeanProvider);
         beanFactory.initializeBean(registryBeanProvider, registryBeanName);

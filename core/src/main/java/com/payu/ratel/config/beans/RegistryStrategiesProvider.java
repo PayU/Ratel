@@ -19,7 +19,7 @@ import com.payu.ratel.client.ClientProxyGenerator;
 import com.payu.ratel.client.FetchStrategy;
 import com.payu.ratel.register.RegisterStrategy;
 
-public interface RegistryBeanProvider {
+public interface RegistryStrategiesProvider {
 
     RegisterStrategy getRegisterStrategy();
     FetchStrategy getFetchStrategy();

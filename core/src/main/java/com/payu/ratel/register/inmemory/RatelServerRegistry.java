@@ -33,9 +33,9 @@ public class RatelServerRegistry implements RegisterStrategy {
 
     private final TaskScheduler taskScheduler;
 
-    public RatelServerRegistry(RemoteRestDiscoveryServer server, TaskScheduler taskScheduler) {
+    public RatelServerRegistry(RemoteRestDiscoveryServer server, TaskScheduler heartBeatTaskScheduler) {
         this.server = server;
-        this.taskScheduler = taskScheduler;
+        this.taskScheduler = heartBeatTaskScheduler;
     }
 
     @Override
@@ -46,6 +46,10 @@ public class RatelServerRegistry implements RegisterStrategy {
     }
 
     private void applyHeartBeat(final ServiceDescriptor serviceDescriptor) {
+        if (taskScheduler == null) {
+            //hearbeat feature not active, when no scheduler is given
+            return;
+        }
         taskScheduler.scheduleAtFixedRate(new Runnable() {
             @Override
             public void run() {

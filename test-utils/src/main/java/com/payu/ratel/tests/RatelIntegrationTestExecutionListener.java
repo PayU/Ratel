@@ -130,7 +130,7 @@ public class RatelIntegrationTestExecutionListener extends AbstractTestExecution
    * @see RatelIntegrationTestExecutionListener#beforeTestMethod(TestContext)
    */
   @Override
-  public void afterTestMethod(TestContext testContext){
+  public void afterTestMethod(TestContext testContext) {
     RatelTestContext rtc = getRatelTestContext(testContext);
     rtc.close();
 

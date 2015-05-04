@@ -16,6 +16,7 @@
 package com.payu.ratel.tests;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.BDDAssertions.then;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,6 +25,7 @@ import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.payu.ratel.Discover;
+import com.payu.ratel.client.standalone.RatelStandaloneFactory;
 import com.payu.ratel.tests.service.ProxableService;
 import com.payu.ratel.tests.service.ProxableServiceConfiguration;
 import com.payu.ratel.tests.service.TestService;
@@ -32,8 +34,8 @@ import com.payu.ratel.tests.service.provider.ProviderConfiguration;
 import com.payu.ratel.tests.service.provider.RatelServiceDiscoveredByConstructor;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = {TestRatelConfiguration.class, ProviderConfiguration.class})
-@RatelTest(registerServices = {ProxableServiceConfiguration.class, TestServiceConfiguration.class})
+@SpringApplicationConfiguration(classes = { TestRatelConfiguration.class, ProviderConfiguration.class })
+@RatelTest(registerServices = { ProxableServiceConfiguration.class, TestServiceConfiguration.class })
 public class ServiceDiscoverTest {
 
     @Autowired
@@ -44,6 +46,9 @@ public class ServiceDiscoverTest {
 
     @Discover
     private ProxableService proxiedService;
+
+    @Autowired
+    private RatelTestContext ratelTestCtx;
 
     @Test
     public void shouldDiscoverServiceByField() throws InterruptedException {
@@ -73,12 +78,25 @@ public class ServiceDiscoverTest {
     @Test
     public void shouldDiscoverServiceWithProxy() throws InterruptedException {
 
-        //when
+        // when
         int result = proxiedService.doInTransaction();
 
-        //then
+        // then
         assertThat(result).isEqualTo(4);
 
+    }
+
+    public void shouldDiscoverServiceWithStandaloneRatelClient() {
+
+        // given
+        String zookeeperAddr = "127.0.0.1:" + ratelTestCtx.getServiceDiscoveryPort() + "/server/discovery";
+        RatelStandaloneFactory clientFactory = RatelStandaloneFactory.fromRatelServer(zookeeperAddr);
+
+        // when
+        TestService testServiceClient = clientFactory.getServiceProxy(TestService.class);
+
+        // then
+        then(testServiceClient.hello()).isEqualTo("success");
     }
 
 }
