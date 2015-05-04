@@ -31,7 +31,7 @@ import com.payu.ratel.register.RegisterStrategy;
 import com.payu.ratel.register.inmemory.RatelServerRegistry;
 import com.payu.ratel.register.inmemory.RemoteRestDiscoveryServer;
 
-public class InMemoryRegistryBeanProviderFactory implements RegistryBeanProvider, InitializingBean {
+public class InMemoryRegistryBeanProviderFactory implements RegistryStrategiesProvider, InitializingBean {
 
     private static final String DEFAULT_DISCOVERY_URL = "http://localhost:8090/server/discovery";
 

@@ -24,9 +24,8 @@ public class RegistryBeanProviderFactory {
     public static final String SERVICE_DISCOVERY_ADDRESS = SERVICE_DISCOVERY + ".ratelServerAddress";
     public static final String SERVICE_DISCOVERY_ZK_HOST = SERVICE_DISCOVERY + ".zkHost";
 
-    public RegistryBeanProvider create(ConfigurableListableBeanFactory beanFactory) {
+    public RegistryStrategiesProvider create(ConfigurableListableBeanFactory beanFactory) {
         final Environment environment = beanFactory.getBean(Environment.class);
-
         if (environment.containsProperty(SERVICE_DISCOVERY_ZK_HOST)) {
             return new ZookeeperRegistryBeanProvider(beanFactory);
         } else if (environment.containsProperty(SERVICE_DISCOVERY_ADDRESS)) {

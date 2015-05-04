@@ -1,24 +1,25 @@
 /*
  * Copyright 2015 PayU
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
  *
- *        http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package com.payu.ratel.tests.zookeeper;
 
 import static com.jayway.awaitility.Awaitility.await;
-import static com.payu.ratel.config.beans.RegistryBeanProviderFactory.SERVICE_DISCOVERY_ZK_HOST;
+
 import static com.payu.ratel.config.beans.JbossPropertySelfAddressProvider.JBOSS_BIND_ADDRESS;
 import static com.payu.ratel.config.beans.JbossPropertySelfAddressProvider.JBOSS_BIND_PORT;
+import static com.payu.ratel.config.beans.RegistryBeanProviderFactory.SERVICE_DISCOVERY_ZK_HOST;
 import static org.assertj.core.api.BDDAssertions.then;
 
 import java.io.IOException;
@@ -44,16 +45,15 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import com.payu.ratel.Discover;
+import com.payu.ratel.client.standalone.RatelStandaloneFactory;
 import com.payu.ratel.config.ServiceDiscoveryConfig;
 import com.payu.ratel.server.DiscoveryServerMain;
-import com.payu.ratel.tests.service.TestServiceConfiguration;
 import com.payu.ratel.tests.service.TestService;
+import com.payu.ratel.tests.service.TestServiceConfiguration;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = {ServiceDiscoveryConfig.class, DiscoveryServerMain.class})
-@IntegrationTest({
-        SERVICE_DISCOVERY_ZK_HOST + ":127.0.0.1:" + ZookeeperServicePublishingTest.ZK_PORT
-})
+@SpringApplicationConfiguration(classes = { ServiceDiscoveryConfig.class, DiscoveryServerMain.class })
+@IntegrationTest({ SERVICE_DISCOVERY_ZK_HOST + ":127.0.0.1:" + ZookeeperServicePublishingTest.ZK_PORT })
 @WebAppConfiguration
 public class ZookeeperServicePublishingTest {
     public static final String SPRING_JMX_ENABLED_FALSE = "--spring.jmx.enabled=false";
@@ -78,17 +78,12 @@ public class ZookeeperServicePublishingTest {
 
     @Before
     public void before() throws Exception {
-        remoteContext = SpringApplication.run(TestServiceConfiguration.class,
-                "--server.port=8035",
-                "--" + JBOSS_BIND_ADDRESS + "=localhost",
-                "--" + JBOSS_BIND_PORT + "=8035",
-                "--" + SERVICE_DISCOVERY_ZK_HOST + "=127.0.0.1:" + ZK_PORT,
-                SPRING_JMX_ENABLED_FALSE);
+        remoteContext = SpringApplication.run(TestServiceConfiguration.class, "--server.port=8035", "--"
+                + JBOSS_BIND_ADDRESS + "=localhost", "--" + JBOSS_BIND_PORT + "=8035", "--" + SERVICE_DISCOVERY_ZK_HOST
+                + "=127.0.0.1:" + ZK_PORT, SPRING_JMX_ENABLED_FALSE);
 
-        serviceProvider = serviceDiscovery.serviceProviderBuilder()
-                .serviceName(TestService.class.getName())
-                .providerStrategy(new RoundRobinStrategy<TestService>())
-                .build();
+        serviceProvider = serviceDiscovery.serviceProviderBuilder().serviceName(TestService.class.getName())
+                .providerStrategy(new RoundRobinStrategy<TestService>()).build();
         serviceProvider.start();
     }
 
@@ -105,17 +100,37 @@ public class ZookeeperServicePublishingTest {
 
     @Test
     public void shouldDiscoverService() throws InterruptedException {
+        waitForTestServiceRegistration();
+
+        // when
+        final String result = testService.hello();
+
+        then(result).isEqualTo("success");
+    }
+
+    private void waitForTestServiceRegistration() {
         await().atMost(10, TimeUnit.SECONDS).until(new Callable<Boolean>() {
             @Override
             public Boolean call() throws Exception {
                 return serviceProvider.getInstance() != null;
             }
         });
+    }
 
-        //when
-        final String result = testService.hello();
+    @Test
+    public void shouldDiscoverServiceWithStandaloneClient() throws Exception {
 
-        then(result).isEqualTo("success");
+        // given
+        waitForTestServiceRegistration();
+
+        String zookeeperAddr = "127.0.0.1:" + ZookeeperServicePublishingTest.ZK_PORT;
+        RatelStandaloneFactory clientFactory = RatelStandaloneFactory.fromZookeeperServer(zookeeperAddr);
+
+        // when
+        TestService testServiceClient = clientFactory.getServiceProxy(TestService.class);
+
+        // then
+        then(testServiceClient.hello()).isEqualTo("success");
     }
 
 }
