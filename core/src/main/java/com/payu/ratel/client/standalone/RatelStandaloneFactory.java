@@ -31,3 +31,4 @@ public class RatelStandaloneFactory {
         return clientProducer.produceServiceProxy(serviceContractClass, false, null);
     }
 }
+
