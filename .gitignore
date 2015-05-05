@@ -1,11 +1,6 @@
 target
 *.iml
 .idea
-tests/server
-
 /bin/
 /.settings/
-/server/
-/tests/
-/test-utils/
 /.project
