@@ -10,11 +10,13 @@ import com.payu.ratel.config.EnableServiceDiscovery;
 @Configuration
 @EnableAutoConfiguration
 @EnableServiceDiscovery
-@ComponentScan(basePackageClasses={CalculatorServiceImpl.class})
-public class Calculator {
-  
-  public static void main(String[] args) {
-    SpringApplication.run(Calculator.class, args);
-  }
+@ComponentScan(basePackageClasses = { CalculatorServiceImpl.class })
+public final class Calculator {
 
+
+    public static void main(String[] args) {
+        SpringApplication.run(Calculator.class, args);
+    }
+
+    private Calculator() { }
 }
