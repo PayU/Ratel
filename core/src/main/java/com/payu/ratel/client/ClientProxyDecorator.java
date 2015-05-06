@@ -41,10 +41,13 @@ public class ClientProxyDecorator {
         HessianProxyFactoryBean proxyFactory = new RatelHessianProxyFactoryBean();
         proxyFactory.setServiceUrl(serviceUrl);
         proxyFactory.setServiceInterface(clazz);
-        proxyFactory.setProxyFactory(new RatelHessianProxyFactory());
+
+        RatelHessianProxyFactory ratelProxyFactory = new RatelHessianProxyFactory();
+        ratelProxyFactory.setConnectTimeout(CONNECT_READ_TIMEOUT);
+        ratelProxyFactory.setReadTimeout(CONNECT_READ_TIMEOUT);
+        proxyFactory.setProxyFactory(ratelProxyFactory);
+
         proxyFactory.afterPropertiesSet();
-        proxyFactory.setConnectTimeout(CONNECT_READ_TIMEOUT);
-        proxyFactory.setReadTimeout(CONNECT_READ_TIMEOUT);
         return (T) proxyFactory.getObject();
 
     }
