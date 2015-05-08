@@ -23,6 +23,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.ws.rs.NotFoundException;
+
+import org.omg.CosNaming.NamingContextPackage.NotFound;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -44,7 +47,7 @@ public class ServiceRegisterPostProcessor implements MergedBeanDefinitionPostPro
 
     private final Map<String, Class> beanTypes = new HashMap<>();
 
-    private final Map<String, Object> registeredServices  = new HashMap<>();
+    private final Map<String, Object> registeredServices = new HashMap<>();
 
 
     public ServiceRegisterPostProcessor(ConfigurableListableBeanFactory configurableListableBeanFactory,
@@ -62,9 +65,11 @@ public class ServiceRegisterPostProcessor implements MergedBeanDefinitionPostPro
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
         if (isService(bean, beanName)) {
-            final String relativeServiceAddress = getFirstInterface(bean).getCanonicalName();
+            final String relativeServiceAddress = getPublishInterface(bean, beanName).getCanonicalName();
+
             final HessianServiceExporter hessianServiceExporter = exportService(bean, relativeServiceAddress);
-            registerStrategy.registerService(hessianServiceExporter.getServiceInterface().getCanonicalName(), address + relativeServiceAddress);
+            registerStrategy.registerService(hessianServiceExporter.getServiceInterface().getCanonicalName(),
+                    address + relativeServiceAddress);
             registeredServices.put(beanName, bean);
             LOGGER.info("Bean {} published as a service: {}", bean, bean.toString());
         }
@@ -75,11 +80,11 @@ public class ServiceRegisterPostProcessor implements MergedBeanDefinitionPostPro
      * Get a map of Ratel services exported by this post processor.
      *
      * @return the unmodifiable map with entries in form: [bean name] -&gt; [bean].
-     *         The beans of this map are the providers of the implementation of
-     *         the service business interface.
+     * The beans of this map are the providers of the implementation of
+     * the service business interface.
      */
     public Map<String, Object> getRegisteredServices() {
-      return Collections.unmodifiableMap(registeredServices);
+        return Collections.unmodifiableMap(registeredServices);
     }
 
     private HessianServiceExporter exportService(Object bean, String beanName) {
@@ -90,8 +95,8 @@ public class ServiceRegisterPostProcessor implements MergedBeanDefinitionPostPro
 
     private HessianServiceExporter createHessianExporterService(Object bean) {
         HessianServiceExporter hessianServiceExporter = new RatelHessianServiceExporter();
-        hessianServiceExporter.setService(decorateWithMonitoring(bean, getFirstInterface(bean)));
-        hessianServiceExporter.setServiceInterface(getFirstInterface(bean));
+        hessianServiceExporter.setService(decorateWithMonitoring(bean, getPublishInterface(bean)));
+        hessianServiceExporter.setServiceInterface(getPublishInterface(bean));
         hessianServiceExporter.prepare();
         return hessianServiceExporter;
     }
@@ -102,15 +107,45 @@ public class ServiceRegisterPostProcessor implements MergedBeanDefinitionPostPro
                         new Class[]{clazz}, new MonitoringInvocationHandler(object));
     }
 
-    private Class<?> getFirstInterface(Object bean) {
-        Class<?>[] interfaces = bean.getClass().getInterfaces();
-        for (Class<?> clazz : interfaces) {
-            return clazz;
-        }
-        return null;
+    private Class<?> getPublishInterface(Object bean) {
+        return getPublishInterface(bean, null);
     }
 
-    private boolean isService(Object o, String beanName) {
+    private Class<?> getPublishInterface(Object bean, String beanName) {
+        Class<? extends Object> realBeanClazz = getRealBeanClass(bean, beanName);
+
+        Publish publish = realBeanClazz.getAnnotation(Publish.class);
+
+        if (publish == null) {
+            return getFirstInterfaceOrDefined(bean, null);
+        }
+
+        Class[] listValuePublished = publish.value();
+
+        if (listValuePublished.length == 0) {
+            return getFirstInterfaceOrDefined(bean, null);
+        }
+
+        return getFirstInterfaceOrDefined(bean, listValuePublished[0]);
+    }
+
+    private Class<?> getFirstInterfaceOrDefined(Object bean, Class defInterface) {
+        Class<?>[] interfaces = bean.getClass().getInterfaces();
+        for (Class<?> clazz : interfaces) {
+            if (defInterface == null) {
+                return clazz;
+            } else {
+                if (clazz.equals(defInterface)) {
+                    return clazz;
+                }
+            }
+        }
+
+        throw new IllegalStateException(bean.getClass().getCanonicalName() + " not implement interface " + defInterface
+                .getCanonicalName());
+    }
+
+    private Class getRealBeanClass(Object o, String beanName) {
         Class<? extends Object> realBeanClazz = o.getClass();
 
         //check original class of this bean, just in case it is already proxied
@@ -118,6 +153,12 @@ public class ServiceRegisterPostProcessor implements MergedBeanDefinitionPostPro
         if (rootBeanClazz != null) {
             realBeanClazz = rootBeanClazz;
         }
+
+        return realBeanClazz;
+    }
+
+    private boolean isService(Object o, String beanName) {
+        Class realBeanClazz = getRealBeanClass(o, beanName);
 
         return !realBeanClazz.isInterface()
                 && realBeanClazz.isAnnotationPresent(Publish.class);

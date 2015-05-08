@@ -33,4 +33,9 @@ public class TestServiceConfiguration {
     public TestService testService() {
         return new TestServiceImpl();
     }
+
+    @Bean
+    public Test2Service test2Service() {
+        return new TestTest2ServiceImpl();
+    }
 }
