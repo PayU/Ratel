@@ -27,4 +27,5 @@ import java.lang.annotation.Target;
 @Documented
 @Named
 public @interface Publish {
+    Class<?>[] value() default {};
 }
