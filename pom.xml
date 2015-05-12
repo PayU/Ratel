@@ -92,6 +92,7 @@
         <jackson.version>2.4.4</jackson.version>
         <curator.version>2.6.0</curator.version>
         <powermock.version>1.6.2</powermock.version>
+        <spring.boot.version>1.2.0.RELEASE</spring.boot.version>
     </properties>
 
     <dependencyManagement>
@@ -101,7 +102,7 @@
                 <!-- Import dependency management from Spring Boot -->
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
-                <version>1.2.0.RELEASE</version>
+                <version>${spring.boot.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -163,6 +164,7 @@
                 <plugin>
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-maven-plugin</artifactId>
+                    <version>${spring.boot.version}</version>
                 </plugin>
             </plugins>
         </pluginManagement>
