@@ -47,7 +47,7 @@ public class UnicastingInvocationHandler implements InvocationHandler {
 
         if (StringUtils.isEmpty(serviceAddress)) {
             LOGGER.error("No instance named {}", serviceApi.getName());
-            return null;
+            throw new NoServiceInstanceFound(serviceApi);
         }
 
         final Object clientProxy = clientProxyGenerator.generate(serviceApi, serviceAddress);

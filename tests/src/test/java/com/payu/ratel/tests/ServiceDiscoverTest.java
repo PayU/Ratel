@@ -26,8 +26,10 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.payu.ratel.Discover;
 import com.payu.ratel.client.standalone.RatelStandaloneFactory;
+import com.payu.ratel.proxy.NoServiceInstanceFound;
 import com.payu.ratel.tests.service.ProxableService;
 import com.payu.ratel.tests.service.ProxableServiceConfiguration;
+import com.payu.ratel.tests.service.SecondTestService;
 import com.payu.ratel.tests.service.TestService;
 import com.payu.ratel.tests.service.TestServiceConfiguration;
 import com.payu.ratel.tests.service.provider.ProviderConfiguration;
@@ -46,6 +48,9 @@ public class ServiceDiscoverTest {
 
     @Discover
     private ProxableService proxiedService;
+    
+    @Discover
+    private SecondTestService secondService;
 
     @Autowired
     private RatelTestContext ratelTestCtx;
@@ -86,17 +91,25 @@ public class ServiceDiscoverTest {
 
     }
 
+    @Test
     public void shouldDiscoverServiceWithStandaloneRatelClient() {
 
         // given
-        String zookeeperAddr = "127.0.0.1:" + ratelTestCtx.getServiceDiscoveryPort() + "/server/discovery";
-        RatelStandaloneFactory clientFactory = RatelStandaloneFactory.fromRatelServer(zookeeperAddr);
+        String ratelAddr = "http://127.0.0.1:" + ratelTestCtx.getServiceDiscoveryPort() + "/server/discovery";
+        RatelStandaloneFactory clientFactory = RatelStandaloneFactory.fromRatelServer(ratelAddr);
 
         // when
         TestService testServiceClient = clientFactory.getServiceProxy(TestService.class);
 
         // then
         then(testServiceClient.hello()).isEqualTo("success");
+    }
+    
+    @Test(expected=NoServiceInstanceFound.class)
+    public void shouldThrowExceptionWhenNoServiceInstanceIsFound() {
+        
+        //no instasnce of this service configured
+        secondService.testMethod();
     }
 
 }
