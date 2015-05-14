@@ -16,5 +16,7 @@
 package com.payu.ratel.client;
 
 public interface ClientProxyGenerator {
-    Object generate(Class<?> serviceClazz, String serviceAddress);
+
+
+    <T> T generate(Class<T> serviceClazz, String serviceAddress);
 }

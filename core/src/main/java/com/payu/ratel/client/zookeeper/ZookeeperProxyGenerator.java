@@ -15,18 +15,19 @@
  */
 package com.payu.ratel.client.zookeeper;
 
-import com.payu.ratel.client.ClientProxyDecorator;
-import com.payu.ratel.client.ClientProxyGenerator;
+import org.springframework.core.env.Environment;
 
-public class ZookeeperProxyGenerator implements ClientProxyGenerator {
-    private final ClientProxyDecorator clientProxyDecorator;
+import com.payu.ratel.client.AbstractClientProxyGenerator;
 
-    public ZookeeperProxyGenerator(ClientProxyDecorator clientProxyDecorator) {
-        this.clientProxyDecorator = clientProxyDecorator;
+/**
+ * An implementation of ClientProxyGenerator that builds service client proxies
+ * with use of a Zookeeper server.
+ *
+ */
+public class ZookeeperProxyGenerator extends AbstractClientProxyGenerator {
+
+    public ZookeeperProxyGenerator(Environment env) {
+        super(env);
     }
 
-    @Override
-    public Object generate(Class<?> serviceClazz, String serviceAddress) {
-        return clientProxyDecorator.createServiceClientProxy(serviceClazz, serviceAddress);
-    }
 }
