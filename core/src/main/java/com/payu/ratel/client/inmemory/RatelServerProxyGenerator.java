@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *        http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,19 +15,27 @@
  */
 package com.payu.ratel.client.inmemory;
 
-import com.payu.ratel.client.ClientProxyDecorator;
-import com.payu.ratel.client.ClientProxyGenerator;
+import java.lang.reflect.Proxy;
 
-public class RatelServerProxyGenerator implements ClientProxyGenerator {
-    private final ClientProxyDecorator clientProxyDecorator;
+import org.springframework.core.env.Environment;
 
-    public RatelServerProxyGenerator(ClientProxyDecorator clientProxyDecorator) {
-        this.clientProxyDecorator = clientProxyDecorator;
+import com.payu.ratel.client.AbstractClientProxyGenerator;
+import com.payu.ratel.proxy.monitoring.MonitoringInvocationHandler;
+
+/**
+ * An implementation of ClientProxyGenerator that builds
+ * service client proxies with use of a Ratel server.
+ *
+ */
+public class RatelServerProxyGenerator extends AbstractClientProxyGenerator {
+
+    public RatelServerProxyGenerator(Environment env) {
+        super(env);
     }
 
     @Override
-    public Object generate(Class<?> serviceClazz, String serviceAddress) {
-        return clientProxyDecorator.decorateWithMonitoring(clientProxyDecorator.createServiceClientProxy(serviceClazz, serviceAddress),
-                serviceClazz);
+    protected <T> T decorate(final T object, final Class<T> clazz) {
+        return (T) Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class[] {clazz},
+                new MonitoringInvocationHandler(object));
     }
 }

@@ -23,6 +23,9 @@ public class ProcessContext {
 
     /**
      * Get unique identifier of this process.
+     *
+     * @return the identifier, typically 36 char UUID,
+     *         or <code>null</code>, if it is not set.
      */
     public String getProcessIdentifier() {
         return processIdentifier;
