@@ -27,7 +27,6 @@ import com.payu.ratel.register.RegisterStrategy;
 
 public class InMemoryRegistryBeanProviderFactory implements RegistryStrategiesProvider, InitializingBean {
 
-    private static final String DEFAULT_DISCOVERY_URL = "http://localhost:8090/server/discovery";
 
     private final ConfigurableListableBeanFactory beanFactory;
     private InMemoryServiceRegistryStrategy inMemoryServiceRegistryStrategy;
@@ -38,10 +37,9 @@ public class InMemoryRegistryBeanProviderFactory implements RegistryStrategiesPr
 
     @Override
     public void afterPropertiesSet() {
-        final Environment environment = beanFactory.getBean(Environment.class);
+        final Environment env = beanFactory.getBean(Environment.class);
 
-        final String inMemoryServerAddress = environment.getProperty(
-                RegistryBeanProviderFactory.SERVICE_DISCOVERY_ADDRESS, DEFAULT_DISCOVERY_URL);
+
 
         TaskScheduler taskScheduler = new ThreadPoolTaskScheduler();
         final String schedulerBeanName = taskScheduler.getClass().getName();
@@ -50,7 +48,7 @@ public class InMemoryRegistryBeanProviderFactory implements RegistryStrategiesPr
 
         inMemoryServiceRegistryStrategy = new InMemoryServiceRegistryStrategy();
 
-        inMemoryServiceRegistryStrategy.configureWithServiceDiscoveryAddress(inMemoryServerAddress, taskScheduler);
+        inMemoryServiceRegistryStrategy.configure(env, taskScheduler);
     }
 
     @Override

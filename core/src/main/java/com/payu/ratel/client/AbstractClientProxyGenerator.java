@@ -19,22 +19,25 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Strings.isNullOrEmpty;
 
-import java.lang.reflect.Proxy;
-
+import org.springframework.core.env.Environment;
 import org.springframework.remoting.caucho.HessianProxyFactoryBean;
 
-import com.payu.ratel.proxy.monitoring.MonitoringInvocationHandler;
+public abstract class AbstractClientProxyGenerator implements ClientProxyGenerator {
 
-public class ClientProxyDecorator {
 
-    public static final int CONNECT_READ_TIMEOUT = 30000;
+    private static final long DEFAULT_CONNECT_READ_TIMEOUT = 30000;
 
-    public Object decorateWithMonitoring(final Object object, final Class clazz) {
-        return Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class[]{clazz},
-                new MonitoringInvocationHandler(object));
+    public static final String PROP_CONNECT_TIMEOUT = "ratel.connectTimeout";
+    public static final String PROP_READ_TIMEOUT = "ratel.readTimeout";
+
+    private final Environment env;
+
+    public AbstractClientProxyGenerator(Environment env) {
+        super();
+        this.env = env;
     }
 
-    public <T> T createServiceClientProxy(Class<T> clazz, String serviceUrl) {
+    protected <T> T createServiceClientProxy(Class<T> clazz, String serviceUrl) {
         checkNotNull(clazz, "Given service class cannot be null");
         checkArgument(!isNullOrEmpty(serviceUrl), "Given serviceUrl class cannot be blank");
 
@@ -43,14 +46,32 @@ public class ClientProxyDecorator {
         proxyFactory.setServiceInterface(clazz);
 
         RatelHessianProxyFactory ratelProxyFactory = new RatelHessianProxyFactory();
-        ratelProxyFactory.setConnectTimeout(CONNECT_READ_TIMEOUT);
-        ratelProxyFactory.setReadTimeout(CONNECT_READ_TIMEOUT);
+        ratelProxyFactory.setConnectTimeout(getConnectTimeout());
+        ratelProxyFactory.setReadTimeout(getReadTimeout());
         ratelProxyFactory.setOverloadEnabled(true);
         proxyFactory.setProxyFactory(ratelProxyFactory);
 
         proxyFactory.afterPropertiesSet();
         return (T) proxyFactory.getObject();
 
+    }
+
+    private long getReadTimeout() {
+        return env.getProperty(PROP_READ_TIMEOUT, Long.class,  DEFAULT_CONNECT_READ_TIMEOUT);
+    }
+
+    private long getConnectTimeout() {
+        return env.getProperty(PROP_CONNECT_TIMEOUT, Long.class,  DEFAULT_CONNECT_READ_TIMEOUT);
+    }
+
+    @Override
+    public final <T> T generate(Class<T> serviceClazz, String serviceAddress) {
+        T bareServiceProxy = createServiceClientProxy(serviceClazz, serviceAddress);
+        return decorate(bareServiceProxy, serviceClazz);
+    }
+
+    protected <T> T decorate(T bareServiceProxy, Class<T> serviceClass) {
+        return bareServiceProxy;
     }
 
 }

@@ -38,7 +38,7 @@ public class ZookeeperRegistryBeanProvider implements RegistryStrategiesProvider
     @Override
     public void afterPropertiesSet() throws Exception {
         final Environment environment = beanFactory.getBean(Environment.class);
-        zookeeperStrategy.configureWithZookeeperHost(environment.getProperty(RegistryBeanProviderFactory.SERVICE_DISCOVERY_ZK_HOST));
+        zookeeperStrategy.configure(environment);
 
         beanFactory.registerSingleton(zookeeperStrategy.getServiceDiscovery().getClass().getName(), zookeeperStrategy.getServiceDiscovery());
     }
