@@ -16,9 +16,7 @@
 package com.payu.ratel.tests.zookeeper;
 
 import static com.jayway.awaitility.Awaitility.await;
-
-import static com.payu.ratel.config.beans.JbossPropertySelfAddressProvider.JBOSS_BIND_ADDRESS;
-import static com.payu.ratel.config.beans.JbossPropertySelfAddressProvider.JBOSS_BIND_PORT;
+import static com.payu.ratel.config.beans.RatelPropertySelfAddressProvider.RATEL_BIND_ADDRESS;
 import static com.payu.ratel.config.beans.RegistryBeanProviderFactory.SERVICE_DISCOVERY_ZK_HOST;
 import static org.assertj.core.api.BDDAssertions.then;
 
@@ -34,6 +32,7 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +40,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
@@ -55,57 +55,79 @@ import com.payu.ratel.tests.service.TestServiceConfiguration;
 @SpringApplicationConfiguration(classes = { ServiceDiscoveryConfig.class, DiscoveryServerMain.class })
 @IntegrationTest({ SERVICE_DISCOVERY_ZK_HOST + ":127.0.0.1:" + ZookeeperServicePublishingTest.ZK_PORT })
 @WebAppConfiguration
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class ZookeeperServicePublishingTest {
+
     public static final String SPRING_JMX_ENABLED_FALSE = "--spring.jmx.enabled=false";
     public static final int ZK_PORT = 2185;
-
-    private ConfigurableApplicationContext remoteContext;
-
-    @Discover
-    private TestService testService;
-
+    public static final String ZK_HOST = "127.0.0.1:" + ZK_PORT;
     private static TestingServer zkServer;
 
-    @Autowired
-    private ServiceDiscovery<TestService> serviceDiscovery;
 
     private ServiceProvider<TestService> serviceProvider;
+    @Discover
+    private TestService testService;
+    private ConfigurableApplicationContext remoteContext;
+    @Autowired
+    private ServiceDiscovery<TestService> serviceDiscovery;
+    private int port = 8035;
 
     @BeforeClass
     public static void startZookeeper() throws Exception {
         zkServer = new TestingServer(ZK_PORT);
-    }
-
-    @Before
-    public void before() throws Exception {
-        remoteContext = SpringApplication.run(TestServiceConfiguration.class, "--server.port=8035", "--"
-                + JBOSS_BIND_ADDRESS + "=localhost", "--" + JBOSS_BIND_PORT + "=8035", "--" + SERVICE_DISCOVERY_ZK_HOST
-                + "=127.0.0.1:" + ZK_PORT, SPRING_JMX_ENABLED_FALSE);
-
-        serviceProvider = serviceDiscovery.serviceProviderBuilder().serviceName(TestService.class.getName())
-                .providerStrategy(new RoundRobinStrategy<TestService>()).build();
-        serviceProvider.start();
-    }
-
-    @After
-    public void close() throws IOException {
-        serviceProvider.close();
-        remoteContext.close();
+        zkServer.start();
     }
 
     @AfterClass
     public static void closeZookeeper() throws IOException {
         zkServer.stop();
+        zkServer.close();
     }
 
     @Test
     public void shouldDiscoverService() throws InterruptedException {
-        waitForTestServiceRegistration();
+        //given
 
         // when
         final String result = testService.hello();
 
         then(result).isEqualTo("success");
+    }
+
+    @Test
+    public void shouldCreateStandaloneClientWithZookeeper() {
+        //given
+        RatelStandaloneFactory ratelStandaloneFactory = RatelStandaloneFactory.fromZookeeperServer(ZK_HOST);
+
+        //when
+        TestService testedService = ratelStandaloneFactory.getServiceProxy(TestService.class);
+
+        then(testedService.hello()).isEqualTo("success");
+    }
+
+    @Test
+    @Ignore
+    public void shouldResolveZookeeperHostFromCliProperty() {
+        //given
+        System.setProperty(SERVICE_DISCOVERY_ZK_HOST, ZK_HOST);
+
+        //when
+        final TestService testedService = RatelStandaloneFactory.fromZookeeperServer().getServiceProxy(TestService.class);
+
+        then(testedService.hello()).isEqualTo("success");
+
+    }
+
+    @Before
+    public void before() throws Exception {
+        remoteContext = SpringApplication.run(TestServiceConfiguration.class, "--server.port=" + port, "--"
+                + RATEL_BIND_ADDRESS + "=localhost:" + port, "--" + SERVICE_DISCOVERY_ZK_HOST
+                + "=" + ZK_HOST, SPRING_JMX_ENABLED_FALSE);
+
+        serviceProvider = serviceDiscovery.serviceProviderBuilder().serviceName(TestService.class.getName())
+                .providerStrategy(new RoundRobinStrategy<TestService>()).build();
+        serviceProvider.start();
+        waitForTestServiceRegistration();
     }
 
     private void waitForTestServiceRegistration() {
@@ -117,20 +139,8 @@ public class ZookeeperServicePublishingTest {
         });
     }
 
-    @Test
-    public void shouldDiscoverServiceWithStandaloneZookeeperClient() throws Exception {
-
-        // given
-        waitForTestServiceRegistration();
-
-        String zookeeperAddr = "127.0.0.1:" + ZookeeperServicePublishingTest.ZK_PORT;
-        RatelStandaloneFactory clientFactory = RatelStandaloneFactory.fromZookeeperServer(zookeeperAddr);
-
-        // when
-        TestService testServiceClient = clientFactory.getServiceProxy(TestService.class);
-
-        // then
-        then(testServiceClient.hello()).isEqualTo("success");
+    @After
+    public void close() throws IOException {
+        remoteContext.close();
     }
-
 }

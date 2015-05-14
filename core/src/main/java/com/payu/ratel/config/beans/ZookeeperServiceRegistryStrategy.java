@@ -38,8 +38,8 @@ public class ZookeeperServiceRegistryStrategy implements RegistryStrategiesProvi
         return zookeeperProxyGenerator;
     }
 
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    public void configureWithZookeeperHost(String zkHostAddress) throws Exception {
+    @SuppressWarnings("PMD.AvoidCatchingGenericException")
+    public void configureWithZookeeperHost(String zkHostAddress) {
         System.setProperty("zookeeper.sasl.client", "false");
         this.curatorFramework = CuratorFrameworkFactory.newClient(zkHostAddress, new ExponentialBackoffRetry(1000, 3));
 
@@ -48,7 +48,11 @@ public class ZookeeperServiceRegistryStrategy implements RegistryStrategiesProvi
         this.serviceDiscovery = ServiceDiscoveryBuilder.builder(Void.class).client(this.curatorFramework)
                 .basePath("services").build();
 
-        getServiceDiscovery().start();
+        try {
+            getServiceDiscovery().start();
+        } catch (Exception e) {
+            throw new IllegalStateException("Service discovery start failed.", e);
+        }
 
         this.zookeeperRegistry = new ZookeeperRegistry(getServiceDiscovery());
         this.zookeeperFetcher = new ZookeeperFetcher(getServiceDiscovery());
