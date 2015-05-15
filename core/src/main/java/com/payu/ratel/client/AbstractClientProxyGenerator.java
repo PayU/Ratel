@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *        http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -19,22 +19,24 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Strings.isNullOrEmpty;
 
+import org.springframework.beans.factory.BeanFactory;
 import org.springframework.core.env.Environment;
 import org.springframework.remoting.caucho.HessianProxyFactoryBean;
 
 public abstract class AbstractClientProxyGenerator implements ClientProxyGenerator {
-
 
     private static final long DEFAULT_CONNECT_READ_TIMEOUT = 30000;
 
     public static final String PROP_CONNECT_TIMEOUT = "ratel.connectTimeout";
     public static final String PROP_READ_TIMEOUT = "ratel.readTimeout";
 
+    private final BeanFactory beanFactory;
     private final Environment env;
 
-    public AbstractClientProxyGenerator(Environment env) {
+    public AbstractClientProxyGenerator(BeanFactory beanFactory) {
         super();
-        this.env = env;
+        this.beanFactory = beanFactory;
+        this.env = beanFactory.getBean(Environment.class);
     }
 
     protected <T> T createServiceClientProxy(Class<T> clazz, String serviceUrl) {
@@ -50,6 +52,7 @@ public abstract class AbstractClientProxyGenerator implements ClientProxyGenerat
         ratelProxyFactory.setReadTimeout(getReadTimeout());
         ratelProxyFactory.setOverloadEnabled(true);
         proxyFactory.setProxyFactory(ratelProxyFactory);
+        beanFactory.containsBean("abc");
 
         proxyFactory.afterPropertiesSet();
         return (T) proxyFactory.getObject();
@@ -57,11 +60,11 @@ public abstract class AbstractClientProxyGenerator implements ClientProxyGenerat
     }
 
     private long getReadTimeout() {
-        return env.getProperty(PROP_READ_TIMEOUT, Long.class,  DEFAULT_CONNECT_READ_TIMEOUT);
+        return env.getProperty(PROP_READ_TIMEOUT, Long.class, DEFAULT_CONNECT_READ_TIMEOUT);
     }
 
     private long getConnectTimeout() {
-        return env.getProperty(PROP_CONNECT_TIMEOUT, Long.class,  DEFAULT_CONNECT_READ_TIMEOUT);
+        return env.getProperty(PROP_CONNECT_TIMEOUT, Long.class, DEFAULT_CONNECT_READ_TIMEOUT);
     }
 
     @Override
