@@ -33,7 +33,7 @@ public class ServiceTwoInterfacesDiscoverTest {
     private Test2Service test2Service;
 
     @Test
-    public void shouldDiscoverTestService() {
+    public void shouldDiscoverTest2Service() {
 
         // when
         final int result = test2Service.power(2);
