@@ -36,6 +36,9 @@ public class UnicastingInvocationHandler implements InvocationHandler {
 
 
     public UnicastingInvocationHandler(FetchStrategy fetchStrategy, Class<?> serviceApi, ClientProxyGenerator clientProxyGenerator) {
+        assert fetchStrategy != null;
+        assert serviceApi.isInterface();
+        assert clientProxyGenerator != null;
         this.fetchStrategy = fetchStrategy;
         this.serviceApi = serviceApi;
         this.clientProxyGenerator = clientProxyGenerator;

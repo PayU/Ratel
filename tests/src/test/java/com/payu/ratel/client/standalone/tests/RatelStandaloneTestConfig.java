@@ -1,0 +1,16 @@
+package com.payu.ratel.client.standalone.tests;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+import com.payu.ratel.client.standalone.RatelStandaloneFactory;
+
+@Configuration
+public class RatelStandaloneTestConfig {
+
+    @Bean
+    public RatelStandaloneFactory standaloneFactory() {
+        return new RatelStandaloneFactory();
+    }
+}
+

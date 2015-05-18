@@ -85,9 +85,11 @@ public class RatelStandaloneFactory implements BeanFactoryAware {
 
     @Override
     public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
-//        this.beanFactory = beanFactory;
-        //DOZRO: remove this cast from here
-        RegistryStrategiesProvider create = new RegistryBeanProviderFactory().create((ConfigurableListableBeanFactory) beanFactory);
+        // this.beanFactory = beanFactory;
+        // DOZRO: remove this cast from here
+        RegistryStrategiesProvider create = new RegistryBeanProviderFactory()
+                        .create((ConfigurableListableBeanFactory) beanFactory);
+
         this.clientProducer = new RatelClientProducer(create.getFetchStrategy(), create.getClientProxyGenerator());
     }
 }
