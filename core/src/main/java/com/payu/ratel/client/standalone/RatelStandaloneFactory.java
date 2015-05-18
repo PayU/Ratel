@@ -3,7 +3,6 @@ package com.payu.ratel.client.standalone;
 import static com.payu.ratel.config.beans.RegistryBeanProviderFactory.SERVICE_DISCOVERY_ADDRESS;
 import static com.payu.ratel.config.beans.RegistryBeanProviderFactory.SERVICE_DISCOVERY_ZK_HOST;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,14 +16,15 @@ import org.springframework.core.env.MapPropertySource;
 import org.springframework.core.env.StandardEnvironment;
 
 import com.payu.ratel.client.RatelClientProducer;
-import com.payu.ratel.config.beans.InMemoryRegistryBeanProviderFactory;
+import com.payu.ratel.client.RatelServiceCallPublisher;
+import com.payu.ratel.client.ServiceCallListener;
 import com.payu.ratel.config.beans.RegistryBeanProviderFactory;
 import com.payu.ratel.config.beans.RegistryStrategiesProvider;
-import com.payu.ratel.config.beans.ZookeeperRegistryBeanProvider;
 
-public class RatelStandaloneFactory implements BeanFactoryAware {
+public class RatelStandaloneFactory implements BeanFactoryAware, RatelServiceCallPublisher {
 
     private RatelClientProducer clientProducer;
+    private ConfigurableListableBeanFactory beanFactory;
 
     public static RatelStandaloneFactory fromZookeeperServer(String zookeeperAddress) {
         RatelStandaloneFactory result = new RatelStandaloneFactory();
@@ -32,12 +32,8 @@ public class RatelStandaloneFactory implements BeanFactoryAware {
         ConfigurableListableBeanFactory beanFactory = new BeanFactoryBuilder("zookeeperAddr").//
                 withProperty(SERVICE_DISCOVERY_ZK_HOST, zookeeperAddress).//
                 build();
-        ZookeeperRegistryBeanProvider zookeeperStrategy = new ZookeeperRegistryBeanProvider(beanFactory);
+        result.setBeanFactory(beanFactory);
 
-        zookeeperStrategy.afterPropertiesSet();
-
-        result.clientProducer = new RatelClientProducer(zookeeperStrategy.getFetchStrategy(),
-                zookeeperStrategy.getClientProxyGenerator());
         return result;
     }
 
@@ -46,16 +42,9 @@ public class RatelStandaloneFactory implements BeanFactoryAware {
         ConfigurableListableBeanFactory beanFactory = new BeanFactoryBuilder("ratelAddr").//
                 withProperty(SERVICE_DISCOVERY_ADDRESS, ratelServerAddr).//
                 build();
-        InMemoryRegistryBeanProviderFactory ratelStrategy = new InMemoryRegistryBeanProviderFactory(beanFactory);
 
-        ConfigurableEnvironment env = new StandardEnvironment();
-        env.getPropertySources().addFirst(
-                new MapPropertySource("ratelCustomConfig", Collections.singletonMap(
-                        SERVICE_DISCOVERY_ADDRESS, ((Object) ratelServerAddr))));
-        ratelStrategy.afterPropertiesSet();
+        result.setBeanFactory(beanFactory);
 
-        result.clientProducer = new RatelClientProducer(ratelStrategy.getFetchStrategy(),
-                ratelStrategy.getClientProxyGenerator());
         return result;
     }
 
@@ -85,17 +74,21 @@ public class RatelStandaloneFactory implements BeanFactoryAware {
 
     @Override
     public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
-        // this.beanFactory = beanFactory;
+        this.beanFactory = (ConfigurableListableBeanFactory) beanFactory;
         // DOZRO: remove this cast from here
         RegistryStrategiesProvider create = new RegistryBeanProviderFactory()
-                        .create((ConfigurableListableBeanFactory) beanFactory);
+                .create((ConfigurableListableBeanFactory) beanFactory);
 
         this.clientProducer = new RatelClientProducer(create.getFetchStrategy(), create.getClientProxyGenerator());
+    }
+
+    public void addRatelServiceCallListener(ServiceCallListener listener) {
+        this.beanFactory.registerSingleton(listener.getClass().getName(), listener);
     }
 }
 
 class BeanFactoryBuilder {
-    private final  String name;
+    private final String name;
     private final Map<String, Object> environmentProperties = new HashMap<>();
 
     public BeanFactoryBuilder(String sourcePropertyName) {

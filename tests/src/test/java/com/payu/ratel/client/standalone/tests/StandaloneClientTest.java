@@ -19,6 +19,10 @@ import static com.payu.ratel.config.beans.JbossPropertySelfAddressProvider.JBOSS
 import static com.payu.ratel.config.beans.JbossPropertySelfAddressProvider.JBOSS_BIND_PORT;
 import static com.payu.ratel.config.beans.RegistryBeanProviderFactory.SERVICE_DISCOVERY_ADDRESS;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 import java.util.concurrent.TimeUnit;
 
@@ -34,8 +38,11 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.jayway.awaitility.Awaitility;
+import com.payu.ratel.client.ServiceCallListener;
 import com.payu.ratel.client.standalone.RatelStandaloneFactory;
 import com.payu.ratel.config.ServiceDiscoveryConfig;
+import com.payu.ratel.context.ServiceCallEvent;
+import com.payu.ratel.context.ServiceResponseEvent;
 import com.payu.ratel.server.DiscoveryServerMain;
 import com.payu.ratel.server.InMemoryDiscoveryServer;
 import com.payu.ratel.tests.service.TestService;
@@ -86,6 +93,22 @@ public class StandaloneClientTest {
 
         // then
         assertThat(result).isEqualTo("success");
+    }
+
+    @Test
+    public void shouldUseAddedServiceCallListenerStandaloneClientFactory() {
+
+        TestService testService = standaloneFactory.getServiceProxy(TestService.class);
+        ServiceCallListener listener = mock(ServiceCallListener.class);
+        standaloneFactory.addRatelServiceCallListener(listener);
+
+        // when
+        final String result = testService.hello();
+
+        // then
+        assertThat(result).isEqualTo("success");
+        verify(listener, times(1)).serviceCalled(any(ServiceCallEvent.class));
+        verify(listener, times(1)).serviceResponded(any(ServiceResponseEvent.class));
     }
 
 }

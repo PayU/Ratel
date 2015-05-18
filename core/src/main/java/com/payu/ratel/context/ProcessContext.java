@@ -52,5 +52,9 @@ public class ProcessContext {
         setProcessIdentifier(null);
     }
 
+    @Override
+    public String toString() {
+        return "ProcessContext [processIdentifier=" + processIdentifier + "]";
+    }
 
 }

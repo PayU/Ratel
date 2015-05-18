@@ -15,7 +15,7 @@
  */
 package com.payu.ratel.client.zookeeper;
 
-import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 
 import com.payu.ratel.client.AbstractClientProxyGenerator;
 
@@ -26,7 +26,7 @@ import com.payu.ratel.client.AbstractClientProxyGenerator;
  */
 public class ZookeeperProxyGenerator extends AbstractClientProxyGenerator {
 
-    public ZookeeperProxyGenerator(BeanFactory beanFactory) {
+    public ZookeeperProxyGenerator(ConfigurableListableBeanFactory beanFactory) {
         super(beanFactory);
     }
 

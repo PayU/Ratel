@@ -19,9 +19,10 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Strings.isNullOrEmpty;
 
-import org.springframework.beans.factory.BeanFactory;
+import java.util.Collection;
+
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.core.env.Environment;
-import org.springframework.remoting.caucho.HessianProxyFactoryBean;
 
 public abstract class AbstractClientProxyGenerator implements ClientProxyGenerator {
 
@@ -30,10 +31,10 @@ public abstract class AbstractClientProxyGenerator implements ClientProxyGenerat
     public static final String PROP_CONNECT_TIMEOUT = "ratel.connectTimeout";
     public static final String PROP_READ_TIMEOUT = "ratel.readTimeout";
 
-    private final BeanFactory beanFactory;
+    private final ConfigurableListableBeanFactory beanFactory;
     private final Environment env;
 
-    public AbstractClientProxyGenerator(BeanFactory beanFactory) {
+    public AbstractClientProxyGenerator(ConfigurableListableBeanFactory beanFactory) {
         super();
         this.beanFactory = beanFactory;
         this.env = beanFactory.getBean(Environment.class);
@@ -43,20 +44,29 @@ public abstract class AbstractClientProxyGenerator implements ClientProxyGenerat
         checkNotNull(clazz, "Given service class cannot be null");
         checkArgument(!isNullOrEmpty(serviceUrl), "Given serviceUrl class cannot be blank");
 
-        HessianProxyFactoryBean proxyFactory = new RatelHessianProxyFactoryBean();
+        RatelHessianProxyFactoryBean proxyFactory = new RatelHessianProxyFactoryBean();
         proxyFactory.setServiceUrl(serviceUrl);
         proxyFactory.setServiceInterface(clazz);
+        setServiceCallListeners(proxyFactory);
 
         RatelHessianProxyFactory ratelProxyFactory = new RatelHessianProxyFactory();
         ratelProxyFactory.setConnectTimeout(getConnectTimeout());
         ratelProxyFactory.setReadTimeout(getReadTimeout());
         ratelProxyFactory.setOverloadEnabled(true);
         proxyFactory.setProxyFactory(ratelProxyFactory);
-        beanFactory.containsBean("abc");
 
         proxyFactory.afterPropertiesSet();
+
         return (T) proxyFactory.getObject();
 
+    }
+
+    private void setServiceCallListeners(RatelHessianProxyFactoryBean proxyFactory) {
+        Collection<ServiceCallListener> serviceCallListeners = beanFactory.getBeansOfType(
+                ServiceCallListener.class).values();
+        for (ServiceCallListener serviceCallListener : serviceCallListeners) {
+            proxyFactory.addCallListeners(serviceCallListener);
+        }
     }
 
     private long getReadTimeout() {

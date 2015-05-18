@@ -36,26 +36,26 @@ public class RatelClientProducer {
 
     @SuppressWarnings("unchecked")
     private <T> T produceUnicaster(Class<T> clazz) {
-        return (T) Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class[] {clazz },
+        return (T) Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class[] {clazz},
                 new UnicastingInvocationHandler(fetchStrategy, clazz, clientProxyGenerator));
     }
 
     @SuppressWarnings("unchecked")
     private <T> T decorateWithCaching(final Object object, final Class<T> clazz) {
-        return (T) Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class[] {clazz },
+        return (T) Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class[] {clazz},
                 new CacheInvocationHandler(object));
     }
 
     @SuppressWarnings("unchecked")
     private <T> T decorateWithRetryPolicy(final Object object, final Class<T> clazz,
             final Class<? extends Throwable> exception) {
-        return (T) Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class[] {clazz },
+        return (T) Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class[] {clazz},
                 new RetryPolicyInvocationHandler(object, exception));
     }
 
     public Object produceBroadcaster() {
         return Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(),
-                new Class[] {EventCannon.class }, new BroadcastingInvocationHandler(fetchStrategy,
+                new Class[] {EventCannon.class}, new BroadcastingInvocationHandler(fetchStrategy,
                         clientProxyGenerator));
     }
 

@@ -1,58 +1,42 @@
 package com.payu.ratel.context;
 
-import java.net.URL;
-import java.util.Arrays;
-
 public class ServiceResponseEvent {
 
-    private final String methodName;
-    private final Object[] args;
-    private final URL url;
-    private final Class apiType;
     private final ProcessContext processContext;
     private final long nanoTime;
 
-    public ServiceResponseEvent(String methodName, Object[] args, URL url, @SuppressWarnings("rawtypes") Class apiType,
-            ProcessContext processContext, long nanoTime) {
+    private final ServiceCallInput input;
+    private final ServiceCallResult output;
+
+    public ServiceResponseEvent(ProcessContext processContext, long nanoTime, ServiceCallInput input,
+            ServiceCallResult output) {
         super();
-        this.methodName = methodName;
-        this.args = copyOf(args);
-        this.url = url;
-        this.apiType = apiType;
+        this.input = input;
         this.processContext = processContext;
         this.nanoTime = nanoTime;
+        this.output = output;
     }
 
-    public String getMethodName() {
-        return methodName;
-    }
-
-    public Object[] getArgs() {
-        return Arrays.copyOf(args, args.length);
-    }
-
-    public URL getUrl() {
-        return url;
-    }
-
-    public Class getApiType() {
-        return apiType;
+    public ServiceCallInput getInput() {
+        return input;
     }
 
     public ProcessContext getProcessContext() {
         return processContext;
     }
 
+    public ServiceCallResult getOutput() {
+        return output;
+    }
+
     public long getNanoTime() {
         return nanoTime;
     }
 
-
-    private Object[] copyOf(Object[] args) {
-        if (args == null) {
-            return null;
-        } else {
-            return Arrays.copyOf(args, args.length);
-        }
+    @Override
+    public String toString() {
+        return "ServiceResponseEvent [processContext=" + processContext + ", nanoTime=" + nanoTime + ", input=" + input
+                + ", output=" + output + "]";
     }
+
 }
