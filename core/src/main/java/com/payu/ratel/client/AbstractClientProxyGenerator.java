@@ -62,9 +62,9 @@ public abstract class AbstractClientProxyGenerator implements ClientProxyGenerat
     }
 
     private void setServiceCallListeners(RatelHessianProxyFactoryBean proxyFactory) {
-        Collection<ServiceCallListener> serviceCallListeners = beanFactory.getBeansOfType(
-                ServiceCallListener.class).values();
-        for (ServiceCallListener serviceCallListener : serviceCallListeners) {
+        Collection<RemoteServiceCallListener> serviceCallListeners = getBeanFactory().getBeansOfType(
+                RemoteServiceCallListener.class).values();
+        for (RemoteServiceCallListener serviceCallListener : serviceCallListeners) {
             proxyFactory.addCallListeners(serviceCallListener);
         }
     }
@@ -85,6 +85,10 @@ public abstract class AbstractClientProxyGenerator implements ClientProxyGenerat
 
     protected <T> T decorate(T bareServiceProxy, Class<T> serviceClass) {
         return bareServiceProxy;
+    }
+
+    protected ConfigurableListableBeanFactory getBeanFactory() {
+        return beanFactory;
     }
 
 }

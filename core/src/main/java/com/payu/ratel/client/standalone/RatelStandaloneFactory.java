@@ -17,7 +17,7 @@ import org.springframework.core.env.StandardEnvironment;
 
 import com.payu.ratel.client.RatelClientProducer;
 import com.payu.ratel.client.RatelServiceCallPublisher;
-import com.payu.ratel.client.ServiceCallListener;
+import com.payu.ratel.client.RemoteServiceCallListener;
 import com.payu.ratel.config.beans.RegistryBeanProviderFactory;
 import com.payu.ratel.config.beans.RegistryStrategiesProvider;
 
@@ -27,22 +27,22 @@ public class RatelStandaloneFactory implements BeanFactoryAware, RatelServiceCal
     private ConfigurableListableBeanFactory beanFactory;
 
     public static RatelStandaloneFactory fromZookeeperServer(String zookeeperAddress) {
-        RatelStandaloneFactory result = new RatelStandaloneFactory();
-
         ConfigurableListableBeanFactory beanFactory = new BeanFactoryBuilder("zookeeperAddr").//
                 withProperty(SERVICE_DISCOVERY_ZK_HOST, zookeeperAddress).//
                 build();
+
+        RatelStandaloneFactory result = new RatelStandaloneFactory();
         result.setBeanFactory(beanFactory);
 
         return result;
     }
 
     public static RatelStandaloneFactory fromRatelServer(String ratelServerAddr) {
-        RatelStandaloneFactory result = new RatelStandaloneFactory();
         ConfigurableListableBeanFactory beanFactory = new BeanFactoryBuilder("ratelAddr").//
                 withProperty(SERVICE_DISCOVERY_ADDRESS, ratelServerAddr).//
                 build();
 
+        RatelStandaloneFactory result = new RatelStandaloneFactory();
         result.setBeanFactory(beanFactory);
 
         return result;
@@ -74,15 +74,21 @@ public class RatelStandaloneFactory implements BeanFactoryAware, RatelServiceCal
 
     @Override
     public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
-        this.beanFactory = (ConfigurableListableBeanFactory) beanFactory;
-        // DOZRO: remove this cast from here
-        RegistryStrategiesProvider create = new RegistryBeanProviderFactory()
-                .create((ConfigurableListableBeanFactory) beanFactory);
+        if (beanFactory instanceof ConfigurableListableBeanFactory) {
+            ConfigurableListableBeanFactory lbl = (ConfigurableListableBeanFactory) beanFactory;
 
-        this.clientProducer = new RatelClientProducer(create.getFetchStrategy(), create.getClientProxyGenerator());
+            this.beanFactory = lbl;
+            RegistryStrategiesProvider strategiesProvider = new RegistryBeanProviderFactory()
+                    .create(this.beanFactory);
+
+            this.clientProducer = new RatelClientProducer(strategiesProvider.getFetchStrategy(),
+                    strategiesProvider.getClientProxyGenerator());
+        } else {
+            throw new IllegalArgumentException("Only ConfigurableListableBeanFactory is provided ");
+        }
     }
 
-    public void addRatelServiceCallListener(ServiceCallListener listener) {
+    public void addRatelServiceCallListener(RemoteServiceCallListener listener) {
         this.beanFactory.registerSingleton(listener.getClass().getName(), listener);
     }
 }

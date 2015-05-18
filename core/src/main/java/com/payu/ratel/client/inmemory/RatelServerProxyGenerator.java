@@ -29,6 +29,7 @@ import com.payu.ratel.proxy.monitoring.MonitoringInvocationHandler;
  */
 public class RatelServerProxyGenerator extends AbstractClientProxyGenerator {
 
+
     public RatelServerProxyGenerator(ConfigurableListableBeanFactory beanFactory) {
         super(beanFactory);
     }
@@ -36,6 +37,6 @@ public class RatelServerProxyGenerator extends AbstractClientProxyGenerator {
     @Override
     protected <T> T decorate(final T object, final Class<T> clazz) {
         return (T) Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class[] {clazz},
-                new MonitoringInvocationHandler(object));
+                new MonitoringInvocationHandler(getBeanFactory(), object, clazz));
     }
 }

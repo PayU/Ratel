@@ -4,7 +4,6 @@ public class ServiceCallEvent {
 
     private final ProcessContext processContext;
     private final long nanoTime;
-
     private final ServiceCallInput input;
 
     public ServiceCallEvent(ProcessContext processContext, long nanoTime, ServiceCallInput input) {

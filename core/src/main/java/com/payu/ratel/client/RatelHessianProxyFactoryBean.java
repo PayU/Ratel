@@ -24,21 +24,23 @@ import org.springframework.remoting.RemoteConnectFailureException;
 import org.springframework.remoting.caucho.HessianProxyFactoryBean;
 
 import com.payu.ratel.context.ProcessContext;
+import com.payu.ratel.context.RemoteServiceCallEvent;
 import com.payu.ratel.context.ServiceCallEvent;
 import com.payu.ratel.context.ServiceCallInput;
 import com.payu.ratel.context.ServiceCallResult;
+import com.payu.ratel.context.RemoteServiceResponseEvent;
 import com.payu.ratel.context.ServiceResponseEvent;
 
 public class RatelHessianProxyFactoryBean extends HessianProxyFactoryBean {
 
-    private List<ServiceCallListener> callListeners = new LinkedList<>();
+    private List<RemoteServiceCallListener> callListeners = new LinkedList<>();
 
-    public void setCallListeners(List<ServiceCallListener> callListeners) {
+    public void setCallListeners(List<RemoteServiceCallListener> callListeners) {
         this.callListeners = callListeners;
     }
 
-    public void addCallListeners(ServiceCallListener... callListeners) {
-        for (ServiceCallListener cl : callListeners) {
+    public void addCallListeners(RemoteServiceCallListener... callListeners) {
+        for (RemoteServiceCallListener cl : callListeners) {
             this.callListeners.add(cl);
         }
     }
@@ -74,50 +76,58 @@ public class RatelHessianProxyFactoryBean extends HessianProxyFactoryBean {
 
     private void beforeServiceCall(MethodInvocation invocation) {
         ServiceCallEvent event = createServiceCallEvent(invocation);
-        for (ServiceCallListener callListener : callListeners) {
-            callListener.serviceCalled(event);
-        }
+        publishServiceCallEvent(event);
+    }
 
+    private void publishServiceCallEvent(ServiceCallEvent event) {
+        for (RemoteServiceCallListener callListener : callListeners) {
+            callListener.remoteServiceCalled(event);
+        }
     }
 
     private ServiceCallEvent createServiceCallEvent(MethodInvocation invocation) {
-        return new ServiceCallEvent(
+        return new RemoteServiceCallEvent(
                 ProcessContext.getInstance(),
                 System.nanoTime(),
+                this.getServiceUrl(),
                 new ServiceCallInput(invocation.getMethod().getName(),
-                        invocation.getArguments(), this.getServiceUrl(), invocation.getMethod().getDeclaringClass()));
+                        invocation.getArguments(), invocation.getMethod().getDeclaringClass()));
     }
 
     private void afterServiceSuccessfulCall(MethodInvocation invocation, Object result) {
         ServiceResponseEvent event = createServiceRespondEvent(invocation, result);
-        for (ServiceCallListener callListener : callListeners) {
-            callListener.serviceResponded(event);
-        }
+        publishServiceResponseEvent(event);
 
+    }
+
+    private void publishServiceResponseEvent(ServiceResponseEvent event) {
+        for (RemoteServiceCallListener callListener : callListeners) {
+            callListener.remoteServiceResponded(event);
+        }
     }
 
     private void afterServiceException(MethodInvocation invocation, Exception e) {
         ServiceResponseEvent event = createServiceExceptionEvent(invocation, e);
-        for (ServiceCallListener callListener : callListeners) {
-            callListener.serviceResponded(event);
-        }
+        publishServiceResponseEvent(event);
 
     }
 
     private ServiceResponseEvent createServiceRespondEvent(MethodInvocation invocation, Object result) {
-        return new ServiceResponseEvent(
+        return new RemoteServiceResponseEvent(
                 ProcessContext.getInstance(),
                 System.nanoTime(),
-                new ServiceCallInput(invocation.getMethod().getName(), invocation.getArguments(), this.getServiceUrl(),
+                this.getServiceUrl(),
+                new ServiceCallInput(invocation.getMethod().getName(), invocation.getArguments(),
                         invocation.getMethod().getDeclaringClass()), ServiceCallResult.success(result));
     }
 
     private ServiceResponseEvent createServiceExceptionEvent(MethodInvocation invocation,
             Exception exception) {
-        return new ServiceResponseEvent(
+        return new RemoteServiceResponseEvent(
                 ProcessContext.getInstance(),
                 System.nanoTime(),
-                new ServiceCallInput(invocation.getMethod().getName(), invocation.getArguments(), this.getServiceUrl(),
+                this.getServiceUrl(),
+                new ServiceCallInput(invocation.getMethod().getName(), invocation.getArguments(),
                         invocation.getMethod().getDeclaringClass()), ServiceCallResult.exception(exception));
     }
 

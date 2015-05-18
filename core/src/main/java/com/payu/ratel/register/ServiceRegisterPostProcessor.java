@@ -99,7 +99,7 @@ public class ServiceRegisterPostProcessor implements MergedBeanDefinitionPostPro
     public Object decorateWithMonitoring(final Object object, final Class clazz) {
         return Proxy
                 .newProxyInstance(Thread.currentThread().getContextClassLoader(),
-                        new Class[]{clazz}, new MonitoringInvocationHandler(object));
+                        new Class[]{clazz}, new MonitoringInvocationHandler(configurableListableBeanFactory, object, clazz));
     }
 
     private Class<?> getFirstInterface(Object bean) {

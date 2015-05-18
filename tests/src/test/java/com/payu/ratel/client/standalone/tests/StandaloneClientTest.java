@@ -38,11 +38,11 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.jayway.awaitility.Awaitility;
-import com.payu.ratel.client.ServiceCallListener;
+import com.payu.ratel.client.RemoteServiceCallListener;
 import com.payu.ratel.client.standalone.RatelStandaloneFactory;
 import com.payu.ratel.config.ServiceDiscoveryConfig;
-import com.payu.ratel.context.ServiceCallEvent;
-import com.payu.ratel.context.ServiceResponseEvent;
+import com.payu.ratel.context.RemoteServiceCallEvent;
+import com.payu.ratel.context.RemoteServiceResponseEvent;
 import com.payu.ratel.server.DiscoveryServerMain;
 import com.payu.ratel.server.InMemoryDiscoveryServer;
 import com.payu.ratel.tests.service.TestService;
@@ -99,7 +99,7 @@ public class StandaloneClientTest {
     public void shouldUseAddedServiceCallListenerStandaloneClientFactory() {
 
         TestService testService = standaloneFactory.getServiceProxy(TestService.class);
-        ServiceCallListener listener = mock(ServiceCallListener.class);
+        RemoteServiceCallListener listener = mock(RemoteServiceCallListener.class);
         standaloneFactory.addRatelServiceCallListener(listener);
 
         // when
@@ -107,8 +107,8 @@ public class StandaloneClientTest {
 
         // then
         assertThat(result).isEqualTo("success");
-        verify(listener, times(1)).serviceCalled(any(ServiceCallEvent.class));
-        verify(listener, times(1)).serviceResponded(any(ServiceResponseEvent.class));
+        verify(listener, times(1)).remoteServiceCalled(any(RemoteServiceCallEvent.class));
+        verify(listener, times(1)).remoteServiceResponded(any(RemoteServiceResponseEvent.class));
     }
 
 }

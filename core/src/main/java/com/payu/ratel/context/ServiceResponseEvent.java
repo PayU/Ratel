@@ -11,9 +11,9 @@ public class ServiceResponseEvent {
     public ServiceResponseEvent(ProcessContext processContext, long nanoTime, ServiceCallInput input,
             ServiceCallResult output) {
         super();
-        this.input = input;
         this.processContext = processContext;
         this.nanoTime = nanoTime;
+        this.input = input;
         this.output = output;
     }
 
