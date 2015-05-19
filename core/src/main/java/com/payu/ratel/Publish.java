@@ -15,17 +15,18 @@
  */
 package com.payu.ratel;
 
-import javax.inject.Named;
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import javax.inject.Named;
+
 @Target({ElementType.TYPE, ElementType.CONSTRUCTOR, ElementType.FIELD, ElementType.METHOD, ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Named
 public @interface Publish {
-    Class<?>[] value() default {};
+    Class<?> value() default Void.class;
 }

@@ -32,6 +32,7 @@ import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.remoting.caucho.HessianServiceExporter;
 
 import com.payu.ratel.Publish;
+import com.payu.ratel.exception.PublishException;
 import com.payu.ratel.proxy.monitoring.MonitoringInvocationHandler;
 
 public class ServiceRegisterPostProcessor implements MergedBeanDefinitionPostProcessor {
@@ -117,13 +118,13 @@ public class ServiceRegisterPostProcessor implements MergedBeanDefinitionPostPro
             return getFirstInterfaceOrDefined(bean, null);
         }
 
-        Class[] listValuePublished = publish.value();
+        Class publishedInterface = publish.value();
 
-        if (listValuePublished.length == 0) {
+        if (publishedInterface == Void.class) {
             return getFirstInterfaceOrDefined(bean, null);
         }
 
-        return getFirstInterfaceOrDefined(bean, listValuePublished[0]);
+        return getFirstInterfaceOrDefined(bean, publishedInterface);
     }
 
     private Class<?> getFirstInterfaceOrDefined(Object bean, Class defInterface) {
@@ -138,8 +139,8 @@ public class ServiceRegisterPostProcessor implements MergedBeanDefinitionPostPro
             }
         }
 
-        throw new IllegalStateException(bean.getClass().getCanonicalName() + " not implement interface " + defInterface
-                .getCanonicalName());
+        throw new PublishException(
+                bean.getClass().getCanonicalName() + " does not implement interface " + defInterface.getCanonicalName());
     }
 
     private Class getRealBeanClass(Object o, String beanName) {
