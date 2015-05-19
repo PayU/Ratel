@@ -28,14 +28,15 @@ import com.payu.ratel.Discover;
 import com.payu.ratel.client.standalone.RatelStandaloneFactory;
 import com.payu.ratel.tests.service.ProxableService;
 import com.payu.ratel.tests.service.ProxableServiceConfiguration;
+import com.payu.ratel.tests.service.Test2Service;
 import com.payu.ratel.tests.service.TestService;
 import com.payu.ratel.tests.service.TestServiceConfiguration;
 import com.payu.ratel.tests.service.provider.ProviderConfiguration;
 import com.payu.ratel.tests.service.provider.RatelServiceDiscoveredByConstructor;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = { TestRatelConfiguration.class, ProviderConfiguration.class })
-@RatelTest(registerServices = { ProxableServiceConfiguration.class, TestServiceConfiguration.class })
+@SpringApplicationConfiguration(classes = {TestRatelConfiguration.class, ProviderConfiguration.class})
+@RatelTest(registerServices = {ProxableServiceConfiguration.class, TestServiceConfiguration.class})
 public class ServiceDiscoverTest {
 
     @Autowired
@@ -43,6 +44,9 @@ public class ServiceDiscoverTest {
 
     @Discover
     private TestService testService;
+
+    @Discover
+    private Test2Service test2Service;
 
     @Discover
     private ProxableService proxiedService;
@@ -83,7 +87,16 @@ public class ServiceDiscoverTest {
 
         // then
         assertThat(result).isEqualTo(4);
+    }
 
+    @Test
+    public void shouldDiscoverSecondServiceWithProxy() throws InterruptedException {
+
+        // when
+        int result = test2Service.power(2);
+
+        // then
+        assertThat(result).isEqualTo(4);
     }
 
     public void shouldDiscoverServiceWithStandaloneRatelClient() {
