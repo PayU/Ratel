@@ -38,19 +38,27 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.jayway.awaitility.Awaitility;
-import com.payu.ratel.client.RemoteServiceCallListener;
+import com.payu.ratel.client.ServiceCallListener;
 import com.payu.ratel.client.standalone.RatelStandaloneFactory;
 import com.payu.ratel.config.ServiceDiscoveryConfig;
+import com.payu.ratel.context.ProcessContext;
 import com.payu.ratel.context.RemoteServiceCallEvent;
 import com.payu.ratel.context.RemoteServiceResponseEvent;
+import com.payu.ratel.context.ServiceCallEvent;
+import com.payu.ratel.context.ServiceEvent;
+import com.payu.ratel.context.ServiceResponseEvent;
 import com.payu.ratel.server.DiscoveryServerMain;
 import com.payu.ratel.server.InMemoryDiscoveryServer;
 import com.payu.ratel.tests.service.TestService;
+import com.payu.ratel.tests.service.TestServiceCallListener;
 import com.payu.ratel.tests.service.TestServiceConfiguration;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = {RatelStandaloneTestConfig.class})
-@IntegrationTest("serviceDiscovery.ratelServerAddress:http://localhost:8070/server/discovery")
+@IntegrationTest({"serviceDiscovery.ratelServerAddress:http://localhost:8070/server/discovery",
+        "ratel.connectTimeout:40000000",
+        "ratel.readTimeout:40000000",
+})
 public class StandaloneClientTest {
 
     @Autowired
@@ -98,9 +106,15 @@ public class StandaloneClientTest {
     @Test
     public void shouldUseAddedServiceCallListenerStandaloneClientFactory() {
 
+        // given
+        // client side
         TestService testService = standaloneFactory.getServiceProxy(TestService.class);
-        RemoteServiceCallListener listener = mock(RemoteServiceCallListener.class);
+        ServiceCallListener listener = mock(ServiceCallListener.class);
         standaloneFactory.addRatelServiceCallListener(listener);
+        ProcessContext.getInstance().setProcessIdentifier("123");
+
+        // server side
+        TestServiceCallListener serverSideListener = startedApp.getBean(TestServiceCallListener.class);
 
         // when
         final String result = testService.hello();
@@ -109,6 +123,18 @@ public class StandaloneClientTest {
         assertThat(result).isEqualTo("success");
         verify(listener, times(1)).remoteServiceCalled(any(RemoteServiceCallEvent.class));
         verify(listener, times(1)).remoteServiceResponded(any(RemoteServiceResponseEvent.class));
+
+        // Separate context on server side = should not be impacted
+        verify(listener, times(0)).serviceInstanceInvoked(any(ServiceCallEvent.class));
+        verify(listener, times(0)).serviceInstanceResponded(any(ServiceResponseEvent.class));
+
+        // events on server side
+        assertRecordedProcessId(serverSideListener.getServiceCallEvent(), "123");
+        assertRecordedProcessId(serverSideListener.getServiceResponseEvent(), "123");
+    }
+
+    private void assertRecordedProcessId(ServiceEvent serviceEvent, String processId) {
+        assertThat(serviceEvent.getProcessContext().getProcessIdentifier()).isEqualTo(processId);
     }
 
 }

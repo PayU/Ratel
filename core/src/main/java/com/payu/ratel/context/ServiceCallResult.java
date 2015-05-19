@@ -50,4 +50,13 @@ public final class ServiceCallResult {
         return successful;
     }
 
+    @Override
+    public String toString() {
+        if (successful) {
+            return "ServiceCallResult [result=" + result + "]";
+        } else {
+            return "ServiceCallResult [exception=" + exception + "]";
+        }
+    }
+
 }

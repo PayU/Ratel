@@ -15,12 +15,9 @@
  */
 package com.payu.ratel.client.inmemory;
 
-import java.lang.reflect.Proxy;
-
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 
 import com.payu.ratel.client.AbstractClientProxyGenerator;
-import com.payu.ratel.proxy.monitoring.MonitoringInvocationHandler;
 
 /**
  * An implementation of ClientProxyGenerator that builds
@@ -36,7 +33,8 @@ public class RatelServerProxyGenerator extends AbstractClientProxyGenerator {
 
     @Override
     protected <T> T decorate(final T object, final Class<T> clazz) {
-        return (T) Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class[] {clazz},
-                new MonitoringInvocationHandler(getBeanFactory(), object, clazz));
+        return object;
+//        return (T) Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class[] {clazz},
+//                new MonitoringInvocationHandler(getBeanFactory(), object, clazz));
     }
 }

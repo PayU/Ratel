@@ -1,29 +1,68 @@
 package com.payu.ratel.tests.service;
 
-import com.payu.ratel.client.ServiceCallListner;
-import com.payu.ratel.context.ServiceCallEvent;
+import com.payu.ratel.client.ServiceCallListener;
+import com.payu.ratel.context.RemoteServiceCallEvent;
+import com.payu.ratel.context.RemoteServiceResponseEvent;
+import com.payu.ratel.context.ServiceEvent;
 import com.payu.ratel.context.ServiceResponseEvent;
 
-public class TestServiceCallListener implements ServiceCallListner {
+public class TestServiceCallListener implements ServiceCallListener {
+
+    private RemoteServiceCallEvent remoteServiceCallEvent;
+    private RemoteServiceResponseEvent remoteServiceResponseEvent;
+    private ServiceEvent serviceCallEvent;
+    private ServiceResponseEvent serviceResponseEvent;
 
     @Override
-    public void remoteServiceCalled(ServiceCallEvent event) {
+    public void remoteServiceCalled(RemoteServiceCallEvent event) {
+        this.remoteServiceCallEvent = event;
         System.err.println(event);
+        System.err.flush();
     }
 
     @Override
-    public void remoteServiceResponded(ServiceResponseEvent event) {
+    public void remoteServiceResponded(RemoteServiceResponseEvent event) {
+        remoteServiceResponseEvent = event;
         System.err.println(event);
+        System.err.flush();
     }
 
     @Override
-    public void serviceInstanceInvoked(ServiceCallEvent event) {
+    public void serviceInstanceInvoked(ServiceEvent event) {
+        this.serviceCallEvent = event;
+
         System.err.println(event);
+        System.err.flush();
     }
 
     @Override
     public void serviceInstanceResponded(ServiceResponseEvent event) {
+        this.serviceResponseEvent = event;
         System.err.println(event);
+        System.err.flush();
+    }
+
+    public void clear() {
+        this.remoteServiceCallEvent = null;
+        this.remoteServiceResponseEvent = null;
+        this.serviceCallEvent = null;
+        this.serviceResponseEvent = null;
+    }
+
+    public RemoteServiceCallEvent getRemoteServiceCallEvent() {
+        return remoteServiceCallEvent;
+    }
+
+    public RemoteServiceResponseEvent getRemoteServiceResponseEvent() {
+        return remoteServiceResponseEvent;
+    }
+
+    public ServiceEvent getServiceCallEvent() {
+        return serviceCallEvent;
+    }
+
+    public ServiceResponseEvent getServiceResponseEvent() {
+        return serviceResponseEvent;
     }
 
 }

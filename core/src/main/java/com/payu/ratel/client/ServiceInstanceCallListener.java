@@ -1,6 +1,6 @@
 package com.payu.ratel.client;
 
-import com.payu.ratel.context.ServiceCallEvent;
+import com.payu.ratel.context.ServiceEvent;
 import com.payu.ratel.context.ServiceResponseEvent;
 
 /**
@@ -9,7 +9,7 @@ import com.payu.ratel.context.ServiceResponseEvent;
  */
 public interface ServiceInstanceCallListener {
 
-    void serviceInstanceInvoked(ServiceCallEvent event);
+    void serviceInstanceInvoked(ServiceEvent event);
 
     void serviceInstanceResponded(ServiceResponseEvent event);
 

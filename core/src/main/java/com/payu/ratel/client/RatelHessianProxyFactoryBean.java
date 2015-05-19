@@ -25,11 +25,9 @@ import org.springframework.remoting.caucho.HessianProxyFactoryBean;
 
 import com.payu.ratel.context.ProcessContext;
 import com.payu.ratel.context.RemoteServiceCallEvent;
-import com.payu.ratel.context.ServiceCallEvent;
+import com.payu.ratel.context.RemoteServiceResponseEvent;
 import com.payu.ratel.context.ServiceCallInput;
 import com.payu.ratel.context.ServiceCallResult;
-import com.payu.ratel.context.RemoteServiceResponseEvent;
-import com.payu.ratel.context.ServiceResponseEvent;
 
 public class RatelHessianProxyFactoryBean extends HessianProxyFactoryBean {
 
@@ -75,17 +73,17 @@ public class RatelHessianProxyFactoryBean extends HessianProxyFactoryBean {
     }
 
     private void beforeServiceCall(MethodInvocation invocation) {
-        ServiceCallEvent event = createServiceCallEvent(invocation);
+        RemoteServiceCallEvent event = createServiceCallEvent(invocation);
         publishServiceCallEvent(event);
     }
 
-    private void publishServiceCallEvent(ServiceCallEvent event) {
+    private void publishServiceCallEvent(RemoteServiceCallEvent event) {
         for (RemoteServiceCallListener callListener : callListeners) {
             callListener.remoteServiceCalled(event);
         }
     }
 
-    private ServiceCallEvent createServiceCallEvent(MethodInvocation invocation) {
+    private RemoteServiceCallEvent createServiceCallEvent(MethodInvocation invocation) {
         return new RemoteServiceCallEvent(
                 ProcessContext.getInstance(),
                 System.nanoTime(),
@@ -95,24 +93,24 @@ public class RatelHessianProxyFactoryBean extends HessianProxyFactoryBean {
     }
 
     private void afterServiceSuccessfulCall(MethodInvocation invocation, Object result) {
-        ServiceResponseEvent event = createServiceRespondEvent(invocation, result);
+        RemoteServiceResponseEvent event = createServiceRespondEvent(invocation, result);
         publishServiceResponseEvent(event);
 
     }
 
-    private void publishServiceResponseEvent(ServiceResponseEvent event) {
+    private void publishServiceResponseEvent(RemoteServiceResponseEvent event) {
         for (RemoteServiceCallListener callListener : callListeners) {
             callListener.remoteServiceResponded(event);
         }
     }
 
     private void afterServiceException(MethodInvocation invocation, Exception e) {
-        ServiceResponseEvent event = createServiceExceptionEvent(invocation, e);
+        RemoteServiceResponseEvent event = createServiceExceptionEvent(invocation, e);
         publishServiceResponseEvent(event);
 
     }
 
-    private ServiceResponseEvent createServiceRespondEvent(MethodInvocation invocation, Object result) {
+    private RemoteServiceResponseEvent createServiceRespondEvent(MethodInvocation invocation, Object result) {
         return new RemoteServiceResponseEvent(
                 ProcessContext.getInstance(),
                 System.nanoTime(),
@@ -121,7 +119,7 @@ public class RatelHessianProxyFactoryBean extends HessianProxyFactoryBean {
                         invocation.getMethod().getDeclaringClass()), ServiceCallResult.success(result));
     }
 
-    private ServiceResponseEvent createServiceExceptionEvent(MethodInvocation invocation,
+    private RemoteServiceResponseEvent createServiceExceptionEvent(MethodInvocation invocation,
             Exception exception) {
         return new RemoteServiceResponseEvent(
                 ProcessContext.getInstance(),

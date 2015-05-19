@@ -1,7 +1,7 @@
 package com.payu.ratel.client;
 
-import com.payu.ratel.context.ServiceCallEvent;
-import com.payu.ratel.context.ServiceResponseEvent;
+import com.payu.ratel.context.RemoteServiceCallEvent;
+import com.payu.ratel.context.RemoteServiceResponseEvent;
 
 /**
  * Listener invoked when Ratel client invokes a remote service and receives
@@ -9,8 +9,8 @@ import com.payu.ratel.context.ServiceResponseEvent;
  */
 public interface RemoteServiceCallListener {
 
-    void remoteServiceCalled(ServiceCallEvent event);
+    void remoteServiceCalled(RemoteServiceCallEvent event);
 
-    void remoteServiceResponded(ServiceResponseEvent event);
+    void remoteServiceResponded(RemoteServiceResponseEvent event);
 
 }
