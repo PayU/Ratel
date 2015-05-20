@@ -44,9 +44,9 @@ import com.payu.ratel.config.ServiceDiscoveryConfig;
 import com.payu.ratel.context.ProcessContext;
 import com.payu.ratel.context.RemoteServiceCallEvent;
 import com.payu.ratel.context.RemoteServiceResponseEvent;
-import com.payu.ratel.context.ServiceCallEvent;
 import com.payu.ratel.context.ServiceEvent;
-import com.payu.ratel.context.ServiceResponseEvent;
+import com.payu.ratel.context.ServiceInstanceCallEvent;
+import com.payu.ratel.context.ServiceInstanceResponseEvent;
 import com.payu.ratel.server.DiscoveryServerMain;
 import com.payu.ratel.server.InMemoryDiscoveryServer;
 import com.payu.ratel.tests.service.TestService;
@@ -125,8 +125,8 @@ public class StandaloneClientTest {
         verify(listener, times(1)).remoteServiceResponded(any(RemoteServiceResponseEvent.class));
 
         // Separate context on server side = should not be impacted
-        verify(listener, times(0)).serviceInstanceInvoked(any(ServiceCallEvent.class));
-        verify(listener, times(0)).serviceInstanceResponded(any(ServiceResponseEvent.class));
+        verify(listener, times(0)).serviceInstanceCalled(any(ServiceInstanceCallEvent.class));
+        verify(listener, times(0)).serviceInstanceResponded(any(ServiceInstanceResponseEvent.class));
 
         // events on server side
         assertRecordedProcessId(serverSideListener.getServiceCallEvent(), "123");

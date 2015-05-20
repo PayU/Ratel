@@ -42,9 +42,9 @@ public final class ServiceCallResult {
      * proprety exception is set.
      * There is <b>NO</b> distinction between business exception intentionally
      * thrown by the service
-     * and some infrastructure exceptions e.g. network timeouts.
+     * and some infrastructure exceptions caused by e.g. network timeouts.
      *
-     * @return if the service responded with proper return value;
+     * @return if the service responded with a proper return value.
      */
     public boolean isSuccessful() {
         return successful;

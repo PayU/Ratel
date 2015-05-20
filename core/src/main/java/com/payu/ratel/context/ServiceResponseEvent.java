@@ -1,6 +1,11 @@
 package com.payu.ratel.context;
 
-public class ServiceResponseEvent extends ServiceEvent {
+/**
+ * An event that is risen when a service returns a result (or exception) after
+ * handling an event.
+ * Particular subclasses represent more concrete situations.
+ */
+public abstract class ServiceResponseEvent extends ServiceEvent {
 
     private final ServiceCallInput input;
     private final ServiceCallResult output;
@@ -21,10 +26,6 @@ public class ServiceResponseEvent extends ServiceEvent {
     }
 
     @Override
-    public String toString() {
-        return "ServiceResponseEvent [processContext=" + getProcessContext() + ", nanoTime=" + getNanoTime()
-                + ", input=" + input
-                + ", output=" + output + "]";
-    }
+    public abstract String toString();
 
 }

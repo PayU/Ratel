@@ -1,6 +1,11 @@
 package com.payu.ratel.context;
 
-public class ServiceCallEvent extends ServiceEvent {
+/**
+ * An event that is risen when a service is called.
+ * Subclasses represent particular cases of calling it on server and client
+ * side.
+ */
+public abstract class ServiceCallEvent extends ServiceEvent {
 
     private final ServiceCallInput input;
 
@@ -9,14 +14,16 @@ public class ServiceCallEvent extends ServiceEvent {
         this.input = input;
     }
 
+    /**
+     * Then input (method name, parameters, contract class) that was used when
+     * calling a service.
+     *
+     * @return the input sent to the server.
+     */
     public ServiceCallInput getInput() {
         return input;
     }
 
-    @Override
-    public String toString() {
-        return "ServiceCallEvent [processContext=" + getProcessContext() + ", nanoTime=" + getNanoTime() + ", input=" + input
-                + "]";
-    }
+    public abstract String toString();
 
 }

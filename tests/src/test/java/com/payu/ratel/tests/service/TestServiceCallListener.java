@@ -4,6 +4,8 @@ import com.payu.ratel.client.ServiceCallListener;
 import com.payu.ratel.context.RemoteServiceCallEvent;
 import com.payu.ratel.context.RemoteServiceResponseEvent;
 import com.payu.ratel.context.ServiceEvent;
+import com.payu.ratel.context.ServiceInstanceCallEvent;
+import com.payu.ratel.context.ServiceInstanceResponseEvent;
 import com.payu.ratel.context.ServiceResponseEvent;
 
 public class TestServiceCallListener implements ServiceCallListener {
@@ -16,30 +18,21 @@ public class TestServiceCallListener implements ServiceCallListener {
     @Override
     public void remoteServiceCalled(RemoteServiceCallEvent event) {
         this.remoteServiceCallEvent = event;
-        System.err.println(event);
-        System.err.flush();
     }
 
     @Override
     public void remoteServiceResponded(RemoteServiceResponseEvent event) {
         remoteServiceResponseEvent = event;
-        System.err.println(event);
-        System.err.flush();
     }
 
     @Override
-    public void serviceInstanceInvoked(ServiceEvent event) {
+    public void serviceInstanceCalled(ServiceInstanceCallEvent event) {
         this.serviceCallEvent = event;
-
-        System.err.println(event);
-        System.err.flush();
     }
 
     @Override
-    public void serviceInstanceResponded(ServiceResponseEvent event) {
+    public void serviceInstanceResponded(ServiceInstanceResponseEvent event) {
         this.serviceResponseEvent = event;
-        System.err.println(event);
-        System.err.flush();
     }
 
     public void clear() {

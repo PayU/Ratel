@@ -24,11 +24,10 @@ import org.springframework.beans.factory.ListableBeanFactory;
 
 import com.payu.ratel.client.ServiceInstanceCallListener;
 import com.payu.ratel.context.ProcessContext;
-import com.payu.ratel.context.ServiceCallEvent;
 import com.payu.ratel.context.ServiceCallInput;
 import com.payu.ratel.context.ServiceCallResult;
-import com.payu.ratel.context.ServiceEvent;
-import com.payu.ratel.context.ServiceResponseEvent;
+import com.payu.ratel.context.ServiceInstanceCallEvent;
+import com.payu.ratel.context.ServiceInstanceResponseEvent;
 
 public class ServiceInvocationHandler implements java.lang.reflect.InvocationHandler {
 
@@ -77,7 +76,8 @@ public class ServiceInvocationHandler implements java.lang.reflect.InvocationHan
     }
 
     private void publishResponseEvent(ServiceCallResult serviceResult, ProcessContext processCtx, ServiceCallInput input) {
-        ServiceResponseEvent responseEvent = new ServiceResponseEvent(processCtx, System.nanoTime(), input,
+        ServiceInstanceResponseEvent responseEvent = new ServiceInstanceResponseEvent(processCtx, System.nanoTime(),
+                input,
                 serviceResult);
         for (ServiceInstanceCallListener listener : serviceListeners) {
             listener.serviceInstanceResponded(responseEvent);
@@ -85,9 +85,9 @@ public class ServiceInvocationHandler implements java.lang.reflect.InvocationHan
     }
 
     private void publishCallEvent(ProcessContext processCtx, ServiceCallInput input) {
-        ServiceEvent callEvent = new ServiceCallEvent(processCtx, System.nanoTime(), input);
+        ServiceInstanceCallEvent callEvent = new ServiceInstanceCallEvent(processCtx, System.nanoTime(), input);
         for (ServiceInstanceCallListener listener : serviceListeners) {
-            listener.serviceInstanceInvoked(callEvent);
+            listener.serviceInstanceCalled(callEvent);
         }
     }
 
