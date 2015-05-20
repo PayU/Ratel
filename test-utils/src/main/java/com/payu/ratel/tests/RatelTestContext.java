@@ -1,9 +1,9 @@
 package com.payu.ratel.tests;
 
 import static com.jayway.awaitility.Awaitility.await;
-import static com.payu.ratel.config.beans.RegistryBeanProviderFactory.SERVICE_DISCOVERY_ADDRESS;
 import static com.payu.ratel.config.beans.JbossPropertySelfAddressProvider.JBOSS_BIND_ADDRESS;
 import static com.payu.ratel.config.beans.JbossPropertySelfAddressProvider.JBOSS_BIND_PORT;
+import static com.payu.ratel.config.beans.RegistryBeanProviderFactory.SERVICE_DISCOVERY_ADDRESS;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.HashSet;
@@ -86,20 +86,20 @@ public class RatelTestContext {
   }
 
   @SuppressWarnings("rawtypes")
-  private ConfigurableApplicationContext startNewApplication(int servicePort, Class springJavaConfigClasses) {
-    ConfigurableApplicationContext ctx = createNewContext(servicePort, springJavaConfigClasses, serviceDiscoveryPort);
+  private ConfigurableApplicationContext startNewApplication(int servicePort, Class... springJavaConfigClasses) {
+    ConfigurableApplicationContext ctx = createNewContext(servicePort, serviceDiscoveryPort, springJavaConfigClasses);
 
     myContexts.add(ctx);
     return ctx;
   }
 
   @SuppressWarnings("rawtypes")
-  private ConfigurableApplicationContext createNewContext(int servicePort, Class springJavaConfigClass,
-      int discoveryPort) {
-    ConfigurableApplicationContext ctx = SpringApplication.run(springJavaConfigClass, "--server.port=" + servicePort,
+  private ConfigurableApplicationContext createNewContext(int servicePort, int discoveryPort,
+      Class... springJavaConfigClass) {
+    ConfigurableApplicationContext ctx = SpringApplication.run(((Object[]) springJavaConfigClass), new String[] {"--server.port=" + servicePort,
         "--" + JBOSS_BIND_ADDRESS + "=localhost", "--" + JBOSS_BIND_PORT + "=" + servicePort,
         "--spring.jmx.enabled=false", "--" + SERVICE_DISCOVERY_ADDRESS + "=http://localhost:" + discoveryPort
-            + "/server/discovery");
+            + "/server/discovery"});
     return ctx;
   }
 

@@ -30,6 +30,7 @@ public class ProcessTracingTest {
         assertThat((targetService.getProcessId())).isNull();
 
         //when
+        ProcessContext.getInstance().clearProcessIdentifier();
         passingService.passProcessId();
 
         //then

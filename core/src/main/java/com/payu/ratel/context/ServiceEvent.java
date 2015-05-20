@@ -28,7 +28,7 @@ public abstract class ServiceEvent {
 
     /**
      * System time in nano seconds taken when this event was risen.
-     * @return
+     * @return time in nano time
      */
     public long getNanoTime() {
         return nanoTime;

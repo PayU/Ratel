@@ -15,6 +15,8 @@ import org.springframework.test.context.TestContext;
 import org.springframework.test.context.support.AbstractTestExecutionListener;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import com.payu.ratel.context.ProcessContext;
+
 /**
  * This test execution listener adds ratel testing capabilities to JUnit tests
  * annotated with {@link RatelTest} annotation. It does the following things:
@@ -111,6 +113,7 @@ public class RatelIntegrationTestExecutionListener extends AbstractTestExecution
     }
     ratelTestCtx.addObservedContext(testContext.getApplicationContext());
     ratelTestCtx.waitForServicesRegistration();
+    ProcessContext.getInstance().setProcessIdentifier(testContext.getTestMethod().getName());
   }
 
   private RatelTestContext getRatelTestContext(TestContext testContext) {
@@ -133,7 +136,6 @@ public class RatelIntegrationTestExecutionListener extends AbstractTestExecution
   public void afterTestMethod(TestContext testContext) {
     RatelTestContext rtc = getRatelTestContext(testContext);
     rtc.close();
-
   }
 
 }

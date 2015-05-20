@@ -8,12 +8,12 @@ import com.payu.ratel.config.ServiceDiscoveryConfig;
 import com.payu.ratel.server.DiscoveryServerMain;
 
 @Configuration
-@Import({ServiceDiscoveryConfig.class, DiscoveryServerMain.class })
+@Import({ServiceDiscoveryConfig.class, DiscoveryServerMain.class})
 public class TestRatelConfiguration {
 
-  @Bean
-  public RatelTestContext testContext() {
-    return new RatelTestContext();
-  }
+    @Bean
+    public RatelTestContext testContext() {
+        return new RatelTestContext();
+    }
 
 }
