@@ -55,7 +55,7 @@ import com.payu.ratel.tests.service.TestServiceConfiguration;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = {RatelStandaloneTestConfig.class})
-@IntegrationTest({"serviceDiscovery.ratelServerAddress:http://localhost:19070/server/discovery",
+@IntegrationTest({"serviceDiscovery.ratelServerAddress:http://localhost:17070/server/discovery",
         "ratel.connectTimeout:4000",
         "ratel.readTimeout:4000",
 })
@@ -69,9 +69,9 @@ public class StandaloneClientTest {
     @Before
     public void setup() {
         ConfigurableApplicationContext ctx = SpringApplication.run(new Object[] {TestServiceConfiguration.class,
-                ServiceDiscoveryConfig.class, DiscoveryServerMain.class}, new String[] {"--server.port=19070",
-                "--" + JBOSS_BIND_ADDRESS + "=localhost", "--" + JBOSS_BIND_PORT + "=19070",
-                "--spring.jmx.enabled=false", "--" + SERVICE_DISCOVERY_ADDRESS + "=http://localhost:19070"
+                ServiceDiscoveryConfig.class, DiscoveryServerMain.class}, new String[] {"--server.port=17070",
+                "--" + JBOSS_BIND_ADDRESS + "=localhost", "--" + JBOSS_BIND_PORT + "=17070",
+                "--spring.jmx.enabled=false", "--" + SERVICE_DISCOVERY_ADDRESS + "=http://localhost:17070"
                         + "/server/discovery"});
 
         final InMemoryDiscoveryServer server = ctx.getBean(InMemoryDiscoveryServer.class);
@@ -91,20 +91,9 @@ public class StandaloneClientTest {
         startedApp.close();
     }
 
-    @Test
-    public void shouldDiscoverServiceWithInjectedStandaloneClientFactory() {
-
-        TestService testService = standaloneFactory.getServiceProxy(TestService.class);
-
-        // when
-        final String result = testService.hello();
-
-        // then
-        assertThat(result).isEqualTo("success");
-    }
 
     @Test
-    public void shouldUseAddedServiceCallListenerStandaloneClientFactory() {
+    public void shouldUseAddedServiceCallListenerToInjectedStandaloneClientFactory() {
 
         // given
         // client side
@@ -112,7 +101,6 @@ public class StandaloneClientTest {
         ServiceCallListener listener = mock(ServiceCallListener.class);
         standaloneFactory.addRatelServiceCallListener(listener);
         ProcessContext.getInstance().setProcessIdentifier("123");
-
         // server side
         TestServiceCallListener serverSideListener = startedApp.getBean(TestServiceCallListener.class);
 
