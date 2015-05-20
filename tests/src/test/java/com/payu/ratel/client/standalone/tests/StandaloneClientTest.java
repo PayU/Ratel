@@ -75,7 +75,7 @@ public class StandaloneClientTest {
                         + "/server/discovery"});
 
         final InMemoryDiscoveryServer server = ctx.getBean(InMemoryDiscoveryServer.class);
-        Awaitility.await().atMost(20, TimeUnit.SECONDS).until(new Runnable() {
+        Awaitility.await().atMost(40, TimeUnit.SECONDS).until(new Runnable() {
 
             @Override
             public void run() {
