@@ -43,7 +43,7 @@ public class RatelHessianProxyFactoryBean extends HessianProxyFactoryBean {
         }
     }
 
-    @SuppressWarnings("PMD")
+    @SuppressWarnings("PMD.AvoidCatchingGenericException")
     public Object invoke(MethodInvocation invocation) throws Throwable {
         beforeServiceCall(invocation);
         try {
