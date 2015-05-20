@@ -55,9 +55,9 @@ import com.payu.ratel.tests.service.TestServiceConfiguration;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = {RatelStandaloneTestConfig.class})
-@IntegrationTest({"serviceDiscovery.ratelServerAddress:http://localhost:8070/server/discovery",
-        "ratel.connectTimeout:40000000",
-        "ratel.readTimeout:40000000",
+@IntegrationTest({"serviceDiscovery.ratelServerAddress:http://localhost:19070/server/discovery",
+        "ratel.connectTimeout:4000",
+        "ratel.readTimeout:4000",
 })
 public class StandaloneClientTest {
 
@@ -69,9 +69,9 @@ public class StandaloneClientTest {
     @Before
     public void setup() {
         ConfigurableApplicationContext ctx = SpringApplication.run(new Object[] {TestServiceConfiguration.class,
-                ServiceDiscoveryConfig.class, DiscoveryServerMain.class}, new String[] {"--server.port=8070",
-                "--" + JBOSS_BIND_ADDRESS + "=localhost", "--" + JBOSS_BIND_PORT + "=8070",
-                "--spring.jmx.enabled=false", "--" + SERVICE_DISCOVERY_ADDRESS + "=http://localhost:8070"
+                ServiceDiscoveryConfig.class, DiscoveryServerMain.class}, new String[] {"--server.port=19070",
+                "--" + JBOSS_BIND_ADDRESS + "=localhost", "--" + JBOSS_BIND_PORT + "=19070",
+                "--spring.jmx.enabled=false", "--" + SERVICE_DISCOVERY_ADDRESS + "=http://localhost:19070"
                         + "/server/discovery"});
 
         final InMemoryDiscoveryServer server = ctx.getBean(InMemoryDiscoveryServer.class);
