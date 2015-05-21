@@ -43,3 +43,6 @@ FooService is auto-discovered by client application.
     Your contribution is welcome.
     Please send pull request to development branch
     it is the only branch where we can accept your changes.
+
+# Please visit project wiki for more info
+[WIKI](https://github.com/PayU-Tech/Ratel/wiki)		    
