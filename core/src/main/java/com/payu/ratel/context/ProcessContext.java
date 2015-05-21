@@ -3,15 +3,16 @@ package com.payu.ratel.context;
 import java.util.UUID;
 
 /**
- * A context of a process that is always available via {@link ProcessContext#getInstance()}.
+ * A context of a process that is always available via
+ * {@link ProcessContext#getInstance()}.
  * It is automatically transported over ratel remote service calls.
  */
-public class ProcessContext {
+public class ProcessContext implements Cloneable {
 
     private static final ThreadLocal<ProcessContext> INSTANCE = new ThreadLocal<ProcessContext>() {
 
-    protected ProcessContext initialValue() {
-        return new ProcessContext();
+        protected ProcessContext initialValue() {
+            return new ProcessContext();
         }
     };
 
@@ -31,15 +32,16 @@ public class ProcessContext {
         return processIdentifier;
     }
 
-
     public void setProcessIdentifier(String processId) {
         this.processIdentifier = processId;
     }
 
     /**
-     * Generate new random process identifier, given that it is not presently set.
+     * Generate new random process identifier, given that it is not presently
+     * set.
      *
-     * @throws IllegalStateException when currently set process id is not null.
+     * @throws IllegalStateException
+     *             when currently set process id is not null.
      */
     public void generateProcessIdentifier() {
         if (getProcessIdentifier() != null) {
@@ -52,5 +54,20 @@ public class ProcessContext {
         setProcessIdentifier(null);
     }
 
+    @Override
+    @SuppressWarnings("PMD")
+    protected ProcessContext clone() {
+        try {
+            return (ProcessContext) super.clone();
+        } catch (CloneNotSupportedException e) {
+            // won't happen
+            throw new IllegalStateException(e);
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "ProcessContext [processIdentifier=" + processIdentifier + "]";
+    }
 
 }

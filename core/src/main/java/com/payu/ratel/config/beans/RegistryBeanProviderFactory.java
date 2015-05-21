@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *        http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,10 +15,14 @@
  */
 package com.payu.ratel.config.beans;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.core.env.Environment;
 
 public class RegistryBeanProviderFactory {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(RegistryBeanProviderFactory.class);
 
     public static final String SERVICE_DISCOVERY = "serviceDiscovery";
     public static final String SERVICE_DISCOVERY_ADDRESS = SERVICE_DISCOVERY + ".ratelServerAddress";
@@ -26,6 +30,24 @@ public class RegistryBeanProviderFactory {
 
     public RegistryStrategiesProvider create(ConfigurableListableBeanFactory beanFactory) {
         final Environment environment = beanFactory.getBean(Environment.class);
+
+        if ("false".equals(environment.getProperty(RatelContextApplier.SERVICE_DISCOVERY_ENABLED))) {
+            LOGGER.info("Ratel is disabled");
+            return null;
+        }
+
+        LOGGER.info("Ratel is enabled");
+        RegistryStrategiesProvider registryBeanProvider = doCreate(beanFactory);
+        final String registryBeanName = registryBeanProvider.getClass().getName();
+        beanFactory.registerSingleton(registryBeanName, registryBeanProvider);
+        beanFactory.initializeBean(registryBeanProvider, registryBeanName);
+        return registryBeanProvider;
+
+    }
+
+    protected RegistryStrategiesProvider doCreate(ConfigurableListableBeanFactory beanFactory) {
+        final Environment environment = beanFactory.getBean(Environment.class);
+
         if (environment.containsProperty(SERVICE_DISCOVERY_ZK_HOST)) {
             return new ZookeeperRegistryBeanProvider(beanFactory);
         } else if (environment.containsProperty(SERVICE_DISCOVERY_ADDRESS)) {

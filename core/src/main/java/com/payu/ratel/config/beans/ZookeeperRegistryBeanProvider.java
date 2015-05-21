@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *        http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,53 +15,83 @@
  */
 package com.payu.ratel.config.beans;
 
+import org.apache.curator.framework.CuratorFramework;
+import org.apache.curator.framework.CuratorFrameworkFactory;
+import org.apache.curator.retry.ExponentialBackoffRetry;
+import org.apache.curator.x.discovery.ServiceDiscovery;
+import org.apache.curator.x.discovery.ServiceDiscoveryBuilder;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.core.env.Environment;
 
 import com.payu.ratel.client.ClientProxyGenerator;
-import com.payu.ratel.client.FetchStrategy;
-import com.payu.ratel.register.RegisterStrategy;
+import com.payu.ratel.client.zookeeper.ZookeeperFetcher;
+import com.payu.ratel.client.zookeeper.ZookeeperProxyGenerator;
+import com.payu.ratel.register.zookeeper.ZookeeperRegistry;
 
 public class ZookeeperRegistryBeanProvider implements RegistryStrategiesProvider, InitializingBean, DisposableBean {
 
     private final ConfigurableListableBeanFactory beanFactory;
-    private final ZookeeperServiceRegistryStrategy zookeeperStrategy = new ZookeeperServiceRegistryStrategy();
+
+    private CuratorFramework curatorFramework;
+    private ServiceDiscovery<Void> serviceDiscovery;
+    private ZookeeperRegistry zookeeperRegistry;
+    private ZookeeperFetcher zookeeperFetcher;
+    private ClientProxyGenerator zookeeperProxyGenerator;
 
     public ZookeeperRegistryBeanProvider(ConfigurableListableBeanFactory beanFactory) {
         this.beanFactory = beanFactory;
     }
 
-    // TODO - remove PMD suppress
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        final Environment environment = beanFactory.getBean(Environment.class);
-        zookeeperStrategy.configure(environment);
-
-        beanFactory.registerSingleton(zookeeperStrategy.getServiceDiscovery().getClass().getName(), zookeeperStrategy.getServiceDiscovery());
+    public ServiceDiscovery<Void> getServiceDiscovery() {
+        return serviceDiscovery;
     }
 
-    // TODO - remove PMD suppress
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @SuppressWarnings("PMD.AvoidCatchingGenericException")
+    private void configure() {
+        System.setProperty("zookeeper.sasl.client", "false");
+        Environment env = beanFactory.getBean(Environment.class);
+        String zkHostAddress = env.getProperty(RegistryBeanProviderFactory.SERVICE_DISCOVERY_ZK_HOST);
+        this.curatorFramework = CuratorFrameworkFactory.newClient(zkHostAddress, new ExponentialBackoffRetry(1000, 3));
+
+        curatorFramework.start();
+
+        this.serviceDiscovery = ServiceDiscoveryBuilder.builder(Void.class).client(this.curatorFramework)
+                .basePath("services").build();
+
+        try {
+            getServiceDiscovery().start();
+        } catch (Exception e) {
+            throw new IllegalStateException("Service discovery start failed.", e);
+        }
+
+        this.zookeeperRegistry = new ZookeeperRegistry(getServiceDiscovery());
+        this.zookeeperFetcher = new ZookeeperFetcher(getServiceDiscovery());
+        this.zookeeperProxyGenerator = new ZookeeperProxyGenerator(beanFactory);
+    }
+
     @Override
+    public void afterPropertiesSet() {
+        this.configure();
+        beanFactory.registerSingleton(this.getServiceDiscovery().getClass().getName(), this.getServiceDiscovery());
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void destroy() throws Exception {
-        zookeeperStrategy.destroy();
+        serviceDiscovery.close();
+        curatorFramework.close();
     }
 
-    @Override
-    public RegisterStrategy getRegisterStrategy() {
-        return zookeeperStrategy.getRegisterStrategy();
+    public ZookeeperRegistry getRegisterStrategy() {
+        return zookeeperRegistry;
     }
 
-    @Override
-    public FetchStrategy getFetchStrategy() {
-        return zookeeperStrategy.getFetchStrategy();
+    public ZookeeperFetcher getFetchStrategy() {
+        return zookeeperFetcher;
     }
 
-    @Override
     public ClientProxyGenerator getClientProxyGenerator() {
-        return zookeeperStrategy.getClientProxyGenerator();
+        return zookeeperProxyGenerator;
     }
 }

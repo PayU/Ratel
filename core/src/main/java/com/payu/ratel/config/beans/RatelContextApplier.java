@@ -17,13 +17,10 @@ package com.payu.ratel.config.beans;
 
 import static com.payu.ratel.config.beans.RegistryBeanProviderFactory.SERVICE_DISCOVERY;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
-import org.springframework.core.env.Environment;
 
 import com.payu.ratel.client.RatelClientProducer;
 import com.payu.ratel.client.RemoteAutowireCandidateResolver;
@@ -31,7 +28,6 @@ import com.payu.ratel.register.ServiceRegisterPostProcessor;
 
 public class RatelContextApplier implements BeanFactoryPostProcessor {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(RatelContextApplier.class);
 
     public static final String SERVICE_DISCOVERY_ENABLED = SERVICE_DISCOVERY + ".enabled";
 
@@ -46,19 +42,11 @@ public class RatelContextApplier implements BeanFactoryPostProcessor {
 
     @Override
     public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
-        final Environment environment = beanFactory.getBean(Environment.class);
-
-        if ("false".equals(environment.getProperty(SERVICE_DISCOVERY_ENABLED))) {
-            LOGGER.info("Ratel is disabled");
+        final RegistryStrategiesProvider registryBeanProvider = registryBeanProviderFactory.create(beanFactory);
+        if (registryBeanProvider == null) {
+            //Ratel is disabled, stop further processing
             return;
         }
-
-        LOGGER.info("Ratel is enabled");
-
-        final RegistryStrategiesProvider registryBeanProvider = registryBeanProviderFactory.create(beanFactory);
-        final String registryBeanName = registryBeanProvider.getClass().getName();
-        beanFactory.registerSingleton(registryBeanName, registryBeanProvider);
-        beanFactory.initializeBean(registryBeanProvider, registryBeanName);
 
         final ServiceRegisterPostProcessor serviceRegisterPostProcessor = serviceRegisterPostProcessorFactory.create(beanFactory,
                 registryBeanProvider.getRegisterStrategy());

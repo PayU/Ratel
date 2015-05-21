@@ -32,7 +32,7 @@ import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.remoting.caucho.HessianServiceExporter;
 
 import com.payu.ratel.Publish;
-import com.payu.ratel.proxy.monitoring.MonitoringInvocationHandler;
+import com.payu.ratel.proxy.monitoring.ServiceInvocationHandler;
 
 public class ServiceRegisterPostProcessor implements MergedBeanDefinitionPostProcessor {
 
@@ -99,7 +99,7 @@ public class ServiceRegisterPostProcessor implements MergedBeanDefinitionPostPro
     public Object decorateWithMonitoring(final Object object, final Class clazz) {
         return Proxy
                 .newProxyInstance(Thread.currentThread().getContextClassLoader(),
-                        new Class[]{clazz}, new MonitoringInvocationHandler(object));
+                        new Class[]{clazz}, new ServiceInvocationHandler(configurableListableBeanFactory, object, clazz));
     }
 
     private Class<?> getFirstInterface(Object bean) {
