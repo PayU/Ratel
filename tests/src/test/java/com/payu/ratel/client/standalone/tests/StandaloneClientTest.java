@@ -79,7 +79,7 @@ public class StandaloneClientTest {
 
             @Override
             public void run() {
-                assertThat(server.fetchAllServices()).isNotEmpty();
+                assertThat(server.fetchAllServices()).hasSize(2);
             }
         });
 

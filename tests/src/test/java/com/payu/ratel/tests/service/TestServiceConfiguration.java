@@ -42,4 +42,8 @@ public class TestServiceConfiguration {
         return new TestServiceCallListener();
     }
 
+    @Bean
+    public Test2Service test2Service() {
+        return new TestTest2ServiceImpl();
+    }
 }

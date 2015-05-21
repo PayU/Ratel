@@ -36,6 +36,11 @@ public class ProxableServiceConfiguration {
     }
 
     @Bean
+    public Test2Service test2Service() {
+        return new ProxableMultiInterfaceServiceImpl();
+    }
+
+    @Bean
     public static BeanPostProcessor proxyingPostProcessor() {
         return new ProxyingPostProcessor();
     }

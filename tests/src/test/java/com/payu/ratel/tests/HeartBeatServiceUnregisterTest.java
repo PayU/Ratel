@@ -39,19 +39,19 @@ public class HeartBeatServiceUnregisterTest {
     @Test
     public void shouldUnregisterServiceWhenHeartBeatIsMissed() throws InterruptedException {
         //given
-        ratelTestContext.waitForServicesRegistration(1);
+        ratelTestContext.waitForServicesRegistration(2);
 
         //when
         ConfigurableApplicationContext secondCtx = ratelTestContext.startService(TestServiceConfiguration.class);
 
         //then
-        ratelTestContext.waitForServicesRegistration(2);
+        ratelTestContext.waitForServicesRegistration(4);
 
         //when
         secondCtx.close();
 
         //then
-        ratelTestContext.waitForServicesRegistration(2);
+        ratelTestContext.waitForServicesRegistration(4);
 
 
     }

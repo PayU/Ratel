@@ -33,13 +33,13 @@ public class HeartBeatServiceRegisterTest {
     @Test
     public void shouldRegisterServiceAfterFirstHeartBeat() throws InterruptedException {
         //given
-        ratelTestContext.waitForServicesRegistration(1);
+        ratelTestContext.waitForServicesRegistration(2);
 
         //when
         ratelTestContext.startService(TestServiceConfiguration.class);
 
         //then
-        ratelTestContext.waitForServicesRegistration(2);
+        ratelTestContext.waitForServicesRegistration(4);
     }
 
 }

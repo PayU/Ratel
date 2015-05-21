@@ -15,16 +15,11 @@
  */
 package com.payu.ratel.tests.service;
 
-import org.springframework.stereotype.Service;
 
-import com.payu.ratel.Publish;
+public interface Test2Service {
 
-@Publish
-@Service
-public class ProxableServiceImpl implements ProxableService {
+    String helloWorld();
 
-    @Override
-    public int doInTransaction() {
-        return 4;
-    }
+    int power(Integer arg);
+
 }

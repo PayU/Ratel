@@ -47,12 +47,13 @@ public class RatelServerRegistry implements RegisterStrategy {
 
     private void applyHeartBeat(final ServiceDescriptor serviceDescriptor) {
         if (taskScheduler == null) {
-            //hearbeat feature not active, when no scheduler is given
+            //heakrbeat feature not active, when no scheduler is given
             return;
         }
         taskScheduler.scheduleAtFixedRate(new Runnable() {
             @Override
             public void run() {
+                LOGGER.info("Heartbeat for service {} published at: {}", serviceDescriptor.getName(), serviceDescriptor.getAddress());
                 server.registerService(serviceDescriptor);
                 server.collectStatistics(serviceDescriptor);
 
