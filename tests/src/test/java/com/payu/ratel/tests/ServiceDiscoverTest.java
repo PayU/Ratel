@@ -27,6 +27,7 @@ import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.payu.ratel.Discover;
+import com.payu.ratel.client.standalone.RatelClientFactory;
 import com.payu.ratel.client.standalone.RatelStandaloneFactory;
 import com.payu.ratel.proxy.NoServiceInstanceFound;
 import com.payu.ratel.tests.service.ProxableService;
@@ -111,7 +112,7 @@ public class ServiceDiscoverTest {
 
         // given
         String ratelAddr = "http://127.0.0.1:" + ratelTestCtx.getServiceDiscoveryPort() + "/server/discovery";
-        RatelStandaloneFactory clientFactory = RatelStandaloneFactory.fromRatelServer(ratelAddr);
+        RatelClientFactory clientFactory = RatelStandaloneFactory.fromRatelServer(ratelAddr);
 
         // when
         TestService testServiceClient = clientFactory.getServiceProxy(TestService.class);

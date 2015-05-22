@@ -11,6 +11,7 @@ import org.springframework.remoting.RemoteConnectFailureException;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.payu.ratel.Discover;
+import com.payu.ratel.client.standalone.RatelClientFactory;
 import com.payu.ratel.client.standalone.RatelStandaloneFactory;
 import com.payu.ratel.tests.RatelTest;
 import com.payu.ratel.tests.RatelTestContext;
@@ -78,7 +79,7 @@ public class TimeoutConfigurationTest {
 
     private TimeoutService getStandaloneTimeoutClient() {
         String ratelAddr = "http://127.0.0.1:" + RatelTestContext.getServiceDiscoveryPort() + "/server/discovery";
-        RatelStandaloneFactory clientFactory = RatelStandaloneFactory.fromRatelServer(ratelAddr);
+        RatelClientFactory clientFactory = RatelStandaloneFactory.fromRatelServer(ratelAddr);
 
         TimeoutService timeoutClient = clientFactory.getServiceProxy(TimeoutService.class);
         return timeoutClient;

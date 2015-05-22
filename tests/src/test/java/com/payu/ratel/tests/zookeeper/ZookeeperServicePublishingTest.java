@@ -45,6 +45,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import com.payu.ratel.Discover;
+import com.payu.ratel.client.standalone.RatelClientFactory;
 import com.payu.ratel.client.standalone.RatelStandaloneFactory;
 import com.payu.ratel.config.ServiceDiscoveryConfig;
 import com.payu.ratel.server.DiscoveryServerMain;
@@ -97,7 +98,7 @@ public class ZookeeperServicePublishingTest {
     @Test
     public void shouldCreateStandaloneClientWithZookeeper() {
         //given
-        RatelStandaloneFactory ratelStandaloneFactory = RatelStandaloneFactory.fromZookeeperServer(ZK_HOST);
+        RatelClientFactory ratelStandaloneFactory = RatelStandaloneFactory.fromZookeeperServer(ZK_HOST);
 
         //when
         TestService testedService = ratelStandaloneFactory.getServiceProxy(TestService.class);

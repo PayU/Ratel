@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import com.payu.ratel.client.RemoteServiceCallListener;
+import com.payu.ratel.client.standalone.RatelClientFactory;
 import com.payu.ratel.client.standalone.RatelStandaloneFactory;
 import com.payu.ratel.tests.service.TestServiceCallListener;
 
@@ -11,7 +12,7 @@ import com.payu.ratel.tests.service.TestServiceCallListener;
 public class RatelStandaloneTestConfig {
 
     @Bean
-    public RatelStandaloneFactory standaloneFactory() {
+    public RatelClientFactory standaloneFactory() {
         return new RatelStandaloneFactory();
     }
 
