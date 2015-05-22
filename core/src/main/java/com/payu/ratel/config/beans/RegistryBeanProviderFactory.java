@@ -17,8 +17,12 @@ package com.payu.ratel.config.beans;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.core.env.Environment;
+
+import com.payu.ratel.client.standalone.RatelClientFactory;
+import com.payu.ratel.client.standalone.RatelStandaloneFactory;
 
 public class RegistryBeanProviderFactory {
 
@@ -37,12 +41,27 @@ public class RegistryBeanProviderFactory {
         }
 
         LOGGER.info("Ratel is enabled");
-        RegistryStrategiesProvider registryBeanProvider = doCreate(beanFactory);
+        RegistryStrategiesProvider registryBeanProvider;
+        try {
+            registryBeanProvider = beanFactory.getBean(RegistryStrategiesProvider.class);
+            LOGGER.info("Ratel was already configured, skiping second initialization");
+        } catch (NoSuchBeanDefinitionException e) {
+            registryBeanProvider = createAndRegisterStrategiesProvider(beanFactory);
+            LOGGER.info("Ratel is configured");
+        }
+        return registryBeanProvider;
+
+    }
+
+    private RegistryStrategiesProvider createAndRegisterStrategiesProvider(ConfigurableListableBeanFactory beanFactory) {
+        RegistryStrategiesProvider registryBeanProvider;
+        registryBeanProvider = doCreate(beanFactory);
         final String registryBeanName = registryBeanProvider.getClass().getName();
         beanFactory.registerSingleton(registryBeanName, registryBeanProvider);
         beanFactory.initializeBean(registryBeanProvider, registryBeanName);
+        RatelClientFactory standaloneFactory = RatelStandaloneFactory.fromBeanFactory(beanFactory);
+        beanFactory.registerSingleton(standaloneFactory.getClass().getName(), standaloneFactory);
         return registryBeanProvider;
-
     }
 
     protected RegistryStrategiesProvider doCreate(ConfigurableListableBeanFactory beanFactory) {

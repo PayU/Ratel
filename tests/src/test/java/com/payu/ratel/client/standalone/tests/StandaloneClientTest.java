@@ -38,8 +38,9 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.jayway.awaitility.Awaitility;
+import com.payu.ratel.client.RatelServiceCallPublisher;
 import com.payu.ratel.client.ServiceCallListener;
-import com.payu.ratel.client.standalone.RatelStandaloneFactory;
+import com.payu.ratel.client.standalone.RatelClientFactory;
 import com.payu.ratel.config.ServiceDiscoveryConfig;
 import com.payu.ratel.context.ProcessContext;
 import com.payu.ratel.context.RemoteServiceCallEvent;
@@ -62,7 +63,7 @@ import com.payu.ratel.tests.service.TestServiceConfiguration;
 public class StandaloneClientTest {
 
     @Autowired
-    private RatelStandaloneFactory standaloneFactory;
+    private RatelClientFactory standaloneFactory;
 
     private ConfigurableApplicationContext startedApp;
 
@@ -99,7 +100,7 @@ public class StandaloneClientTest {
         // client side
         TestService testService = standaloneFactory.getServiceProxy(TestService.class);
         ServiceCallListener listener = mock(ServiceCallListener.class);
-        standaloneFactory.addRatelServiceCallListener(listener);
+        ((RatelServiceCallPublisher) standaloneFactory).addRatelServiceCallListener(listener);
         ProcessContext.getInstance().setProcessIdentifier("123");
         // server side
         TestServiceCallListener serverSideListener = startedApp.getBean(TestServiceCallListener.class);
