@@ -1,0 +1,98 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Ratel by PayU-Tech</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/github-light.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Ratel</h1>
+        <p>Service Discovery</p>
+
+        <p class="view"><a href="https://github.com/PayU-Tech/Ratel">View the Project on GitHub <small>PayU-Tech/Ratel</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/PayU-Tech/Ratel/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/PayU-Tech/Ratel/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/PayU-Tech/Ratel">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>
+<a id="introduction" class="anchor" href="#introduction" aria-hidden="true"><span class="octicon octicon-link"></span></a>Introduction</h1>
+
+<p>Ratel is a library that allows us to integrate system internal components in a simple way, which hopefully enables you to provide a scalable, testable distributed platform with less effort. The basic motivation behind the library is to minimize technological overhead so that the volume of a code that does not implement actual business logic is minimal.
+Ratel introduces a trivial abstraction of a service in a distributed environment: </p>
+
+<p><strong><em>In java world service is an interface. On client side you inject an interface, on provider side you implement an interface. Nothing more. Period.</em></strong></p>
+
+<h1>
+<a id="ratel---service-discovery" class="anchor" href="#ratel---service-discovery" aria-hidden="true"><span class="octicon octicon-link"></span></a>Ratel - service discovery</h1>
+
+<p><img src="http://yuml.me/diagram/scruffy/class/%5BFooClient%5Ddiscover-%3E%5BRatel%20Server%5D,%20%5BFooServer%5Dpublish-%3E%5BRatel%20Server%5D,%20%5BFooClient%5D-%3E%5BFooServer%5D" alt="client-&gt;ratel-&gt;server"></p>
+
+<p><code>FooClient.java</code> in <strong>Client</strong> application</p>
+
+<pre><code>@Service
+public class FooClient {
+
+    @Discover
+    private FooService fooService;
+
+    ...
+
+}   
+</code></pre>
+
+<p><code>FooService.java</code> in <strong>Server</strong> application</p>
+
+<pre><code>@Service
+@Publish
+public class FooServiceImpl implements FooService {
+
+    ...
+
+}   
+</code></pre>
+
+<p>FooService is auto-discovered by client application.</p>
+
+<h1>
+<a id="reporting-bugs-and-feature-requests" class="anchor" href="#reporting-bugs-and-feature-requests" aria-hidden="true"><span class="octicon octicon-link"></span></a>Reporting bugs and feature requests</h1>
+
+<pre><code>We use github issues to track bugs, improvements and feature requests.
+If you find security bug you can also send info to &lt;security@payu.com&gt;
+</code></pre>
+
+<h1>
+<a id="contributing" class="anchor" href="#contributing" aria-hidden="true"><span class="octicon octicon-link"></span></a>Contributing</h1>
+
+<pre><code>Your contribution is welcome.
+Please send pull request to development branch
+it is the only branch where we can accept your changes.
+</code></pre>
+
+<h1>
+<a id="please-visit-project-wiki-or-apidocs-for-more-info" class="anchor" href="#please-visit-project-wiki-or-apidocs-for-more-info" aria-hidden="true"><span class="octicon octicon-link"></span></a>Please visit project wiki or apidocs for more info</h1>
+
+<p><a href="https://github.com/PayU-Tech/Ratel/wiki">WIKI</a>     </p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/PayU-Tech">PayU-Tech</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
