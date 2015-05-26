@@ -23,10 +23,24 @@ import java.lang.annotation.Target;
 
 import javax.inject.Named;
 
+/**
+ * Annotation used to mark a bean to be exported by Ralel as a service.
+ */
 @Target({ElementType.TYPE, ElementType.CONSTRUCTOR, ElementType.FIELD, ElementType.METHOD, ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Named
 public @interface Publish {
+
+    /**
+     * Specifies a contract under which a service should be exported. The
+     * annotated class must implement this interface
+     *
+     * @return the interaface class that denotes the service contract. A
+     *         default value Void.class denotes
+     *         that the first interface implemented by the annotated class
+     *         should be used as a service contract. This is useful, when a
+     *         class only implements one interface.
+     */
     Class<?> value() default Void.class;
 }

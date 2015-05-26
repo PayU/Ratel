@@ -1,7 +1,5 @@
-package com.payu.ratel.client;
+package com.payu.ratel.context;
 
-import com.payu.ratel.context.ServiceInstanceCallEvent;
-import com.payu.ratel.context.ServiceInstanceResponseEvent;
 
 /**
  * Listener invoked when Ratel invokes an implementation of a service on a

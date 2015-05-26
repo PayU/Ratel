@@ -20,6 +20,14 @@ import org.springframework.context.annotation.Lazy;
 
 import java.lang.annotation.ElementType;
 
+/**
+ * Annotation used to mark fields, accessors or constructor arguments that
+ * should be injected with a proxy of ratel service.
+ * When you annotate a field (setter/parameter) with this annotation, Ratel,
+ * during autowiring phase, will inject a laizily-initialized
+ * proxy of a service, who's contract matches the type of a field
+ * (setter/parameter)
+ */
 @java.lang.annotation.Target({ElementType.TYPE, ElementType.CONSTRUCTOR, ElementType.FIELD, ElementType.METHOD,
         ElementType.ANNOTATION_TYPE, ElementType.PARAMETER})
 @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

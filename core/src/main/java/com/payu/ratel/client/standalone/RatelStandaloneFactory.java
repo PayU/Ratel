@@ -17,9 +17,9 @@ import org.springframework.core.env.StandardEnvironment;
 
 import com.payu.ratel.client.RatelClientProducer;
 import com.payu.ratel.client.RatelServiceCallPublisher;
-import com.payu.ratel.client.RemoteServiceCallListener;
 import com.payu.ratel.config.beans.RegistryBeanProviderFactory;
 import com.payu.ratel.config.beans.RegistryStrategiesProvider;
+import com.payu.ratel.context.RemoteServiceCallListener;
 
 /**
  * Utility class that enables you to imperatively create ratel service clients.
