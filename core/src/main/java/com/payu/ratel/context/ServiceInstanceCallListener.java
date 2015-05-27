@@ -2,7 +2,7 @@ package com.payu.ratel.context;
 
 
 /**
- * Listener invoked when Ratel invokes an implementation of a service on a
+ * Listener notified when Ratel invokes an implementation of a service on a
  * particular instance of a service.
  */
 public interface ServiceInstanceCallListener {
