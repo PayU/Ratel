@@ -39,12 +39,12 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.jayway.awaitility.Awaitility;
 import com.payu.ratel.client.RatelServiceCallPublisher;
-import com.payu.ratel.client.ServiceCallListener;
 import com.payu.ratel.client.standalone.RatelClientFactory;
 import com.payu.ratel.config.ServiceDiscoveryConfig;
 import com.payu.ratel.context.ProcessContext;
 import com.payu.ratel.context.RemoteServiceCallEvent;
 import com.payu.ratel.context.RemoteServiceResponseEvent;
+import com.payu.ratel.context.ServiceCallListener;
 import com.payu.ratel.context.ServiceEvent;
 import com.payu.ratel.context.ServiceInstanceCallEvent;
 import com.payu.ratel.context.ServiceInstanceResponseEvent;

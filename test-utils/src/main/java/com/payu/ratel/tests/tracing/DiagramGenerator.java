@@ -7,10 +7,10 @@ import java.io.IOException;
 import java.util.Stack;
 
 import com.google.common.base.Strings;
-import com.payu.ratel.client.ServiceCallListener;
 import com.payu.ratel.context.ProcessContext;
 import com.payu.ratel.context.RemoteServiceCallEvent;
 import com.payu.ratel.context.RemoteServiceResponseEvent;
+import com.payu.ratel.context.ServiceCallListener;
 import com.payu.ratel.context.ServiceInstanceCallEvent;
 import com.payu.ratel.context.ServiceInstanceResponseEvent;
 

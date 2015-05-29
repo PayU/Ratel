@@ -209,7 +209,7 @@ public class RatelTestContext {
    * observed by this {@link RatelTestContext}. If you invoke a method
    * {@link RatelTestContext#waitForServicesRegistration()}, the services from
    * this context will also be considered and the method will not finalize until
-   * all services punlished by it are up and running.
+   * all services published by it are up and running.
    *
    * @param applicationContext
    *          the context to add

@@ -1,5 +1,12 @@
 package com.payu.ratel.client.standalone;
 
+/**
+ * This interface represents a class which can be used to produce
+ * fully-featured Ratel service proxies, on the basis of the service contract
+ * only.
+ *
+ * @see RatelStandaloneFactory
+ */
 public interface RatelClientFactory {
 
     /**

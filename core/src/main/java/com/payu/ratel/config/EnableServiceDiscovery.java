@@ -22,6 +22,10 @@ import java.lang.annotation.Target;
 
 import org.springframework.context.annotation.Import;
 
+/**
+ * This annotation adds a spring configuration of Ratel to your application.
+ * @see ServiceDiscoveryConfig
+ */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Import(ServiceDiscoveryConfig.class)

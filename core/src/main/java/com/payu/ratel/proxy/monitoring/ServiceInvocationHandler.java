@@ -22,11 +22,11 @@ import java.util.LinkedList;
 
 import org.springframework.beans.factory.ListableBeanFactory;
 
-import com.payu.ratel.client.ServiceInstanceCallListener;
 import com.payu.ratel.context.ProcessContext;
 import com.payu.ratel.context.ServiceCallInput;
 import com.payu.ratel.context.ServiceCallResult;
 import com.payu.ratel.context.ServiceInstanceCallEvent;
+import com.payu.ratel.context.ServiceInstanceCallListener;
 import com.payu.ratel.context.ServiceInstanceResponseEvent;
 
 public class ServiceInvocationHandler implements java.lang.reflect.InvocationHandler {

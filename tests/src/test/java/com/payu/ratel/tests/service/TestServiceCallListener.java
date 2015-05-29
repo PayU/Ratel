@@ -1,8 +1,8 @@
 package com.payu.ratel.tests.service;
 
-import com.payu.ratel.client.ServiceCallListener;
 import com.payu.ratel.context.RemoteServiceCallEvent;
 import com.payu.ratel.context.RemoteServiceResponseEvent;
+import com.payu.ratel.context.ServiceCallListener;
 import com.payu.ratel.context.ServiceEvent;
 import com.payu.ratel.context.ServiceInstanceCallEvent;
 import com.payu.ratel.context.ServiceInstanceResponseEvent;

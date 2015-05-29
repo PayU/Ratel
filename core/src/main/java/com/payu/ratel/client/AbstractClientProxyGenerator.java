@@ -24,6 +24,8 @@ import java.util.Collection;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.core.env.Environment;
 
+import com.payu.ratel.context.RemoteServiceCallListener;
+
 public abstract class AbstractClientProxyGenerator implements ClientProxyGenerator {
 
     private static final long DEFAULT_CONNECT_READ_TIMEOUT = 30000;
