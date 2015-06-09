@@ -22,7 +22,7 @@ public class PublishException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
 
-    private static final String MESSAGE = "Illegal use of @Publish interface ";
+    private static final String MESSAGE = "Illegal use of @Publish annotation ";
 
     public PublishException(String message) {
         super(MESSAGE + "[" + message + "]");

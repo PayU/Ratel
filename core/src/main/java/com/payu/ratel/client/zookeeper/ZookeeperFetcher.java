@@ -106,4 +106,10 @@ public class ZookeeperFetcher implements FetchStrategy {
             }
         }
     }
+
+    @Override
+    @SuppressWarnings("PMD")
+    public Collection<String> getServiceNames() throws Exception {
+        return serviceDiscovery.queryForNames();
+    }
 }

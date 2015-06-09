@@ -20,7 +20,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.concurrent.atomic.AtomicInteger;
 
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
@@ -63,7 +62,7 @@ public class RatelServerFetcher implements FetchStrategy {
     public Collection<String> fetchServiceAddresses(final String serviceName) {
         Preconditions.checkNotNull(serviceName, "Please provide service name");
 
-        final Collection<ServiceDescriptor> serviceInstances = Collections2.filter(discoveryClient.fetchAllServices(),
+        final Collection<ServiceDescriptor> serviceInstances = Collections2.filter(getAllServiceInstances(),
                 new Predicate<ServiceDescriptor>() {
                     @Override
                     public boolean apply(ServiceDescriptor serviceDescriptor) {
@@ -78,6 +77,21 @@ public class RatelServerFetcher implements FetchStrategy {
             }
         });
 
+    }
+
+    private Collection<ServiceDescriptor> getAllServiceInstances() {
+        return discoveryClient.fetchAllServices();
+    }
+
+    @Override
+    public Collection<String> getServiceNames() {
+       return Collections2.transform(getAllServiceInstances(), new Function<ServiceDescriptor, String>() {
+
+            @Override
+            public String apply(ServiceDescriptor input) {
+                return input.getName();
+            }
+        });
     }
 
 }
