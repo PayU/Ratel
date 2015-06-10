@@ -2,6 +2,9 @@ package com.payu.ratel.client;
 
 import java.lang.reflect.Proxy;
 
+import org.springframework.aop.TargetSource;
+import org.springframework.aop.framework.ProxyFactory;
+
 import com.payu.ratel.event.EventCannon;
 import com.payu.ratel.proxy.BroadcastingInvocationHandler;
 import com.payu.ratel.proxy.CacheInvocationHandler;
@@ -19,38 +22,45 @@ public class RatelClientProducer {
         this.clientProxyGenerator = clientProxyGenerator;
     }
 
-    public <T> T produceServiceProxy(Class<T> serviceContractClass, boolean useCache,
+    public <T> T produceServiceProxy(final Class<T> serviceContractClass, boolean useCache,
             Class<? extends Throwable> retryOnException) {
-        T client = produceUnicaster(serviceContractClass);
+
+        ProxyFactory proxyFactory = new ProxyFactory();
+        proxyFactory.setInterfaces(serviceContractClass);
 
         if (useCache) {
-            client = decorateWithCaching(client, serviceContractClass);
+            proxyFactory.addAdvice(new CacheInvocationHandler());
         }
 
         if (retryOnException != null) {
-            client = decorateWithRetryPolicy(client, serviceContractClass, retryOnException);
+            proxyFactory.addAdvice(new RetryPolicyInvocationHandler(retryOnException));
         }
 
-        return client;
-    }
+        proxyFactory.setTargetSource(new TargetSource() {
+            @Override
+            public Class<?> getTargetClass() {
+                return serviceContractClass;
+            }
 
-    @SuppressWarnings("unchecked")
-    private <T> T produceUnicaster(Class<T> clazz) {
-        return (T) Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class[] {clazz},
-                new UnicastingInvocationHandler(fetchStrategy, clazz, clientProxyGenerator));
-    }
+            @Override
+            public boolean isStatic() {
+                return false;
+            }
 
-    @SuppressWarnings("unchecked")
-    private <T> T decorateWithCaching(final Object object, final Class<T> clazz) {
-        return (T) Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class[] {clazz},
-                new CacheInvocationHandler(object));
-    }
+            @Override
+            public Object getTarget() {
+                return Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class[]
+                        {serviceContractClass}, new UnicastingInvocationHandler(fetchStrategy, serviceContractClass,
+                        clientProxyGenerator));
+            }
 
-    @SuppressWarnings("unchecked")
-    private <T> T decorateWithRetryPolicy(final Object object, final Class<T> clazz,
-            final Class<? extends Throwable> exception) {
-        return (T) Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class[] {clazz},
-                new RetryPolicyInvocationHandler(object, exception));
+            @Override
+            public void releaseTarget(Object o) {
+            }
+        });
+
+        return (T) proxyFactory.getProxy();
+
     }
 
     public Object produceBroadcaster() {

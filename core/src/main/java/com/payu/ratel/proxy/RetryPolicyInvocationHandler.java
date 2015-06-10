@@ -15,13 +15,13 @@
  */
 package com.payu.ratel.proxy;
 
+import org.aopalliance.intercept.MethodInterceptor;
+import org.aopalliance.intercept.MethodInvocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.aop.ProxyMethodInvocation;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
-public class RetryPolicyInvocationHandler implements java.lang.reflect.InvocationHandler {
+public class RetryPolicyInvocationHandler implements MethodInterceptor {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RetryPolicyInvocationHandler.class);
 
@@ -31,26 +31,21 @@ public class RetryPolicyInvocationHandler implements java.lang.reflect.Invocatio
 
     private final Class exception;
 
-    private final Object object;
-
-    public RetryPolicyInvocationHandler(Object object, Class exception) {
-        this.object = object;
+    public RetryPolicyInvocationHandler(Class exception) {
         this.exception = exception;
     }
 
-    @Override
-    public Object invoke(Object o, Method method, Object[] args) throws Throwable {
-        return invokeWithRetry(method, args, 1);
-    }
-
-    public Object invokeWithRetry(Method method, Object[] args, int count) throws Throwable {
+    @SuppressWarnings("PMD.AvoidCatchingThrowable")
+    public Object invokeWithRetry(MethodInvocation methodInvocation, int count) throws Throwable {
+        MethodInvocation methodInvocationCopy = ((ProxyMethodInvocation) methodInvocation).invocableClone();
         try {
-            return method.invoke(object, args);
-        } catch (InvocationTargetException thrownException) {
+            return methodInvocationCopy.proceed();
+        } catch (Throwable thrownException) {
             LOGGER.info("Service thrown exception");
             if (isInStacktrace(thrownException, exception) && count < RETRY_COUNT) {
                 Thread.sleep(RETRY_TIME);
-                return invokeWithRetry(method, args, count + 1);
+
+                return invokeWithRetry(methodInvocation, count + 1);
             }
 
             throw thrownException;
@@ -70,4 +65,8 @@ public class RetryPolicyInvocationHandler implements java.lang.reflect.Invocatio
         return false;
     }
 
+    @Override
+    public Object invoke(MethodInvocation methodInvocation) throws Throwable {
+        return invokeWithRetry(methodInvocation, 1);
+    }
 }
