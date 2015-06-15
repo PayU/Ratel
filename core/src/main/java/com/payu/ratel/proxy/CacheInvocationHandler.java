@@ -17,6 +17,9 @@ package com.payu.ratel.proxy;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+
+import org.aopalliance.intercept.MethodInterceptor;
+import org.aopalliance.intercept.MethodInvocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,28 +27,23 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
-public class CacheInvocationHandler implements java.lang.reflect.InvocationHandler {
+public class CacheInvocationHandler implements MethodInterceptor {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CacheInvocationHandler.class);
-
-    private final Object object;
 
     private final Cache<MethodWithArguments, Object> cache = CacheBuilder.newBuilder()
             .maximumSize(1000)
             .expireAfterWrite(10, TimeUnit.MINUTES)
             .build();
 
-    public CacheInvocationHandler(Object object) {
-        this.object = object;
-    }
-
     @Override
-    public Object invoke(Object o, Method method, Object[] args) throws Throwable {
-        final MethodWithArguments methodWithArguments = new MethodWithArguments(method, args);
+    public Object invoke(MethodInvocation methodInvocation) throws Throwable {
+        Method method = methodInvocation.getMethod();
+        final MethodWithArguments methodWithArguments = new MethodWithArguments(method, methodInvocation.getArguments());
         final Object cachedResults = cache.getIfPresent(methodWithArguments);
         if (cachedResults == null) {
             LOGGER.info("New invocation of method {}", method.getName());
-            final Object results = method.invoke(object, args);
+            final Object results = methodInvocation.proceed();
             if (results != null) {
                 cache.put(methodWithArguments, results);
             }
