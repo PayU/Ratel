@@ -1,0 +1,1 @@
+java -DserviceDiscovery.ratelServerAddress=http://localhost:8090/server/discovery -DserviceDiscovery.selfAddress=localhost:8080 -cp target/ratel-examples-*-SNAPSHOT.jar com.payu.ratel.examples.myapp.MyApplication

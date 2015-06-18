@@ -47,9 +47,9 @@ public class RemoteRestDiscoveryServer {
     public void registerService(ServiceDescriptor serviceDescriptor) {
         try {
             api.registerService(serviceDescriptor);
-            LOGGER.info("Service {} registered  in server {}. Try again.", serviceDescriptor, serverApiUrl);
+            LOGGER.info("Service {} registered  in server {}.", serviceDescriptor, serverApiUrl);
         } catch (RetrofitError e) {
-            LOGGER.warn("Retrofit error was thrown while registering service at {}. Try again.", serverApiUrl);
+            LOGGER.warn("Retrofit error was thrown while registering service at {}. Try again.", serverApiUrl, e);
         }
     }
 
@@ -60,7 +60,7 @@ public class RemoteRestDiscoveryServer {
         } catch (UnsupportedEncodingException e) {
             throw new AssertionError("UTF-8 must be supported", e);
         } catch (RetrofitError e) {
-            LOGGER.warn("Retrofit error was thrown while collecting statistics. Try again.");
+            LOGGER.warn("Retrofit error was thrown while collecting statistics. Try again.", e);
         }
     }
 

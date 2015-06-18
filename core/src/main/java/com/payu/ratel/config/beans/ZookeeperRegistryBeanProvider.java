@@ -58,7 +58,7 @@ public class ZookeeperRegistryBeanProvider implements RegistryStrategiesProvider
         curatorFramework.start();
 
         this.serviceDiscovery = ServiceDiscoveryBuilder.builder(Void.class).client(this.curatorFramework)
-                .basePath("services").build();
+                .basePath("/services").build();
 
         try {
             getServiceDiscovery().start();

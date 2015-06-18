@@ -15,22 +15,27 @@
  */
 package com.payu.ratel.register.config;
 
-import com.payu.ratel.server.InMemoryDiscoveryServer;
+import java.util.logging.Logger;
+
+import javax.json.stream.JsonGenerator;
+import javax.ws.rs.ApplicationPath;
+
 import org.glassfish.jersey.filter.LoggingFilter;
 import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.ServerProperties;
 
-import javax.json.stream.JsonGenerator;
-import javax.ws.rs.ApplicationPath;
+import com.payu.ratel.server.InMemoryDiscoveryServer;
 
 @ApplicationPath("discovery")
 public class JerseyConfig extends ResourceConfig {
 
+    private static final Logger LOGGER = Logger.getLogger("Discovery service");
+
     public JerseyConfig() {
         register(InMemoryDiscoveryServer.class);
-        property(ServerProperties.BV_SEND_ERROR_IN_RESPONSE, true);
-        register(LoggingFilter.class);
+        property(ServerProperties.BV_SEND_ERROR_IN_RESPONSE, false);
+        register(new LoggingFilter(LOGGER, true));
         property(JsonGenerator.PRETTY_PRINTING, true);
         register(JacksonFeature.class);
     }
