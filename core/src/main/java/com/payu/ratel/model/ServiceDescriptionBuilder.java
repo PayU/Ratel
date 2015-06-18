@@ -18,7 +18,6 @@ package com.payu.ratel.model;
 public final class ServiceDescriptionBuilder {
     private String name;
     private String address;
-    private String path;
 
     private ServiceDescriptionBuilder() {
     }
@@ -37,13 +36,7 @@ public final class ServiceDescriptionBuilder {
         return this;
     }
 
-    public ServiceDescriptionBuilder withPath(String path) {
-        this.path = path;
-        return this;
-    }
-
-
     public ServiceDescriptor build() {
-        return new ServiceDescriptor(name, address, path);
+        return new ServiceDescriptor(name, address);
     }
 }

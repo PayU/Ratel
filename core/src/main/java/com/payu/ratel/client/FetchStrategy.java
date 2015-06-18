@@ -20,6 +20,9 @@ import java.util.Collection;
 // TODO - remove PMD suppress
 @SuppressWarnings("PMD.SignatureDeclareThrowsException")
 public interface FetchStrategy {
+
+    Collection<String> getServiceNames() throws Exception;
+
     String fetchServiceAddress(String serviceName) throws Exception;
 
     Collection<String> fetchServiceAddresses(String serviceName) throws Exception;

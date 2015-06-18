@@ -20,6 +20,8 @@ package com.payu.ratel.tests;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.BDDAssertions.then;
 
+import java.util.Collection;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +31,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import com.payu.ratel.Discover;
 import com.payu.ratel.client.standalone.RatelClientFactory;
 import com.payu.ratel.client.standalone.RatelStandaloneFactory;
+import com.payu.ratel.config.beans.RegistryStrategiesProvider;
 import com.payu.ratel.proxy.NoServiceInstanceFound;
 import com.payu.ratel.tests.service.ProxableService;
 import com.payu.ratel.tests.service.ProxableServiceConfiguration;
@@ -61,6 +64,9 @@ public class ServiceDiscoverTest {
 
     @Autowired
     private RatelTestContext ratelTestCtx;
+
+    @Autowired
+    private RegistryStrategiesProvider strategiesProvider;
 
     @Test
     public void shouldDiscoverServiceByField() throws InterruptedException {
@@ -106,6 +112,21 @@ public class ServiceDiscoverTest {
         // then
         assertThat(result).isEqualTo(4);
     }
+
+    @Test
+    public void shouldReturnListOfServiceNames() throws Exception {
+        // when
+        testService.hello();
+        Collection<String> serviceNames = strategiesProvider.getFetchStrategy().getServiceNames();
+
+        //then
+        then(serviceNames).hasSize(4)
+                .contains(
+                        ProxableService.class.getCanonicalName(),
+                        TestService.class.getCanonicalName(),
+                        Test2Service.class.getCanonicalName());
+    }
+
 
     @Test
     public void shouldDiscoverServiceWithStandaloneRatelClient() {

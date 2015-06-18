@@ -21,6 +21,7 @@ import static com.payu.ratel.config.beans.RegistryBeanProviderFactory.SERVICE_DI
 import static org.assertj.core.api.BDDAssertions.then;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
@@ -32,7 +33,6 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +48,9 @@ import com.payu.ratel.Discover;
 import com.payu.ratel.client.standalone.RatelClientFactory;
 import com.payu.ratel.client.standalone.RatelStandaloneFactory;
 import com.payu.ratel.config.ServiceDiscoveryConfig;
+import com.payu.ratel.config.beans.RegistryStrategiesProvider;
 import com.payu.ratel.server.DiscoveryServerMain;
+import com.payu.ratel.tests.service.Test2Service;
 import com.payu.ratel.tests.service.TestService;
 import com.payu.ratel.tests.service.TestServiceConfiguration;
 
@@ -64,13 +66,19 @@ public class ZookeeperServicePublishingTest {
     public static final String ZK_HOST = "127.0.0.1:" + ZK_PORT;
     private static TestingServer zkServer;
 
-
     private ServiceProvider<TestService> serviceProvider;
+
     @Discover
     private TestService testService;
+
     private ConfigurableApplicationContext remoteContext;
+
     @Autowired
     private ServiceDiscovery<TestService> serviceDiscovery;
+
+    @Autowired
+    private RegistryStrategiesProvider strategiesProvider;
+
     private int port = 8035;
 
     @BeforeClass
@@ -83,6 +91,16 @@ public class ZookeeperServicePublishingTest {
     public static void closeZookeeper() throws IOException {
         zkServer.stop();
         zkServer.close();
+    }
+
+    @Test
+    public void shouldReturnListOfServiceNames() throws Exception {
+        // when
+        testService.hello();
+        Collection<String> serviceNames = strategiesProvider.getFetchStrategy().getServiceNames();
+
+        //then
+        then(serviceNames).hasSize(2).contains(TestService.class.getCanonicalName(), Test2Service.class.getCanonicalName());
     }
 
     @Test
@@ -107,7 +125,6 @@ public class ZookeeperServicePublishingTest {
     }
 
     @Test
-    @Ignore
     public void shouldResolveZookeeperHostFromCliProperty() {
         //given
         System.setProperty(SERVICE_DISCOVERY_ZK_HOST, ZK_HOST);
@@ -142,6 +159,7 @@ public class ZookeeperServicePublishingTest {
 
     @After
     public void close() throws IOException {
+        System.clearProperty(SERVICE_DISCOVERY_ZK_HOST);
         remoteContext.close();
     }
 }
