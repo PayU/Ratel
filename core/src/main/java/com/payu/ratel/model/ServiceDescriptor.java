@@ -71,11 +71,9 @@ public class ServiceDescriptor {
         if (!address.equals(that.address)) {
             return false;
         }
-        if (!name.equals(that.name)) {
-            return false;
-        }
 
-        return true;
+        return name.equals(that.name);
+
     }
 
     @Override
