@@ -79,11 +79,9 @@ public class CacheInvocationHandler implements MethodInterceptor {
             if (!Arrays.equals(args, that.args)) {
                 return false;
             }
-            if (!method.equals(that.method)) {
-                return false;
-            }
 
-            return true;
+            return method.equals(that.method);
+
         }
 
         @Override
