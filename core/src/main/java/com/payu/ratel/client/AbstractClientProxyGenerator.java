@@ -24,6 +24,7 @@ import java.util.Collection;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.core.env.Environment;
 
+import com.payu.ratel.config.Timeout;
 import com.payu.ratel.context.RemoteServiceCallListener;
 
 public abstract class AbstractClientProxyGenerator implements ClientProxyGenerator {
@@ -52,8 +53,9 @@ public abstract class AbstractClientProxyGenerator implements ClientProxyGenerat
         setServiceCallListeners(proxyFactory);
 
         RatelHessianProxyFactory ratelProxyFactory = new RatelHessianProxyFactory();
-        ratelProxyFactory.setConnectTimeout(getConnectTimeout());
-        ratelProxyFactory.setReadTimeout(getReadTimeout());
+        Timeout timeout = clazz.getAnnotation(Timeout.class);
+        ratelProxyFactory.setConnectTimeout(timeout != null ? timeout.connectTimeout() : getConnectTimeout());
+        ratelProxyFactory.setReadTimeout(timeout != null ? timeout.readTimeout() : getReadTimeout());
         ratelProxyFactory.setOverloadEnabled(true);
         proxyFactory.setProxyFactory(ratelProxyFactory);
 
