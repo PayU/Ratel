@@ -98,7 +98,7 @@ public class StandaloneClientTest {
 
         // given
         // client side
-        TestService testService = standaloneFactory.getServiceProxy(TestService.class);
+        TestService testService = standaloneFactory.getServiceProxy(TestService.class, null);
         ServiceCallListener listener = mock(ServiceCallListener.class);
         ((RatelServiceCallPublisher) standaloneFactory).addRatelServiceCallListener(listener);
         ProcessContext.getInstance().setProcessIdentifier("123");

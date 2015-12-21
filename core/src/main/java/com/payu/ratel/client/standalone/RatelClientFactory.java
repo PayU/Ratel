@@ -1,5 +1,7 @@
 package com.payu.ratel.client.standalone;
 
+import com.payu.ratel.config.TimeoutConfig;
+
 /**
  * This interface represents a class which can be used to produce
  * fully-featured Ratel service proxies, on the basis of the service contract
@@ -23,7 +25,17 @@ public interface RatelClientFactory {
      *            interface for the service
      * @param serviceContractClass
      *            the desired contract class.
+     * @param timeout
+     *            timeout configuration for calling remote endpoint
      * @return a fully-featured service client.
+     */
+    <T> T getServiceProxy(Class<T> serviceContractClass, TimeoutConfig timeout);
+
+    /**
+     * @param <T>                  a type of the service created should contain contract
+     *                             interface for the service
+     * @param serviceContractClass the desired contract class.
+     * @see RatelClientFactory#getServiceProxy(Class, TimeoutConfig)
      */
     <T> T getServiceProxy(Class<T> serviceContractClass);
 

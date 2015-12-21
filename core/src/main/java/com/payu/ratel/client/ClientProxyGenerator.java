@@ -15,8 +15,10 @@
  */
 package com.payu.ratel.client;
 
+import com.payu.ratel.config.TimeoutConfig;
+
 public interface ClientProxyGenerator {
 
 
-    <T> T generate(Class<T> serviceClazz, String serviceAddress);
+    <T> T generate(Class<T> serviceClazz, String serviceAddress, TimeoutConfig timeout);
 }

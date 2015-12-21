@@ -9,6 +9,7 @@ import org.springframework.remoting.RemoteConnectFailureException;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.payu.ratel.Discover;
+import com.payu.ratel.config.Timeout;
 import com.payu.ratel.tests.RatelTest;
 import com.payu.ratel.tests.service.timeout.AnnotatedTimeoutService;
 import com.payu.ratel.tests.service.timeout.TimeoutServiceConfiguration;
@@ -18,6 +19,7 @@ import com.payu.ratel.tests.service.timeout.TimeoutServiceConfiguration;
 public class AnnotatedTimeoutConfigurationTest {
 
     @Discover
+    @Timeout(readTimeout = 2000, connectTimeout = 2000)
     private AnnotatedTimeoutService timeoutService;
 
     @Test

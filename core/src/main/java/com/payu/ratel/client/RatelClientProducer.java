@@ -5,6 +5,7 @@ import java.lang.reflect.Proxy;
 import org.springframework.aop.TargetSource;
 import org.springframework.aop.framework.ProxyFactory;
 
+import com.payu.ratel.config.TimeoutConfig;
 import com.payu.ratel.event.EventCannon;
 import com.payu.ratel.proxy.BroadcastingInvocationHandler;
 import com.payu.ratel.proxy.CacheInvocationHandler;
@@ -23,7 +24,7 @@ public class RatelClientProducer {
     }
 
     public <T> T produceServiceProxy(final Class<T> serviceContractClass, boolean useCache,
-            Class<? extends Throwable> retryOnException) {
+                                     Class<? extends Throwable> retryOnException, final TimeoutConfig timeout) {
 
         ProxyFactory proxyFactory = new ProxyFactory();
         proxyFactory.setInterfaces(serviceContractClass);
@@ -51,7 +52,7 @@ public class RatelClientProducer {
             public Object getTarget() {
                 return Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class[]
                         {serviceContractClass}, new UnicastingInvocationHandler(fetchStrategy, serviceContractClass,
-                        clientProxyGenerator));
+                        clientProxyGenerator, timeout));
             }
 
             @Override
@@ -66,7 +67,7 @@ public class RatelClientProducer {
     public Object produceBroadcaster() {
         return Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(),
                 new Class[] {EventCannon.class}, new BroadcastingInvocationHandler(fetchStrategy,
-                        clientProxyGenerator));
+                        clientProxyGenerator, null));
     }
 
 }

@@ -23,11 +23,15 @@ import org.springframework.beans.factory.config.DependencyDescriptor;
 import org.springframework.beans.factory.support.AutowireCandidateResolver;
 
 import com.google.common.base.Function;
+import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
+import com.google.common.collect.Iterables;
 import com.payu.ratel.Cachable;
 import com.payu.ratel.Discover;
 import com.payu.ratel.RetryPolicy;
+import com.payu.ratel.config.Timeout;
+import com.payu.ratel.config.TimeoutConfig;
 import com.payu.ratel.event.EventCannon;
 
 public class RemoteAutowireCandidateResolver extends ContextAnnotationAutowireCandidateResolver implements
@@ -42,26 +46,33 @@ public class RemoteAutowireCandidateResolver extends ContextAnnotationAutowireCa
     @Override
     protected Object buildLazyResolutionProxy(DependencyDescriptor descriptor, String beanName) {
 
-        if (getAnnotationsType(descriptor).contains(Discover.class.getName())) {
+        Collection<String> annotationsType = getAnnotationsTypes(descriptor);
+        if (annotationsType.contains(Discover.class.getName())) {
             if (descriptor.getDependencyType().equals(EventCannon.class)) {
                 return produceEventCannonProxy();
             } else {
                 Class retryOnException = null;
-                if (getAnnotationsType(descriptor).contains(RetryPolicy.class.getName())) {
-                    final RetryPolicy annotation = (RetryPolicy) (getAnnotationWithType(descriptor).toArray())[0];
-                    retryOnException = annotation.exception();
+                Optional<Annotation> retryPolicy = getAnnotationWithType(descriptor, RetryPolicy.class);
+                if (retryPolicy.isPresent()) {
+                    retryOnException = ((RetryPolicy) retryPolicy.get()).exception();
                 }
-                boolean useCache = getAnnotationsType(descriptor).contains(Cachable.class.getName());
+                TimeoutConfig timeout = null;
+                Optional<Annotation> timeoutAnn = getAnnotationWithType(descriptor, Timeout.class);
+                if (timeoutAnn.isPresent()) {
+                    timeout = TimeoutConfig.fromTimeout((Timeout) timeoutAnn.get());
+                }
+
+                boolean useCache = annotationsType.contains(Cachable.class.getName());
 
                 return ratelClientProducer.produceServiceProxy(descriptor.getDependencyType(), useCache,
-                        retryOnException);
+                        retryOnException, timeout);
             }
         }
 
         return super.buildLazyResolutionProxy(descriptor, beanName);
     }
 
-    private Collection<String> getAnnotationsType(DependencyDescriptor descriptor) {
+    private Collection<String> getAnnotationsTypes(DependencyDescriptor descriptor) {
         Function<Annotation, String> function = new Function<Annotation, String>() {
 
             @Override
@@ -77,11 +88,12 @@ public class RemoteAutowireCandidateResolver extends ContextAnnotationAutowireCa
         return ratelClientProducer.produceBroadcaster();
     }
 
-    private Collection<Annotation> getAnnotationWithType(DependencyDescriptor descriptor) {
-        return Collections2.filter(Arrays.asList(descriptor.getAnnotations()), new Predicate<Annotation>() {
+    private static Optional<Annotation> getAnnotationWithType(DependencyDescriptor descriptor, final Class
+            clazz) {
+        return Iterables.tryFind(Arrays.asList(descriptor.getAnnotations()), new Predicate<Annotation>() {
             @Override
-            public boolean apply(Annotation annotation) {
-                return RetryPolicy.class.getName().equals(annotation.annotationType().getName());
+            public boolean apply(Annotation input) {
+                return clazz.getName().equals(input.annotationType().getName());
             }
         });
     }

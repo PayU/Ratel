@@ -24,7 +24,7 @@ import java.util.Collection;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.core.env.Environment;
 
-import com.payu.ratel.config.Timeout;
+import com.payu.ratel.config.TimeoutConfig;
 import com.payu.ratel.context.RemoteServiceCallListener;
 
 public abstract class AbstractClientProxyGenerator implements ClientProxyGenerator {
@@ -43,7 +43,7 @@ public abstract class AbstractClientProxyGenerator implements ClientProxyGenerat
         this.env = beanFactory.getBean(Environment.class);
     }
 
-    protected <T> T createServiceClientProxy(Class<T> clazz, String serviceUrl) {
+    protected <T> T createServiceClientProxy(Class<T> clazz, String serviceUrl, TimeoutConfig timeout) {
         checkNotNull(clazz, "Given service class cannot be null");
         checkArgument(!isNullOrEmpty(serviceUrl), "Given serviceUrl class cannot be blank");
 
@@ -53,9 +53,8 @@ public abstract class AbstractClientProxyGenerator implements ClientProxyGenerat
         setServiceCallListeners(proxyFactory);
 
         RatelHessianProxyFactory ratelProxyFactory = new RatelHessianProxyFactory();
-        Timeout timeout = clazz.getAnnotation(Timeout.class);
-        ratelProxyFactory.setConnectTimeout(timeout != null ? timeout.connectTimeout() : getConnectTimeout());
-        ratelProxyFactory.setReadTimeout(timeout != null ? timeout.readTimeout() : getReadTimeout());
+        ratelProxyFactory.setConnectTimeout(timeout != null ? timeout.getConnectTimeout() : getConnectTimeout());
+        ratelProxyFactory.setReadTimeout(timeout != null ? timeout.getReadTimeout() : getReadTimeout());
         ratelProxyFactory.setOverloadEnabled(true);
         proxyFactory.setProxyFactory(ratelProxyFactory);
 
@@ -82,8 +81,8 @@ public abstract class AbstractClientProxyGenerator implements ClientProxyGenerat
     }
 
     @Override
-    public final <T> T generate(Class<T> serviceClazz, String serviceAddress) {
-        T bareServiceProxy = createServiceClientProxy(serviceClazz, serviceAddress);
+    public final <T> T generate(Class<T> serviceClazz, String serviceAddress, TimeoutConfig timeout) {
+        T bareServiceProxy = createServiceClientProxy(serviceClazz, serviceAddress, timeout);
         return decorate(bareServiceProxy, serviceClazz);
     }
 
