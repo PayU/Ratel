@@ -86,6 +86,11 @@ public abstract class AbstractClientProxyGenerator implements ClientProxyGenerat
         return decorate(bareServiceProxy, serviceClazz);
     }
 
+    @Override
+    public final <T> T generate(Class<T> serviceClazz, String serviceAddress) {
+        return generate(serviceClazz, serviceAddress, null);
+    }
+
     protected <T> T decorate(T bareServiceProxy, Class<T> serviceClass) {
         return bareServiceProxy;
     }

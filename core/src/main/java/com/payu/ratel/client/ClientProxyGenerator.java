@@ -21,4 +21,6 @@ public interface ClientProxyGenerator {
 
 
     <T> T generate(Class<T> serviceClazz, String serviceAddress, TimeoutConfig timeout);
+
+    <T> T generate(Class<T> serviceClazz, String serviceAddress);
 }
