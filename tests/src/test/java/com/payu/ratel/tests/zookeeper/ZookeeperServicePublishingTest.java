@@ -119,7 +119,7 @@ public class ZookeeperServicePublishingTest {
         RatelClientFactory ratelStandaloneFactory = RatelStandaloneFactory.fromZookeeperServer(ZK_HOST);
 
         //when
-        TestService testedService = ratelStandaloneFactory.getServiceProxy(TestService.class, null);
+        TestService testedService = ratelStandaloneFactory.getServiceProxy(TestService.class);
 
         then(testedService.hello()).isEqualTo("success");
     }
@@ -130,9 +130,7 @@ public class ZookeeperServicePublishingTest {
         System.setProperty(SERVICE_DISCOVERY_ZK_HOST, ZK_HOST);
 
         //when
-        final TestService testedService = RatelStandaloneFactory.fromZookeeperServer().getServiceProxy(
-                TestService.class,
-                null);
+        final TestService testedService = RatelStandaloneFactory.fromZookeeperServer().getServiceProxy(TestService.class);
 
         then(testedService.hello()).isEqualTo("success");
 
