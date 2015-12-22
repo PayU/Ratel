@@ -17,6 +17,7 @@ import org.springframework.core.env.StandardEnvironment;
 
 import com.payu.ratel.client.RatelClientProducer;
 import com.payu.ratel.client.RatelServiceCallPublisher;
+import com.payu.ratel.config.TimeoutConfig;
 import com.payu.ratel.config.beans.RegistryBeanProviderFactory;
 import com.payu.ratel.config.beans.RegistryStrategiesProvider;
 import com.payu.ratel.context.RemoteServiceCallListener;
@@ -156,15 +157,18 @@ public class RatelStandaloneFactory implements BeanFactoryAware, RatelServiceCal
      */
     @Override
     public <T> T getServiceProxy(Class<T> serviceContractClass) {
-        return clientProducer.produceServiceProxy(serviceContractClass, false, null);
+        return clientProducer.produceServiceProxy(serviceContractClass, false, null, null);
+    }
+
+    @Override
+    public <T> T getServiceProxy(Class<T> serviceContractClass, TimeoutConfig timeout) {
+        return clientProducer.produceServiceProxy(serviceContractClass, false, null, timeout);
     }
 
     @Override
     public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
         if (beanFactory instanceof ConfigurableListableBeanFactory) {
-            ConfigurableListableBeanFactory lbl = (ConfigurableListableBeanFactory) beanFactory;
-
-            this.beanFactory = lbl;
+            this.beanFactory = (ConfigurableListableBeanFactory) beanFactory;
             RegistryStrategiesProvider strategiesProvider = new RegistryBeanProviderFactory()
                     .create(this.beanFactory);
 

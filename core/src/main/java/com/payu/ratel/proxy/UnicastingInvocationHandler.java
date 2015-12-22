@@ -15,16 +15,17 @@
  */
 package com.payu.ratel.proxy;
 
-import com.payu.ratel.client.ClientProxyGenerator;
-import com.payu.ratel.client.FetchStrategy;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import com.payu.ratel.client.ClientProxyGenerator;
+import com.payu.ratel.client.FetchStrategy;
+import com.payu.ratel.config.TimeoutConfig;
 
 public class UnicastingInvocationHandler implements InvocationHandler {
 
@@ -33,15 +34,17 @@ public class UnicastingInvocationHandler implements InvocationHandler {
     private final FetchStrategy fetchStrategy;
     private final Class<?> serviceApi;
     private final ClientProxyGenerator clientProxyGenerator;
+    private final TimeoutConfig timeout;
 
 
-    public UnicastingInvocationHandler(FetchStrategy fetchStrategy, Class<?> serviceApi, ClientProxyGenerator clientProxyGenerator) {
+    public UnicastingInvocationHandler(FetchStrategy fetchStrategy, Class<?> serviceApi, ClientProxyGenerator clientProxyGenerator, TimeoutConfig timeout) {
         assert fetchStrategy != null;
         assert serviceApi.isInterface();
         assert clientProxyGenerator != null;
         this.fetchStrategy = fetchStrategy;
         this.serviceApi = serviceApi;
         this.clientProxyGenerator = clientProxyGenerator;
+        this.timeout = timeout;
     }
 
     @Override
@@ -53,7 +56,7 @@ public class UnicastingInvocationHandler implements InvocationHandler {
             throw new NoServiceInstanceFound(serviceApi);
         }
 
-        final Object clientProxy = clientProxyGenerator.generate(serviceApi, serviceAddress);
+        final Object clientProxy = clientProxyGenerator.generate(serviceApi, serviceAddress, timeout);
 
         LOGGER.debug("Calling {} on address {}", serviceApi.getName(), serviceAddress);
 

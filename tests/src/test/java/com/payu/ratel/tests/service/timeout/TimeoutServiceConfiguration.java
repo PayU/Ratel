@@ -33,4 +33,9 @@ public class TimeoutServiceConfiguration {
     public TimeoutService testService() {
         return new TimeoutServiceImpl();
     }
+
+    @Bean
+    AnnotatedTimeoutService annotatedTestService() {
+        return new AnnotatedTimeoutServiceImpl();
+    }
 }
