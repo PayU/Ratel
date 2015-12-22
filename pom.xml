@@ -73,7 +73,7 @@
         <connection>scm:git:git@github.com:PayU-Tech/Ratel.git</connection>
         <developerConnection>${project.scm.connection}</developerConnection>
         <url>https://github.com/PayU-Tech/Ratel</url>
-        <tag>ratel-project-1.2.8</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <modules>
