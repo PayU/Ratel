@@ -29,4 +29,6 @@ public interface TestService {
     void alwaysThrowsCheckedException() throws MyCheckedException;
 
     void alwaysThrowsRuntimeException();
+
+    void countableThrowsException(int count) throws MyCheckedException;
 }
