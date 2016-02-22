@@ -16,6 +16,13 @@ script:
             fi
         fi
 
+cache:
+    directories:
+    - $HOME/.m2/repository
+
+before_cache:
+    - rm -rfv $HOME/.m2/repository/com/payu/ratel/
+
 env:
     global:
         - _MVN='mvn -B -V -e -s .travis.xml -Pnexus'
