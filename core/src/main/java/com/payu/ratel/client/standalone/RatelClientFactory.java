@@ -1,5 +1,6 @@
 package com.payu.ratel.client.standalone;
 
+import com.payu.ratel.config.RetryPolicyConfig;
 import com.payu.ratel.config.TimeoutConfig;
 
 /**
@@ -36,7 +37,19 @@ public interface RatelClientFactory {
      *                             interface for the service
      * @param serviceContractClass the desired contract class.
      * @see RatelClientFactory#getServiceProxy(Class, TimeoutConfig)
+     * @return a fully-featured service client.
      */
     <T> T getServiceProxy(Class<T> serviceContractClass);
+
+    /**
+     * @param <T>                  a type of the service created should contain contract
+     *                             interface for the service
+     * @param serviceContractClass the desired contract class.
+     * @param retryPolicy          retry policy configuration for calling remote endpoint
+     * @param timeout              timeout configuration for calling remote endpoint
+     * @see RatelClientFactory#getServiceProxy(Class, TimeoutConfig)
+     * @return a fully-featured service client.
+     */
+    <T> T getServiceProxy(Class<T> serviceContractClass, RetryPolicyConfig retryPolicy, TimeoutConfig timeout);
 
 }

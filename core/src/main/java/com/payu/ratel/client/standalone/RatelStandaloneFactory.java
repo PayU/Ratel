@@ -17,6 +17,7 @@ import org.springframework.core.env.StandardEnvironment;
 
 import com.payu.ratel.client.RatelClientProducer;
 import com.payu.ratel.client.RatelServiceCallPublisher;
+import com.payu.ratel.config.RetryPolicyConfig;
 import com.payu.ratel.config.TimeoutConfig;
 import com.payu.ratel.config.beans.RegistryBeanProviderFactory;
 import com.payu.ratel.config.beans.RegistryStrategiesProvider;
@@ -113,7 +114,6 @@ public class RatelStandaloneFactory implements BeanFactoryAware, RatelServiceCal
      * {@link RegistryBeanProviderFactory#SERVICE_DISCOVERY_ADDRESS} and
      * {@link RegistryBeanProviderFactory#SERVICE_DISCOVERY_ZK_HOST} must be
      * present in system properties.
-     *
      * If {@link RegistryBeanProviderFactory#SERVICE_DISCOVERY_ADDRESS} is
      * present, then this method is eqivalent to {@link #fromRatelServer()}.
      * If {@link RegistryBeanProviderFactory#SERVICE_DISCOVERY_ZK_HOST} is
@@ -157,12 +157,17 @@ public class RatelStandaloneFactory implements BeanFactoryAware, RatelServiceCal
      */
     @Override
     public <T> T getServiceProxy(Class<T> serviceContractClass) {
-        return clientProducer.produceServiceProxy(serviceContractClass, false, null, null);
+        return clientProducer.produceServiceProxy(serviceContractClass, false);
     }
 
     @Override
     public <T> T getServiceProxy(Class<T> serviceContractClass, TimeoutConfig timeout) {
-        return clientProducer.produceServiceProxy(serviceContractClass, false, null, timeout);
+        return clientProducer.produceServiceProxy(serviceContractClass, false, timeout);
+    }
+
+    @Override
+    public <T> T getServiceProxy(Class<T> serviceContractClass, RetryPolicyConfig retryPolicyConfig, TimeoutConfig timeout) {
+        return clientProducer.produceServiceProxy(serviceContractClass, false, retryPolicyConfig, timeout);
     }
 
     @Override
