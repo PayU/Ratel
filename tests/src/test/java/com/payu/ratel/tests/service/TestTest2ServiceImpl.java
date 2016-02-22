@@ -51,6 +51,14 @@ public class TestTest2ServiceImpl implements TestService, Test2Service {
     }
 
     @Override
+    public void countableThrowsException(int count) throws MyCheckedException {
+        incrementCounter();
+        if (counter < count) {
+            throw new MyCheckedException();
+        }
+    }
+
+    @Override
     public void alwaysThrowsRuntimeException() {
         throw new RuntimeException();
     }

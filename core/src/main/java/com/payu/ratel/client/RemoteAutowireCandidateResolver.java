@@ -30,6 +30,7 @@ import com.google.common.collect.Iterables;
 import com.payu.ratel.Cachable;
 import com.payu.ratel.Discover;
 import com.payu.ratel.RetryPolicy;
+import com.payu.ratel.config.RetryPolicyConfig;
 import com.payu.ratel.config.Timeout;
 import com.payu.ratel.config.TimeoutConfig;
 import com.payu.ratel.event.EventCannon;
@@ -51,10 +52,10 @@ public class RemoteAutowireCandidateResolver extends ContextAnnotationAutowireCa
             if (descriptor.getDependencyType().equals(EventCannon.class)) {
                 return produceEventCannonProxy();
             } else {
-                Class retryOnException = null;
-                Optional<Annotation> retryPolicy = getAnnotationWithType(descriptor, RetryPolicy.class);
-                if (retryPolicy.isPresent()) {
-                    retryOnException = ((RetryPolicy) retryPolicy.get()).exception();
+                RetryPolicyConfig retryPolicy = null;
+                Optional<Annotation> retryPolicyAnn = getAnnotationWithType(descriptor, RetryPolicy.class);
+                if (retryPolicyAnn.isPresent()) {
+                    retryPolicy = RetryPolicyConfig.fromRetryPolicy((RetryPolicy) retryPolicyAnn.get());
                 }
                 TimeoutConfig timeout = null;
                 Optional<Annotation> timeoutAnn = getAnnotationWithType(descriptor, Timeout.class);
@@ -64,8 +65,8 @@ public class RemoteAutowireCandidateResolver extends ContextAnnotationAutowireCa
 
                 boolean useCache = annotationsType.contains(Cachable.class.getName());
 
-                return ratelClientProducer.produceServiceProxy(descriptor.getDependencyType(), useCache,
-                        retryOnException, timeout);
+                return ratelClientProducer.produceServiceProxy(descriptor.getDependencyType(), useCache, retryPolicy,
+                        timeout);
             }
         }
 
