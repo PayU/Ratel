@@ -21,18 +21,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.aop.ProxyMethodInvocation;
 
+import com.payu.ratel.config.RetryPolicyConfig;
+
 public class RetryPolicyInvocationHandler implements MethodInterceptor {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RetryPolicyInvocationHandler.class);
 
-    private static final long RETRY_TIME = 5000;
+    private final RetryPolicyConfig config;
 
-    private static final long RETRY_COUNT = 5;
-
-    private final Class exception;
-
-    public RetryPolicyInvocationHandler(Class exception) {
-        this.exception = exception;
+    public RetryPolicyInvocationHandler(RetryPolicyConfig config) {
+        this.config = config;
     }
 
     @SuppressWarnings("PMD.AvoidCatchingThrowable")
@@ -41,9 +39,9 @@ public class RetryPolicyInvocationHandler implements MethodInterceptor {
         try {
             return methodInvocationCopy.proceed();
         } catch (Throwable thrownException) {
-            LOGGER.info("Service thrown exception");
-            if (isInStacktrace(thrownException, exception) && count < RETRY_COUNT) {
-                Thread.sleep(RETRY_TIME);
+            LOGGER.error("Service thrown exception");
+            if (isInStacktrace(thrownException, config.getRetryOnException()) && count < config.getRetryCount()) {
+                Thread.sleep(config.getWaitingTime());
 
                 return invokeWithRetry(methodInvocation, count + 1);
             }

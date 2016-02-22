@@ -28,4 +28,8 @@ public @interface RetryPolicy {
 
     Class exception() default Exception.class;
 
+    long waitingTime() default 5000;
+
+    int retryCount() default 5;
+
 }

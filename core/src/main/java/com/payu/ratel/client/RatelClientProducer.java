@@ -5,6 +5,7 @@ import java.lang.reflect.Proxy;
 import org.springframework.aop.TargetSource;
 import org.springframework.aop.framework.ProxyFactory;
 
+import com.payu.ratel.config.RetryPolicyConfig;
 import com.payu.ratel.config.TimeoutConfig;
 import com.payu.ratel.event.EventCannon;
 import com.payu.ratel.proxy.BroadcastingInvocationHandler;
@@ -23,8 +24,16 @@ public class RatelClientProducer {
         this.clientProxyGenerator = clientProxyGenerator;
     }
 
+    public <T> T produceServiceProxy(final Class<T> serviceContractClass, boolean useCache, final TimeoutConfig timeout) {
+        return produceServiceProxy(serviceContractClass, useCache, (RetryPolicyConfig) null, timeout);
+    }
+
+    public <T> T produceServiceProxy(final Class<T> serviceContractClass, boolean useCache) {
+        return produceServiceProxy(serviceContractClass, useCache, (RetryPolicyConfig) null, null);
+    }
+
     public <T> T produceServiceProxy(final Class<T> serviceContractClass, boolean useCache,
-                                     Class<? extends Throwable> retryOnException, final TimeoutConfig timeout) {
+                                      final RetryPolicyConfig retryPolicyConfig, final TimeoutConfig timeout) {
 
         ProxyFactory proxyFactory = new ProxyFactory();
         proxyFactory.setInterfaces(serviceContractClass);
@@ -33,8 +42,8 @@ public class RatelClientProducer {
             proxyFactory.addAdvice(new CacheInvocationHandler());
         }
 
-        if (retryOnException != null) {
-            proxyFactory.addAdvice(new RetryPolicyInvocationHandler(retryOnException));
+        if (retryPolicyConfig != null) {
+            proxyFactory.addAdvice(new RetryPolicyInvocationHandler(retryPolicyConfig));
         }
 
         proxyFactory.setTargetSource(new TargetSource() {
@@ -61,12 +70,11 @@ public class RatelClientProducer {
         });
 
         return (T) proxyFactory.getProxy();
-
     }
 
     public Object produceBroadcaster() {
         return Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(),
-                new Class[] {EventCannon.class}, new BroadcastingInvocationHandler(fetchStrategy,
+                new Class[]{EventCannon.class}, new BroadcastingInvocationHandler(fetchStrategy,
                         clientProxyGenerator, null));
     }
 
