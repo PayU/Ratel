@@ -11,13 +11,13 @@ ratel - service discovery
 
     @Service
     public class FooClient {
-    
+
         @Discover
         private FooService fooService;
-        
+
         ...
-        
-    }	
+
+    }
 
 
 
@@ -28,8 +28,8 @@ ratel - service discovery
     public class FooServiceImpl implements FooService {
 
         ...
-        
-    }	
+
+    }
 
 
 FooService is auto-discovered by client application.
@@ -45,4 +45,4 @@ FooService is auto-discovered by client application.
     it is the only branch where we can accept your changes.
 
 # Please visit project wiki for more info
-[WIKI](https://github.com/PayU-Tech/Ratel/wiki)		    
+[WIKI](https://github.com/PayU-Tech/Ratel/wiki)
