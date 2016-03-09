@@ -39,7 +39,7 @@ public class RetryPolicyInvocationHandler implements MethodInterceptor {
         try {
             return methodInvocationCopy.proceed();
         } catch (Throwable thrownException) {
-            LOGGER.error("Service thrown exception");
+            LOGGER.warn("Ratel - Retry Policy was triggered for service {} cause: {} ",methodInvocation.getThis(), thrownException.getCause());
             if (isInStacktrace(thrownException, config.getRetryOnException()) && count < config.getRetryCount()) {
                 Thread.sleep(config.getWaitingTime());
 
