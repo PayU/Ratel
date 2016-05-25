@@ -80,4 +80,9 @@ public class InMemoryRegistryBeanProviderFactory implements RegistryStrategiesPr
         return ratelServerFetcher;
     }
 
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @Override
+    public void destroy() throws Exception {
+        //Not supported for this strategy
+    }
 }

@@ -19,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.core.env.Environment;
 
 import com.payu.ratel.client.standalone.RatelClientFactory;
@@ -57,6 +58,7 @@ public class RegistryBeanProviderFactory {
         RegistryStrategiesProvider registryBeanProvider;
         registryBeanProvider = doCreate(beanFactory);
         final String registryBeanName = registryBeanProvider.getClass().getName();
+        ((DefaultListableBeanFactory) beanFactory).registerDisposableBean(registryBeanName, registryBeanProvider);
         beanFactory.registerSingleton(registryBeanName, registryBeanProvider);
         beanFactory.initializeBean(registryBeanProvider, registryBeanName);
         RatelClientFactory standaloneFactory = RatelStandaloneFactory.fromBeanFactory(beanFactory);

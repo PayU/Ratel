@@ -18,6 +18,7 @@ package com.payu.ratel.tests.zookeeper;
 import static com.jayway.awaitility.Awaitility.await;
 import static com.payu.ratel.config.beans.RatelPropertySelfAddressProvider.RATEL_BIND_ADDRESS;
 import static com.payu.ratel.config.beans.RegistryBeanProviderFactory.SERVICE_DISCOVERY_ZK_HOST;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.BDDAssertions.then;
 
 import java.io.IOException;
@@ -40,7 +41,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
@@ -58,7 +58,6 @@ import com.payu.ratel.tests.service.TestServiceConfiguration;
 @SpringApplicationConfiguration(classes = { ServiceDiscoveryConfig.class, DiscoveryServerMain.class })
 @IntegrationTest({ SERVICE_DISCOVERY_ZK_HOST + ":127.0.0.1:" + ZookeeperServicePublishingTest.ZK_PORT })
 @WebAppConfiguration
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class ZookeeperServicePublishingTest {
 
     public static final String SPRING_JMX_ENABLED_FALSE = "--spring.jmx.enabled=false";
@@ -158,8 +157,9 @@ public class ZookeeperServicePublishingTest {
     }
 
     @After
-    public void close() throws IOException {
-        System.clearProperty(SERVICE_DISCOVERY_ZK_HOST);
+    public void close() throws Exception {
         remoteContext.close();
+        assertThat(serviceProvider.getInstance()).isNull();
+        System.clearProperty(SERVICE_DISCOVERY_ZK_HOST);
     }
 }

@@ -15,11 +15,13 @@
  */
 package com.payu.ratel.config.beans;
 
+import org.springframework.beans.factory.DisposableBean;
+
 import com.payu.ratel.client.ClientProxyGenerator;
 import com.payu.ratel.client.FetchStrategy;
 import com.payu.ratel.register.RegisterStrategy;
 
-public interface RegistryStrategiesProvider {
+public interface RegistryStrategiesProvider extends DisposableBean {
 
     RegisterStrategy getRegisterStrategy();
     FetchStrategy getFetchStrategy();
