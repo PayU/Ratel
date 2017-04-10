@@ -39,8 +39,10 @@ public class RetryPolicyInvocationHandler implements MethodInterceptor {
         try {
             return methodInvocationCopy.proceed();
         } catch (Throwable thrownException) {
-            LOGGER.warn("Ratel - Retry Policy was triggered for service {} cause: {} ", methodInvocation.getThis(), thrownException.getCause());
-            if (isInStacktrace(thrownException, config.getRetryOnException()) && count < config.getRetryCount()) {
+            LOGGER.warn("Ratel - Retry Policy was triggered for service {} because: {} ", methodInvocation.getMethod(),
+                    thrownException.getMessage());
+            final Class<? extends Throwable> retryOnException = config.getRetryOnException();
+            if (shouldRetry(count, thrownException, retryOnException)) {
                 Thread.sleep(config.getWaitingTime());
 
                 return invokeWithRetry(methodInvocation, count + 1);
@@ -50,17 +52,8 @@ public class RetryPolicyInvocationHandler implements MethodInterceptor {
         }
     }
 
-    private boolean isInStacktrace(Throwable stackTrace, Class target) {
-        Throwable t = stackTrace;
-        while (t != null) {
-            if (t.getClass().equals(target)) {
-                return true;
-            }
-
-            t = t.getCause();
-        }
-
-        return false;
+    private boolean shouldRetry(int count, Throwable thrownException, Class<? extends Throwable> retryOnException) {
+        return retryOnException != null && retryOnException.isAssignableFrom(thrownException.getClass()) && count < config.getRetryCount();
     }
 
     @Override
