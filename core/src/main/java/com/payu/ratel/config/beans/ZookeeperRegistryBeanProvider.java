@@ -79,6 +79,7 @@ public class ZookeeperRegistryBeanProvider implements RegistryStrategiesProvider
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void destroy() throws Exception {
+        zookeeperFetcher.close();
         serviceDiscovery.close();
         curatorFramework.close();
     }
