@@ -11,12 +11,12 @@
     <parent>
         <groupId>com.payu.ratel</groupId>
         <artifactId>ratel-project</artifactId>
-        <version>1.2.12-SNAPSHOT</version>
+        <version>1.2.12</version>
     </parent>	
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.payu.ratel</groupId>
 	<artifactId>ratel-examples</artifactId>
-	<version>1.2.12-SNAPSHOT</version>
+	<version>1.2.12</version>
 
 	<packaging>jar</packaging>
 
