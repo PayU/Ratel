@@ -16,6 +16,8 @@
 package com.payu.ratel.tests.service;
 
 
+import java.util.List;
+
 public interface TestService {
 
     String hello();
@@ -31,4 +33,6 @@ public interface TestService {
     void alwaysThrowsRuntimeException();
 
     void countableThrowsException(int count) throws MyCheckedException;
+
+    void throwsExceptionsInOrder(List<Exception> exceptions) throws Exception;
 }

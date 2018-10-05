@@ -19,6 +19,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.google.common.collect.ImmutableList;
 import com.payu.ratel.Discover;
 import com.payu.ratel.RetryPolicy;
 import com.payu.ratel.tests.service.MyCheckedException;
@@ -31,7 +32,8 @@ public class RetryPolicyWithConfigurationTest {
 
 
     @Discover
-    @RetryPolicy(exception = MyCheckedException.class, waitingTime = 1000, retryCount = 4)
+    @RetryPolicy(exception = {MyCheckedException.class, RuntimeException.class, IllegalArgumentException.class},
+            waitingTime = 1000, retryCount = 4)
     private TestService testService;
 
     @Test
@@ -50,6 +52,17 @@ public class RetryPolicyWithConfigurationTest {
 
         //when
         testService.countableThrowsException(5);
+
+        //then
+        //nothing
+    }
+
+    @Test
+    public void shouldRetryServiceCallAfter3DifferentExceptionsThrown() throws Exception {
+
+        //when
+        testService.throwsExceptionsInOrder(ImmutableList.of(
+                new RuntimeException(), new IllegalArgumentException(), new MyCheckedException()));
 
         //then
         //nothing

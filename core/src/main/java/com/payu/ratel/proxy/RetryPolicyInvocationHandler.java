@@ -15,6 +15,8 @@
  */
 package com.payu.ratel.proxy;
 
+import java.util.List;
+
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.slf4j.Logger;
@@ -41,8 +43,8 @@ public class RetryPolicyInvocationHandler implements MethodInterceptor {
         } catch (Throwable thrownException) {
             LOGGER.warn("Ratel - Retry Policy was triggered for service {} because: {} ", methodInvocation.getMethod(),
                     thrownException.getMessage());
-            final Class<? extends Throwable> retryOnException = config.getRetryOnException();
-            if (shouldRetry(count, thrownException, retryOnException)) {
+            final List<Class<? extends Throwable>> retryOnExceptions = config.getRetryOnExceptions();
+            if (shouldRetry(count, thrownException, retryOnExceptions)) {
                 Thread.sleep(config.getWaitingTime());
 
                 return invokeWithRetry(methodInvocation, count + 1);
@@ -52,8 +54,17 @@ public class RetryPolicyInvocationHandler implements MethodInterceptor {
         }
     }
 
-    private boolean shouldRetry(int count, Throwable thrownException, Class<? extends Throwable> retryOnException) {
-        return retryOnException != null && retryOnException.isAssignableFrom(thrownException.getClass()) && count < config.getRetryCount();
+    private boolean shouldRetry(int count, Throwable thrownException, List<Class<? extends Throwable>> retryOnExceptions) {
+        for (Class<? extends Throwable> ex : retryOnExceptions) {
+            if (count < config.getRetryCount() && shouldRetryException(thrownException, ex)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean shouldRetryException(Throwable thrownException, Class<? extends Throwable> retryOnException) {
+        return retryOnException != null && retryOnException.isAssignableFrom(thrownException.getClass());
     }
 
     @Override

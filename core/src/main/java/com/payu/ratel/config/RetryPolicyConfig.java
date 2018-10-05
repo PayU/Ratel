@@ -1,5 +1,9 @@
 package com.payu.ratel.config;
 
+import java.util.Arrays;
+import java.util.List;
+
+import com.google.common.base.Preconditions;
 import com.payu.ratel.RetryPolicy;
 
 public class RetryPolicyConfig {
@@ -9,18 +13,17 @@ public class RetryPolicyConfig {
 
     private final long waitingTime;
     private final int retryCount;
-    private final Class<? extends Throwable> retryOnException;
+    private final List<Class<? extends Throwable>> retryOnExceptions;
 
-    public RetryPolicyConfig(Class<? extends Throwable> retryOnException, long waitingTime, int retryCount) {
-        this.retryOnException = retryOnException;
-        this.waitingTime = waitingTime;
-        this.retryCount = retryCount;
+    public RetryPolicyConfig(Class<? extends Throwable>... retryOnExceptions) {
+        this(WAITING_TIME, RETRY_COUNT, retryOnExceptions);
     }
 
-    public RetryPolicyConfig(Class<? extends Throwable> retryOnException) {
-        this.waitingTime = WAITING_TIME;
-        this.retryCount = RETRY_COUNT;
-        this.retryOnException = retryOnException;
+    public RetryPolicyConfig(long waitingTime, int retryCount, Class<? extends Throwable>... retryOnExceptions) {
+        Preconditions.checkNotNull(retryOnExceptions, "Please provide retryOnExceptions");
+        this.waitingTime = waitingTime;
+        this.retryCount = retryCount;
+        this.retryOnExceptions = Arrays.asList(retryOnExceptions);
     }
 
     public long getRetryCount() {
@@ -31,12 +34,12 @@ public class RetryPolicyConfig {
         return waitingTime;
     }
 
-    public Class<? extends Throwable> getRetryOnException() {
-        return retryOnException;
+    public List<Class<? extends Throwable>> getRetryOnExceptions() {
+        return retryOnExceptions;
     }
 
     public static RetryPolicyConfig fromRetryPolicy(RetryPolicy retryPolicyAnnotation) {
-        return new RetryPolicyConfig(retryPolicyAnnotation.exception(), retryPolicyAnnotation.waitingTime(),
-                retryPolicyAnnotation.retryCount());
+        return new RetryPolicyConfig(retryPolicyAnnotation.waitingTime(), retryPolicyAnnotation.retryCount(),
+                retryPolicyAnnotation.exception());
     }
 }

@@ -21,7 +21,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.payu.ratel.Discover;
 import com.payu.ratel.RetryPolicy;
-import com.payu.ratel.tests.service.MyCheckedException;
 import com.payu.ratel.tests.service.TestService;
 import com.payu.ratel.tests.service.TestServiceConfiguration;
 
@@ -31,12 +30,12 @@ public class RetryPolicyTest {
 
 
     @Discover
-    @RetryPolicy(exception = MyCheckedException.class)
+    @RetryPolicy
     private TestService testService;
 
 
     @Test
-    public void shouldRetryServiceCallAfterException() throws InterruptedException, Exception {
+    public void shouldRetryServiceCallAfterException() throws Exception {
 
         //when
         testService.sometimesThrowsException();

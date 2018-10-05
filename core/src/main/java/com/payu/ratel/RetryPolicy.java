@@ -27,7 +27,7 @@ import java.lang.annotation.Target;
 @Documented
 public @interface RetryPolicy {
 
-    Class exception() default Exception.class;
+    Class<? extends Throwable>[] exception() default {Exception.class};
 
     long waitingTime() default 5000;
 
