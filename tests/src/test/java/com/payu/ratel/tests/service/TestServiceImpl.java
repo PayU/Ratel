@@ -15,6 +15,8 @@
  */
 package com.payu.ratel.tests.service;
 
+import java.util.List;
+
 import com.payu.ratel.Publish;
 
 @Publish
@@ -62,4 +64,14 @@ public class TestServiceImpl implements TestService {
     public void alwaysThrowsRuntimeException() {
         throw new RuntimeException();
     }
+
+    @Override
+    public void throwsExceptionsInOrder(List<Exception> exceptions) throws Exception {
+        if (counter < exceptions.size()) {
+            Exception toBeThrown = exceptions.get(counter);
+            incrementCounter();
+            throw toBeThrown;
+        }
+    }
+
 }
